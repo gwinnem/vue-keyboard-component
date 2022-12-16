@@ -1,0 +1,100 @@
+/**
+ * Theme: hg-theme-default
+ */
+.keyboard-input {
+  width: 100%;
+  height: 50px;
+  margin-bottom: 20px;
+  font-size: 20px;
+  border: none;
+  box-sizing: border-box;
+}
+
+.hg-theme-default {
+  font-family: Segoe UI,Arial,sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: 100%;
+  user-select: none;
+  box-sizing: border-box;
+  overflow: hidden;
+  touch-action: manipulation;
+  background-color: #ececec;
+  border-radius: 5px;
+}
+
+.hg-theme-default .hg-button span {
+  pointer-events: none;
+}
+
+/* When using option "useButtonTag" */
+.hg-theme-default button.hg-button {
+  border-radius: 4px;
+  border-bottom: 3px solid #726e6e;
+  font-size: 1em;
+  overflow: hidden;
+}
+
+.hg-theme-default .hg-button {
+  display: inline-block;
+  flex-grow: 1;
+  cursor: pointer;
+}
+
+.hg-theme-default .hg-row {
+  display: flex;
+}
+
+.hg-theme-default .hg-row:not(:last-child) {
+  margin-bottom: 5px;
+}
+
+.hg-theme-default .hg-row .hg-button:not(:last-child) {
+  margin-right: 5px;
+}
+
+.hg-theme-default .hg-row .hg-button-container {
+  margin-right: 5px;
+}
+
+.hg-theme-default .hg-row > div:last-child {
+  margin-right: 0;
+}
+
+.hg-theme-default .hg-row .hg-button-container {
+  display: flex;
+}
+
+.hg-theme-default .hg-button {
+  box-shadow: 0 0 3px -1px rgba(0, 0, 0, 0.3);
+  height: 37px;
+  width: 35px;
+  border-radius: 4px;
+  box-sizing: border-box;
+  padding: 5px;
+  background: white;
+  border-bottom: 3px solid #b5b5b5;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.hg-theme-default .hg-button.hg-standardBtn {
+  width: 20px;
+}
+
+.hg-theme-default .hg-button.hg-activeButton {
+  background: #1481b4;
+}
+
+.hg-theme-default .hg-button.hg-button-hold {
+  background: #0f4b67;
+  color: whitesmoke;
+}
+
+.hg-theme-default .hg-button.hg-selectedButton {
+  background: rgba(5, 25, 70, 0.53);
+  color: white;
+}

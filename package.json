@@ -1,0 +1,83 @@
+{
+  "name": "vue-virtual-keyboard",
+  "version": "1.0.0",
+  "description": "Virtual Keyboard using vue 3x and Microsoft Keyboard Layouts.",
+  "author": "Geirr Winnem <gwinnem@gmail.com>",
+  "license": "ISC",
+  "keywords": [
+    "Virtual keyboard",
+    "Kiosk Keyboard",
+    "Touch keyboard",
+    "Screen Keyboard",
+    "On Screen",
+    "Keyboard",
+    "Virtual",
+    "Vue 3x",
+    "Vue",
+    "Typescript"
+  ],
+  "main": "dist/vue-virtual-keyboard.umd.js",
+  "module": "vue-virtual-keyboard.es.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist/*",
+    "src/**/*.vue"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./dist/vue-virtual-keyboard.es.js",
+      "require": "./dist/vue-virtual-keyboard.umd.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gwinnem/vue-virtual-keyboard.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gwinnem/https://github.com/gwinnem/vue-virtual-keyboard/issues"
+  },
+  "scripts": {
+    "dev": "vite --open --force --host",
+    "build": "vite build && npm run build:types",
+    "build:types": "vue-tsc --project tsconfig.build-types.json --declaration --emitDeclarationOnly --outDir dist/types ",
+    "typecheck": "vue-tsc --project tsconfig.build-types.json --noEmit",
+    "lint": "eslint --ext .js,.ts,.vue ./",
+    "lint:style": "npx stylelint src/**/*.{scss,vue} --no-fix",
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore"
+  },
+  "devDependencies": {
+    "@babel/types": "^7.20.5",
+    "@types/node": "^18.11.11",
+    "@typescript-eslint/eslint-plugin": "^5.45.1",
+    "@typescript-eslint/parser": "^5.45.1",
+    "@vitejs/plugin-vue": "^3.2.0",
+    "@vue/tsconfig": "^0.1.3",
+    "eslint": "^8.29.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-import-quotes": "^0.0.1",
+    "eslint-plugin-vue": "^9.8.0",
+    "prettier": "^2.8.1",
+    "sass": "^1.56.1",
+    "stylelint": "^14.8.5",
+    "stylelint-config-recommended-scss": "^6.0.0",
+    "stylelint-config-recommended-vue": "^1.4.0",
+    "stylelint-config-standard-scss": "^3.0.0",
+    "stylelint-order": "^5.0.0",
+    "typescript": "^4.9.3",
+    "vite": "^3.2.5",
+    "vue": "^3.2.45",
+    "vue-tsc": "^1.0.11"
+  },
+  "peerDependencies": {
+    "vue": "^3.2.45"
+  },
+  "engines": {
+    "node": "^18 || ^16 || ^14.19",
+    "npm": ">= 8.0.0",
+    "yarn": ">= 1.21.1"
+  }
+}

@@ -25,7 +25,7 @@ export default <ILayoutItem>{
     alt: [
       `{empty} {empty} \u00B2 \u00B3 {empty} {empty} {empty} { [ ] } \\ {empty} {bksp}`,
       `{tab} @ {empty} \u20AC {empty} {empty} {empty} {empty} {empty} {empty} {empty} {empty} ~`,
-      `{empty} {empty} {empty} {empty} {empty} {empty} {empty} {empty} {empty} {empty} {empty} {empty} {enter}`,
+      `{caps} {empty} {empty} {empty} {empty} {empty} {empty} {empty} {empty} {empty} {empty} {empty} {empty} {enter}`,
       `{shiftleft} | {empty} {empty} {empty} {empty} {empty} {empty} \u00B5 {empty} {empty} {empty} {shiftright}`,
       `{ctrlleft} {altleft} {space} {altright} {ctrlright}`,
     ],

@@ -30,4 +30,23 @@ export default <ILayoutItem>{
       `{ctrlleft} {altleft} {space} {altright} {ctrlright}`,
     ],
   },
+  display: {
+    // eslint-disable sort-keys
+    '{alt}': `Alt`,
+    '{altleft}': `Alt`,
+    '{altright}': `Alt Gr`,
+    '{bksp}': `\u232b`,
+    '{caps}': `\u21ea`,
+    '{ctrl}': `Strg`,
+    '{ctrlleft}': `Strg`,
+    '{ctrlright}': `Strg`,
+    '{empty}': ` `,
+    '{enter}': `\u21A9`,
+    '{lock}': `caps \u21ea`,
+    '{shift}': `\u2191`,
+    '{shiftleft}': `\u2191`,
+    '{shiftright}': `\u2191`,
+    '{space}': ` `,
+    '{tab}': `\u2b7e`,
+  },
 };

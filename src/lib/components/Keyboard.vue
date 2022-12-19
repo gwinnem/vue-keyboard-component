@@ -1,7 +1,9 @@
 <template>
   <div class="hg-theme-default hg-layout-default keyboard keyboard-border">
     <div class="hg-rows">
-      <div class="hb-row">
+      <div
+        v-if="showLayoutSelector"
+        class="hb-row">
         <div class="selectBox">
           Select Keyboard language:
           <select
@@ -14,7 +16,7 @@
               {{ layout.title }}
             </option>
           </select>
-          <span style="float: right">lfkgj</span>
+          <span style="float: right">Here comes the theme selector</span>
         </div>
       </div>
       <div class="hb-row">
@@ -997,7 +999,7 @@ const onClick = (value: string): void => {
 
 <style lang="scss">
 @import "../../css/Keyboard.css";
-@import "../../css/buttons.css";
+@import "../../css/button-sizes.css";
 @import "../../css/select.scss";
 @import "../../css/scrollbar.scss";
 

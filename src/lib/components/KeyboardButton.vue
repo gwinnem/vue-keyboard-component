@@ -1,178 +1,226 @@
 <template>
   <button
     ref="button"
-    aria-disabled="false"
     :class="buttonClass"
     :data-default-value="defaultValue"
-    :data-shift-value="shiftValue"
     @click="onClick"
     @keydown="onKeyDown"
     @keyup="onKeyUp"
     @mousedown="onKeyDown"
     @mouseup="onKeyUp">
-    {{ getButtonDisplayValue() }}
+    <span>{{ getButtonDisplayValue(defaultValue) }}</span>
   </button>
 </template>
 
 <script lang="ts" setup>
-  import { ref } from 'vue';
-  import * as defaultKeyboard from '../../core/keyboard-layouts/default-keyboard';
-  import { IDisplay } from '../../core/interfaces/display.interfaces';
-  import { EKeyboardButtonEvent } from '../../core/enums/keyboardButtonEvents.enum';
-  import { ESpecialButton } from '../../core/enums/KeyboardSpecialButton.enum';
+import {ref, watch} from 'vue';
+import {IDisplay} from '../../core/interfaces/display.interfaces';
+import {EKeyboardButtonEvent} from '../../core/enums/keyboardButtonEvents.enum';
+import {ESpecialButton} from '../../core/enums/KeyboardSpecialButton.enum';
 
-  interface IKeyboardButtonProps {
-    buttonTheme?: string;
-    debug?: boolean;
-    debugEvents?: boolean;
-    defaultValue?: string;
-    display?: IDisplay;
-    isAltPressed: boolean;
-    isShiftPressed: boolean;
-    shiftValue?: string;
+interface IKeyboardButtonProps {
+  buttonLayout?: string;
+  buttonTheme?: string;
+  debugEvents?: boolean;
+  defaultValue?: string;
+  display: IDisplay;
+  isAltClicked?: boolean;
+  isCapsClicked?: boolean;
+  isCtrlClicked?: boolean;
+  isShiftClicked?: boolean;
+}
+
+const props = withDefaults(defineProps<IKeyboardButtonProps>(), {
+  buttonLayout: undefined,
+  buttonTheme: ``,
+  debugEvents: false,
+  defaultValue: ``,
+  display: undefined,
+  isAltClicked: false,
+  isCapsClicked: false,
+  isCtrlClicked: false,
+  isShiftClicked: false,
+});
+
+const emit = defineEmits<{
+  (event: EKeyboardButtonEvent.ALT_CLICKED): void;
+  (event: EKeyboardButtonEvent.BACKSPACE_CLICKED): void;
+  (event: EKeyboardButtonEvent.CAPS_CLICKED): void;
+  (event: EKeyboardButtonEvent.CLICK, value: string): void;
+  (event: EKeyboardButtonEvent.CTRL_CLICKED): void;
+  (event: EKeyboardButtonEvent.KEY_DOWN, value: string): void;
+  (event: EKeyboardButtonEvent.KEY_UP, value: string): void;
+  (event: EKeyboardButtonEvent.SHIFT_CLICKED): void;
+}>();
+
+const isAltClicked = ref(props.isAltClicked);
+watch(() => props.isAltClicked, newValue => {
+  isAltClicked.value = newValue;
+});
+
+const isCapsClicked = ref(props.isCapsClicked);
+watch(() => props.isCapsClicked, newValue => {
+  isCapsClicked.value = newValue;
+});
+
+const isCtrlClicked = ref(props.isCtrlClicked);
+watch(() => props.isCtrlClicked, newValue => {
+  isCtrlClicked.value = newValue;
+});
+
+const isShiftClicked = ref(props.isShiftClicked);
+watch(() => props.isShiftClicked, newValue => {
+  isShiftClicked.value = newValue;
+});
+
+/**
+ * Retrieve button type
+ *
+ * @return {string} The button type
+ */
+const getButtonType = (): string => {
+  return props.defaultValue.includes(`{`) && props.defaultValue.includes(`}`) && props.defaultValue !== `{//}`
+    ? `functionBtn`
+    : `standardBtn`;
+};
+
+/**
+ * Adds default classes to a given button
+ *
+ * @return {string} The classes to be added to the button
+ */
+const getButtonClass = (): string => {
+  const buttonTypeClass = getButtonType();
+  const buttonWithoutBraces = props.defaultValue.replace(`{`, ``).replace(`}`, ``);
+  let buttonNormalized = ``;
+
+  if (buttonTypeClass !== `standardBtn`) {
+    buttonNormalized = ` hg-button-${buttonWithoutBraces}`;
   }
 
-  const props = withDefaults(defineProps<IKeyboardButtonProps>(), {
-    buttonLayout: undefined,
-    buttonTheme: ``,
-    defaultValue: ``,
-    debug: false,
-    debugEvents: false,
-    display: undefined,
-    isAltPressed: false,
-    isShiftPressed: false,
-    shiftValue: ``,
-  });
+  return `hg-button hg-${buttonTypeClass}${buttonNormalized}`;
+};
 
-  const emit = defineEmits<{
-    (event: EKeyboardButtonEvent.CLICK, value: string): void;
-    (event: EKeyboardButtonEvent.KEY_DOWN, value: string): void;
-    (event: EKeyboardButtonEvent.KEY_UP, value: string): void;
-  }>();
+const buttonClass = ref(``);
+buttonClass.value = getButtonClass();
+/**
+ * Returns the display (label) name for a given button
+ * @return {string} The value to display in the button
+ */
+const getButtonDisplayValue = (value: string): string => {
+  return props.display[value] || value;
+};
 
-  // const sendDebugMessage = (msg: string, obj?: unknown[] | unknown | string): void => {
-  //   if(props.debug) {
-  //     // eslint-disable-next-line no-console
-  //     console.debug(msg, obj);
-  //   }
-  // };
+/**
+ * Event handlers
+ */
 
-  /**
-   * Retrieve button type
-   *
-   * @return {string} The button type
-   */
-  const getButtonType = (): string => {
-    return props.defaultValue.includes(`{`) && props.defaultValue.includes(`}`) && props.defaultValue !== `{//}`
-      ? `functionBtn`
-      : `standardBtn`;
-  };
+const sendButtonEventDebugMessage = (msg: string, evt: Event): void => {
+  if (!props.debugEvents) return;
 
-  /**
-   * Adds default classes to a given button
-   *
-   * @return {string} The classes to be added to the button
-   */
-  const getButtonClass = (): string => {
-    const buttonTypeClass = getButtonType();
-    const buttonWithoutBraces = props.defaultValue.replace(`{`, ``).replace(`}`, ``);
-    let buttonNormalized = ``;
+  if (evt instanceof KeyboardEvent && (evt as KeyboardEvent).key === props.defaultValue) {
+    // eslint-disable-next-line no-console
+    console.debug(msg, (evt as KeyboardEvent));
+    return;
+  }
+  if (evt instanceof MouseEvent) {
+    // eslint-disable-next-line no-console
+    console.debug(msg, (evt as MouseEvent));
+    return;
+  }
+  if (evt instanceof PointerEvent) {
+    // eslint-disable-next-line no-console
+    console.debug(msg, (evt as PointerEvent));
+  }
+};
 
-    if(buttonTypeClass !== `standardBtn`) buttonNormalized = ` hg-button-${buttonWithoutBraces}`;
+const onClick = (evt: Event): void => {
+  evt.preventDefault();
+  sendButtonEventDebugMessage(`KeyboardButton - ${EKeyboardButtonEvent.CLICK}: ${props.defaultValue}`, evt);
+  emit(EKeyboardButtonEvent.CLICK, props.defaultValue);
+};
 
-    return `hg-button hg-${buttonTypeClass}${buttonNormalized}`;
-  };
-
-  const buttonClass = ref(``);
-  buttonClass.value = getButtonClass();
-  /**
-   * Returns the display (label) name for a given button
-   * @return {string} The value to display in the button
-   */
-  const getButtonDisplayValue = (): string => {
-    if(!props.display) {
-      return defaultKeyboard.display[props.defaultValue] || props.defaultValue;
+const onKeyDown = (evt: Event): void => {
+  evt.preventDefault();
+  sendButtonEventDebugMessage(`KeyboardButton - ${EKeyboardButtonEvent.KEY_DOWN}: ${props.defaultValue}`, evt);
+  switch (props.defaultValue) {
+    case ESpecialButton.ALT.toString():
+    case ESpecialButton.ALT_LEFT.toString():
+    case ESpecialButton.ALT_RIGHT.toString(): {
+      emit(EKeyboardButtonEvent.ALT_CLICKED);
+      break;
     }
-    return props.display[props.defaultValue] || props.defaultValue;
-  };
-
-  /**
-   * Event handlers
-   */
-
-  const sendButtonEventDebugMessage = (msg: string, evt: Event): void => {
-    if(!props.debugEvents) return;
-
-    if(evt instanceof KeyboardEvent && (evt as KeyboardEvent).key === props.defaultValue) {
-      // eslint-disable-next-line no-console
-      console.debug(msg, (evt as KeyboardEvent));
-      return;
+    case ESpecialButton.BACKSPACE: {
+      emit(EKeyboardButtonEvent.BACKSPACE_CLICKED);
+      break;
     }
-    if(evt instanceof MouseEvent) {
-      // eslint-disable-next-line no-console
-      console.debug(msg, (evt as MouseEvent));
-      return;
+    case ESpecialButton.CAPS: {
+      if (isShiftClicked.value) {
+        return;
+      }
+      emit(EKeyboardButtonEvent.CAPS_CLICKED);
+      break;
     }
-    if(evt instanceof PointerEvent) {
-      // eslint-disable-next-line no-console
-      console.debug(msg, (evt as PointerEvent));
+    case ESpecialButton.CTRL.toString():
+    case ESpecialButton.CTRL_LEFT.toString():
+    case ESpecialButton.CTRL_RIGHT.toString(): {
+      emit(EKeyboardButtonEvent.CTRL_CLICKED);
+      break;
     }
-  };
-
-  const onClick = (evt: Event): void => {
-    evt.preventDefault();
-    sendButtonEventDebugMessage(`KeyboardButton - ${EKeyboardButtonEvent.CLICK}: ${props.defaultValue}`, evt);
-    emit(EKeyboardButtonEvent.CLICK, props.defaultValue);
-  };
-
-  const isAltClicked = ref(false);
-  const isCapsClicked = ref(false);
-
-  const onKeyDown = (evt: Event): void => {
-    evt.preventDefault();
-    sendButtonEventDebugMessage(`KeyboardButton - ${EKeyboardButtonEvent.KEY_DOWN}: ${props.defaultValue}`, evt);
-
-    buttonClass.value = `${buttonClass.value} hg-activeButton`;
-
-    emit(EKeyboardButtonEvent.KEY_DOWN, props.defaultValue);
-
-    if(props.defaultValue === ESpecialButton.CAPS.toString()) {
-      isCapsClicked.value = !isCapsClicked.value;
-      return;
+    case ESpecialButton.SHIFT.toString():
+    case ESpecialButton.SHIFT_LEFT.toString():
+    case ESpecialButton.SHIFT_RIGHT.toString(): {
+      if (isCapsClicked.value) {
+        return;
+      }
+      emit(EKeyboardButtonEvent.SHIFT_CLICKED);
+      break;
     }
-
-    if(props.defaultValue === ESpecialButton.ALT.toString()
-      || props.defaultValue === ESpecialButton.ALT_LEFT.toString()
-      || props.defaultValue === ESpecialButton.ALT_RIGHT.toString()) {
-      isAltClicked.value = !isAltClicked.value;
+    default: {
+      emit(EKeyboardButtonEvent.KEY_DOWN, props.defaultValue);
     }
-  };
+  }
+  buttonClass.value = `${buttonClass.value} hg-activeButton`;
+};
 
-  const onKeyUp = (evt: Event): void => {
-    evt.preventDefault();
-    sendButtonEventDebugMessage(`KeyboardButton - ${EKeyboardButtonEvent.KEY_UP}: ${props.defaultValue}`, evt);
-
-    emit(EKeyboardButtonEvent.KEY_UP, props.defaultValue);
-
-    if(props.defaultValue !== ESpecialButton.CAPS.toString()
-      && props.defaultValue !== ESpecialButton.ALT.toString()
-      && props.defaultValue !== ESpecialButton.ALT_LEFT.toString()
-      && props.defaultValue !== ESpecialButton.ALT_RIGHT.toString()) {
+const onKeyUp = (evt: Event): void => {
+  evt.preventDefault();
+  sendButtonEventDebugMessage(`KeyboardButton - ${EKeyboardButtonEvent.KEY_UP}: ${props.defaultValue}`, evt);
+  emit(EKeyboardButtonEvent.KEY_UP, props.defaultValue);
+  switch (props.defaultValue) {
+    case ESpecialButton.ALT:
+    case ESpecialButton.ALT_LEFT:
+    case ESpecialButton.ALT_RIGHT: {
+      if (isAltClicked.value) {
+        return;
+      }
       buttonClass.value = getButtonClass();
-      return;
+      break;
     }
-    if(props.defaultValue === ESpecialButton.CAPS.toString() && !isCapsClicked.value) {
+    case ESpecialButton.CAPS: {
+      if (isCapsClicked.value) {
+        return;
+      }
       buttonClass.value = getButtonClass();
-      return;
+      break;
     }
-
-    if((props.defaultValue === ESpecialButton.ALT.toString()
-      || props.defaultValue === ESpecialButton.ALT_LEFT.toString()
-      || props.defaultValue === ESpecialButton.ALT_RIGHT.toString())
-      && !isAltClicked.value) {
+    // case ESpecialButton.CTRL:
+    // case ESpecialButton.CTRL_LEFT:
+    // case ESpecialButton.CTRL_RIGHT:
+    case ESpecialButton.SHIFT:
+    case ESpecialButton.SHIFT_LEFT:
+    case ESpecialButton.SHIFT_RIGHT: {
+      if (isShiftClicked.value) {
+        return;
+      }
+      buttonClass.value = getButtonClass();
+      break;
+    }
+    default: {
       buttonClass.value = getButtonClass();
     }
-  };
+  }
+};
 </script>
 
 <style lang="scss"></style>

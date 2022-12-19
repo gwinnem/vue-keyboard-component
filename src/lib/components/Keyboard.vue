@@ -1,12 +1,32 @@
 <template>
-  <input
-    ref="keyboardInput"
-    class="keyboard-input"
-    placeholder="Start typing now !"
-    style="margin-top: 50px;"
-    @keydown="onInputKeyDown" />
-  <div class="hg-theme-default hg-layout-default">
+  <div class="hg-theme-default hg-layout-default keyboard keyboard-border">
     <div class="hg-rows">
+      <div class="hb-row">
+        <div class="selectBox">
+          Select Keyboard language:
+          <select
+            v-model="layoutName"
+            @change="changeLayout">
+            <option value="default">
+              Default
+            </option>
+            <option v-for="layout in selectValues" :value="layout.name">
+              {{ layout.title }}
+            </option>
+          </select>
+          <span style="float: right">lfkgj</span>
+        </div>
+      </div>
+      <div class="hb-row">
+        <input
+          ref="keyboardInput"
+          v-model="inputValue"
+          class="keyboard-input"
+          placeholder="Start typing now !"
+          style="margin-top: 50px;"
+          @focus="onInputFocus"
+          @keydown="onInputKeyDown"/>
+      </div>
       <div
         v-for="(row, rowIndex) in keyboardPreview"
         :key="rowIndex"
@@ -16,246 +36,973 @@
           v-for="(button, buttonIndex) in getRowOfButtons(row)"
           :key="buttonIndex"
           :button-value="button"
+          :debug-events="false"
           :default-value="button"
-          :debug="true"
-          :display="defaultDisplay.display"
-          :is-alt-pressed="false"
-          :is-shift-pressed="false"
-          :shift-value="button"
-          @onButtonClick="onClick" />
+          :display="keyboardDisplay"
+          :is-alt-clicked="isAltClicked"
+          :is-caps-clicked="isCapsClicked"
+          :is-ctrl-clicked="isCtrlClicked"
+          :is-shift-clicked="isShiftClicked"
+          @onAltClicked="onAltClicked"
+          @onBackspaceClicked="onBackspaceClicked"
+          @onButtonClick="onClick"
+          @onCapsClicked="onCapsClicked"
+          @onCtrlClicked="onCtrlClicked"
+          @onShiftClicked="onShiftClicked"/>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { ref, watch } from 'vue';
-  import KeyboardButton from './KeyboardButton.vue';
-  import { ILayoutItem } from '../../core/interfaces/layout.interfaces';
-  import * as defaultLayout from '../../core/layouts/default';
-  import * as defaultDisplay from '../../core/keyboard-layouts/default-keyboard';
-  import { ESpecialButton } from '../../core/enums/KeyboardSpecialButton.enum';
-  import { EKeyboardLayoutType } from '../../core/enums/keyboardLayoutTypes.enum';
-  import {IDisplay} from "../../core/interfaces/display.interfaces";
+import {nextTick, ref, watch} from 'vue';
+import KeyboardButton from './KeyboardButton.vue';
+import {ILayoutItem} from '../../core/interfaces/layout.interfaces';
+import * as defaultLayout from '../../core/layouts/default';
+import * as defaultDisplay from '../../core/keyboard-layouts/default-keyboard';
+import * as selectValuesFromFile from '../../core/ms-keyboards/ms-layouts.select';
+import {ESpecialButton} from '../../core/enums/KeyboardSpecialButton.enum';
+import {EKeyboardLayoutType} from '../../core/enums/keyboardLayoutTypes.enum';
+import {IDisplay} from '../../core/interfaces/display.interfaces';
+import {ISelect} from "../../core/interfaces/select.interfaces";
+import * as keyboardLayout from "../../core/";
 
-  interface IKeyboardProps {
-    debug?: boolean;
-    debugEvents?: boolean;
-    excludeFromLayout?: string[];
-    includeInLayout?: string[];
-    keyBoardDisplay?: IDisplay;
-    keyboardLayout?: ILayoutItem;
-    showLayoutSelector: boolean;
+interface IKeyboardProps {
+  debug?: boolean;
+  debugEvents?: boolean;
+  disableTab?: boolean;
+  excludeFromLayout?: string[];
+  includeInLayout?: string[];
+  keyboardLayout?: ILayoutItem;
+  keyBoardTranslation?: IDisplay;
+  showLayoutSelector?: boolean;
+  theme?: string;
+  usePhysicalKeyboard?: boolean;
+}
+
+const props = withDefaults(defineProps<IKeyboardProps>(), {
+  debug: false,
+  debugEvents: false,
+  disableTab: true,
+  excludeFromLayout: undefined,
+  includeInLayout: undefined,
+  keyboardLayout: undefined,
+  keyBoardTranslation: undefined,
+  showLayoutSelector: false,
+  theme: ``,
+  usePhysicalKeyboard: false,
+});
+
+const inputValue = ref(``);
+
+const sendDebugMessage = (msg: string, obj?: object | string): void => {
+  if (!props.debug) {
+    return;
+  }
+  console.debug(msg, obj);
+};
+
+const onInputKeyDown = (evt: KeyboardEvent): void => {
+  evt.preventDefault();
+  if (!props.usePhysicalKeyboard) {
+    return;
+  }
+  switch (evt.code) {
+    case `Caps`:
+    case `Delete`:
+    case `Shift`:
+    case `ShiftLeft`:
+    case `ShiftRight`:
+    case `Alt`:
+    case `AltLeft`:
+    case `AltRight`:
+    case `Control`:
+    case `ControlLeft`:
+    case `ControlRight`:
+    case `Context`:
+    case `MetaLeft`:
+    case `MetaRight`: {
+      break;
+    }
+    default: {
+      inputValue.value += evt.key;
+    }
+  }
+  sendDebugMessage(`Keyboard - onInputKeyDown`, evt);
+};
+
+const onInputFocus = (evt: FocusEvent) => {
+  evt.preventDefault();
+  sendDebugMessage(`Keyboard - onInputFocus`, evt);
+};
+
+const layout = ref<ILayoutItem>(defaultLayout.default);
+if (props.keyboardLayout) {
+  layout.value = props.keyboardLayout;
+} else {
+  throw new Error(`keyboard layout not defined`);
+}
+
+const layoutName = ref(`default`);
+const selectValues: ISelect[] = selectValuesFromFile.default;
+
+const keyboardDisplay = ref<IDisplay | undefined>(defaultDisplay.display);
+if (layout.value.display) {
+  keyboardDisplay.value = layout.value.display;
+}
+
+const getKeyboardLayout = (value: string): string[] => {
+  sendDebugMessage(`Keyboard - getKeyboardDisplay`, value);
+
+  if (layout.value.display) {
+    keyboardDisplay.value = layout.value.display;
+  } else {
+    keyboardDisplay.value = defaultDisplay.display;
+  }
+  switch (value) {
+    case EKeyboardLayoutType.DEFAULT: {
+      return layout.value.layout.default;
+    }
+    case EKeyboardLayoutType.SHIFT: {
+      if (layout.value.layout.shift) {
+        return layout.value.layout.shift;
+      }
+      return layout.value.layout.default;
+    }
+    case EKeyboardLayoutType.ALT: {
+      if (layout.value.layout.alt) {
+        return layout.value.layout.alt;
+      }
+      return layout.value.layout.default;
+    }
+    case EKeyboardLayoutType.ALT_SHIFT: {
+      if (layout.value.layout.altShift) {
+        return layout.value.layout.altShift;
+      }
+      return layout.value.layout.default;
+    }
+    default: {
+      return layout.value.layout.default;
+    }
+  }
+};
+
+const keyboardPreview = ref<string[]>();
+const layoutType = ref(EKeyboardLayoutType.DEFAULT);
+
+keyboardPreview.value = getKeyboardLayout(layoutType.value);
+
+const changeLayout = (): void => {
+  switch (layoutName.value) {
+    case `msAlbanian`: {
+      layout.value = keyboardLayout.msAlbanian.default;
+      break;
+    }
+    case `msArabic101`: {
+      layout.value = keyboardLayout.msArabic101.default;
+      break;
+    }
+    case `msArabic102`: {
+      layout.value = keyboardLayout.msArabic102.default;
+      break;
+    }
+    case `msArabic102Azerty`: {
+      layout.value = keyboardLayout.msArabic102Azerty.default;
+      break;
+    }
+    case `msArmenianEastern`: {
+      layout.value = keyboardLayout.msArmenianEastern.default;
+      break;
+    }
+    case `msArmenianWestern`: {
+      layout.value = keyboardLayout.msArmenianWestern.default;
+      break;
+    }
+    case `msAssameseInscript`: {
+      layout.value = keyboardLayout.msAssameseInscript.default;
+      break;
+    }
+    case `msAzeriCyrillic`: {
+      layout.value = keyboardLayout.msAzeriCyrillic.default;
+      break;
+    }
+    case `msAzeriLatin`: {
+      layout.value = keyboardLayout.msAzeriLatin.default;
+      break;
+    }
+    case `msBashir`: {
+      layout.value = keyboardLayout.msBashir.default;
+      break;
+    }
+    case `msBosnianCyrillic`: {
+      layout.value = keyboardLayout.msBosnianCyrillic.default;
+      break;
+    }
+    case `msBelarusian`: {
+      layout.value = keyboardLayout.msBelarusian.default;
+      break;
+    }
+    case `msBelgianComma`: {
+      layout.value = keyboardLayout.msBelgianComma.default;
+      break;
+    }
+    case `msBelgianFrench`: {
+      layout.value = keyboardLayout.msBelgianFrench.default;
+      break;
+    }
+    case `msBengali`: {
+      layout.value = keyboardLayout.msBengali.default;
+      break;
+    }
+    case `msBengaliInscript`: {
+      layout.value = keyboardLayout.msBengaliInscript.default;
+      break;
+    }
+    case `msBulgarianPhoneticTraditional`: {
+      layout.value = keyboardLayout.msBulgarianPhoneticTraditional.default;
+      break;
+    }
+    case `msBulgarianPhonetic`: {
+      layout.value = keyboardLayout.msBulgarianPhonetic.default;
+      break;
+    }
+    case `msBulgarianTypewriter`: {
+      layout.value = keyboardLayout.msBulgarianTypewriter.default;
+      break;
+    }
+    case `msCanadianFrench`: {
+      layout.value = keyboardLayout.msCanadianFrench.default;
+      break;
+    }
+    case `msCanadianFrenchLegacy`: {
+      layout.value = keyboardLayout.msCanadianFrenchLegacy.default;
+      break;
+    }
+    case `msCanadianMultilingual`: {
+      layout.value = keyboardLayout.msCanadianMultilingual.default;
+      break;
+    }
+    case `msChineseBopomofo`: {
+      layout.value = keyboardLayout.msChineseBopomofo.default;
+      break;
+    }
+    case `msChineseChaJei`: {
+      layout.value = keyboardLayout.msChineseChaJei.default;
+      break;
+    }
+    case `msCzech`: {
+      layout.value = keyboardLayout.msCzech.default;
+      break;
+    }
+    case `msCzechQwerty`: {
+      layout.value = keyboardLayout.msCzechQwerty.default;
+      break;
+    }
+    case `msCzechProgrammers`: {
+      layout.value = keyboardLayout.msCzechProgrammers.default;
+      break;
+    }
+    case `msDanish`: {
+      layout.value = keyboardLayout.msDanish.default;
+      break;
+    }
+    case `msDevangariInscript`: {
+      layout.value = keyboardLayout.msDevangariInscript.default;
+      break;
+    }
+    case `msDivehiPhonetic`: {
+      layout.value = keyboardLayout.msDivehiPhonetic.default;
+      break;
+    }
+    case `msDivehiTypewriter`: {
+      layout.value = keyboardLayout.msDivehiTypewriter.default;
+      break;
+    }
+    case `msDutch`: {
+      layout.value = keyboardLayout.msDutch.default;
+      break;
+    }
+    case `msEstonian`: {
+      layout.value = keyboardLayout.msEstonian.default;
+      break;
+    }
+    case `msFinlandSwedenSamiExtended`: {
+      layout.value = keyboardLayout.msFinlandSwedenSamiExtended.default;
+      break;
+    }
+    case `msFinnish`: {
+      layout.value = keyboardLayout.msFinnish.default;
+      break;
+    }
+    case `msFaeroese`: {
+      layout.value = keyboardLayout.msFaeroese.default;
+      break;
+    }
+    case `msFrench`: {
+      layout.value = keyboardLayout.msFrench.default;
+      break;
+    }
+    case `msGaelic`: {
+      layout.value = keyboardLayout.msGaelic.default;
+      break;
+    }
+    case `msGeorgian`: {
+      layout.value = keyboardLayout.msGeorgian.default;
+      break;
+    }
+    case `msGeorgianErgonomic`: {
+      layout.value = keyboardLayout.msGeorgianErgonomic.default;
+      break;
+    }
+    case `msGeorgianQwerty`: {
+      layout.value = keyboardLayout.msGeorgianQwerty.default;
+      break;
+    }
+    case `msGerman`: {
+      layout.value = keyboardLayout.msGerman.default;
+      break;
+    }
+    case `msGreek`: {
+      layout.value = keyboardLayout.msGreek.default;
+      break;
+    }
+    case `msGreekLatin`: {
+      layout.value = keyboardLayout.msGreekLatin.default;
+      break;
+    }
+    case `msGreek220`: {
+      layout.value = keyboardLayout.msGreek220.default;
+      break;
+    }
+    case `msGreekLatin220`: {
+      layout.value = keyboardLayout.msGreekLatin220.default;
+      break;
+    }
+    case `msGreek319`: {
+      layout.value = keyboardLayout.msGreek319.default;
+      break;
+    }
+    case `msGreekLatin319`: {
+      layout.value = keyboardLayout.msGreekLatin319.default;
+      break;
+    }
+    case `msGreekPolytonic`: {
+      layout.value = keyboardLayout.msGreekPolytonic.default;
+      break;
+    }
+    case `msGreenLandic`: {
+      layout.value = keyboardLayout.msGreenlandic.default;
+      break;
+    }
+    case `msGujarati`: {
+      layout.value = keyboardLayout.msGujarati.default;
+      break;
+    }
+    case `msHausa`: {
+      layout.value = keyboardLayout.msHausa.default;
+      break;
+    }
+    case `msHebrew`: {
+      layout.value = keyboardLayout.msHebrew.default;
+      break;
+    }
+    case `msHindi`: {
+      layout.value = keyboardLayout.msHindi.default;
+      break;
+    }
+    case `msHungarian`: {
+      layout.value = keyboardLayout.msHungarian.default;
+      break;
+    }
+    case `msHungarian101`: {
+      layout.value = keyboardLayout.msHungarian101.default;
+      break;
+    }
+    case `msIcelandic`: {
+      layout.value = keyboardLayout.msIcelandic.default;
+      break;
+    }
+    case `msIgbo`: {
+      layout.value = keyboardLayout.msIgbo.default;
+      break;
+    }
+    case `msInuktitutLatin`: {
+      layout.value = keyboardLayout.msInuktitutLatin.default;
+      break;
+    }
+    case `msInuktitutNagittaut`: {
+      layout.value = keyboardLayout.msInuktitutNagittaut.default;
+      break;
+    }
+    case `msIrish`: {
+      layout.value = keyboardLayout.msIrish.default;
+      break;
+    }
+    case `msItalian`: {
+      layout.value = keyboardLayout.msItalian.default;
+      break;
+    }
+    case `msJapaneseEnglishFullWidth`: {
+      layout.value = keyboardLayout.msJapaneseEnglishFullWidth.default;
+      break;
+    }
+    case `msJapaneseEnglishHalfWidth`: {
+      layout.value = keyboardLayout.msJapaneseEnglishHalfWidth.default;
+      break;
+    }
+    case `msJapaneseHiragana`: {
+      layout.value = keyboardLayout.msJapaneseHiragana.default;
+      break;
+    }
+    case `msJapaneseKatakanaFullWidth`: {
+      layout.value = keyboardLayout.msJapaneseKatakanaFullWidth.default;
+      break;
+    }
+    case `msJapaneseKatakanaHalfWidth`: {
+      layout.value = keyboardLayout.msJapaneseKatakanaHalfWidth.default;
+      break;
+    }
+    case `msKannada`: {
+      layout.value = keyboardLayout.msKannada.default;
+      break;
+    }
+    case `msKazakh`: {
+      layout.value = keyboardLayout.msKazakh.default;
+      break;
+    }
+    case `msKorean`: {
+      layout.value = keyboardLayout.msKorean.default;
+      break;
+    }
+    case `msKyrgyzCyrillic`: {
+      layout.value = keyboardLayout.msKyrgyzCyrillic.default;
+      break;
+    }
+    case `msLao`: {
+      layout.value = keyboardLayout.msLao.default;
+      break;
+    }
+    case `msLatinAmerican`: {
+      layout.value = keyboardLayout.msLatinAmerican.default;
+      break;
+    }
+    case `msLatvian`: {
+      layout.value = keyboardLayout.msLatvian.default;
+      break;
+    }
+    case `msLatvianQwerty`: {
+      layout.value = keyboardLayout.msLatvianQwerty.default;
+      break;
+    }
+    case `msLithuanian`: {
+      layout.value = keyboardLayout.msLithuanian.default;
+      break;
+    }
+    case `msLithuanianIbm`: {
+      layout.value = keyboardLayout.msLithuanianIbm.default;
+      break;
+    }
+    case `msLithuanianStandard`: {
+      layout.value = keyboardLayout.msLithuanianStandard.default;
+      break;
+    }
+    case `msLuxembourgish`: {
+      layout.value = keyboardLayout.msLuxembourgish.default;
+      break;
+    }
+    case `msMacedonianFyrom`: {
+      layout.value = keyboardLayout.msMacedonianFyrom.default;
+      break;
+    }
+    case `msMacedonianFyromStandard`: {
+      layout.value = keyboardLayout.msMacedonianFyromStandard.default;
+      break;
+    }
+    case `msMalayalam`: {
+      layout.value = keyboardLayout.msMalayalam.default;
+      break;
+    }
+    case `msMaltese47Key`: {
+      layout.value = keyboardLayout.msMaltese47Key.default;
+      break;
+    }
+    case `msMaltese48Key`: {
+      layout.value = keyboardLayout.msMaltese48Key.default;
+      break;
+    }
+    case `msMaori`: {
+      layout.value = keyboardLayout.msMaori.default;
+      break;
+    }
+    case `msMarathi`: {
+      layout.value = keyboardLayout.msMarathi.default;
+      break;
+    }
+    case `msMongolianCyrillic`: {
+      layout.value = keyboardLayout.msMongolianCyrillic.default;
+      break;
+    }
+    case `msMongolianScript`: {
+      layout.value = keyboardLayout.msMongolianScript.default;
+      break;
+    }
+    case `msNepali`: {
+      layout.value = keyboardLayout.msNepali.default;
+      break;
+    }
+    case `msNorwegian`: {
+      layout.value = keyboardLayout.msNorwegian.default;
+      break;
+    }
+    case `msNorwegianSami`: {
+      layout.value = keyboardLayout.msNorwegianSami.default;
+      break;
+    }
+    case `msNorwegianSamiExtended`: {
+      layout.value = keyboardLayout.msNorwegianSamiExtended.default;
+      break;
+    }
+    case `msOriya`: {
+      layout.value = keyboardLayout.msOriya.default;
+      break;
+    }
+    case `msPashtoAfghanistan`: {
+      layout.value = keyboardLayout.msPashtoAfghanistan.default;
+      break;
+    }
+    case `msPersian`: {
+      layout.value = keyboardLayout.msPersian.default;
+      break;
+    }
+    case `msPolish214`: {
+      layout.value = keyboardLayout.msPolish214.default;
+      break;
+    }
+    case `msPolishProgrammers`: {
+      layout.value = keyboardLayout.msPolishProgrammers.default;
+      break;
+    }
+    case `msPortuguese`: {
+      layout.value = keyboardLayout.msPortuguese.default;
+      break;
+    }
+    case `msPortugueseBrazilian`: {
+      layout.value = keyboardLayout.msPortugueseBrazilian.default;
+      break;
+    }
+    case `msPunjabi`: {
+      layout.value = keyboardLayout.msPunjabi.default;
+      break;
+    }
+    case `msRomanianLegacy`: {
+      layout.value = keyboardLayout.msRomanianLegacy.default;
+      break;
+    }
+    case `msRomanianProgrammers`: {
+      layout.value = keyboardLayout.msRomanianProgrammers.default;
+      break;
+    }
+    case `msRomanianStandard`: {
+      layout.value = keyboardLayout.msRomanianStandard.default;
+      break;
+    }
+    case `msRussian`: {
+      layout.value = keyboardLayout.msRussian.default;
+      break;
+    }
+    case `msRussianTypewriter`: {
+      layout.value = keyboardLayout.msRussianTypewriter.default;
+      break;
+    }
+    case `msSerbianCyrillic`: {
+      layout.value = keyboardLayout.msSerbianCyrillic.default;
+      break;
+    }
+    case `msSerbianLatin`: {
+      layout.value = keyboardLayout.msSerbianLatin.default;
+      break;
+    }
+    case `msSetswana`: {
+      layout.value = keyboardLayout.msSetswana.default;
+      break;
+    }
+    case `msSetswanaSesotoSaLeboa`: {
+      layout.value = keyboardLayout.msSetswanaSesotoSaLeboa.default;
+      break;
+    }
+    case `msSinhala`: {
+      layout.value = keyboardLayout.msSinhala.default;
+      break;
+    }
+    case `msSinhalaWij9`: {
+      layout.value = keyboardLayout.msSinhalaWij9.default;
+      break;
+    }
+    case `msSlovakian`: {
+      layout.value = keyboardLayout.msSlovakian.default;
+      break;
+    }
+    case `msSlovakianQwerty`: {
+      layout.value = keyboardLayout.msSlovakianQwerty.default;
+      break;
+    }
+    case `msSlovenian`: {
+      layout.value = keyboardLayout.msSlovenian.default;
+      break;
+    }
+    case `msSorbianExtended`: {
+      layout.value = keyboardLayout.msSorbianExtended.default;
+      break;
+    }
+    case `msSorbianStandard`: {
+      layout.value = keyboardLayout.msSorbianStandard.default;
+      break;
+    }
+    case `msSorbianStandardLegacy`: {
+      layout.value = keyboardLayout.msSorbianStandardLegacy.default;
+      break;
+    }
+    case `msSpanish`: {
+      layout.value = keyboardLayout.msSpanish.default;
+      break;
+    }
+    case `msSpanishVariation`: {
+      layout.value = keyboardLayout.msSpanishVariation.default;
+      break;
+    }
+    case `msSwedish`: {
+      layout.value = keyboardLayout.msSwedish.default;
+      break;
+    }
+    case `msSwissGerman`: {
+      layout.value = keyboardLayout.msSwissGerman.default;
+      break;
+    }
+    case `msSyriac`: {
+      layout.value = keyboardLayout.msSyriac.default;
+      break;
+    }
+    case `msSyriacPhonetic`: {
+      layout.value = keyboardLayout.msSyriacPhonetic.default;
+      break;
+    }
+    case `msTajik`: {
+      layout.value = keyboardLayout.msTajik.default;
+      break;
+    }
+    case `msTamil`: {
+      layout.value = keyboardLayout.msTamil.default;
+      break;
+    }
+    case `msTatar`: {
+      layout.value = keyboardLayout.msTatar.default;
+      break;
+    }
+    case `msTelugu`: {
+      layout.value = keyboardLayout.msTelugu.default;
+      break;
+    }
+    case `msThaiKedmanee`: {
+      layout.value = keyboardLayout.msThaiKedmanee.default;
+      break;
+    }
+    case `msThaiPattachote`: {
+      layout.value = keyboardLayout.msThaiPattachote.default;
+      break;
+    }
+    case `msTibetanPrc`: {
+      layout.value = keyboardLayout.msTibetanPrc.default;
+      break;
+    }
+    case `msTurkishF`: {
+      layout.value = keyboardLayout.msTurkishF.default;
+      break;
+    }
+    case `msTurkishQ`: {
+      layout.value = keyboardLayout.msTurkishQ.default;
+      break;
+    }
+    case `msTurkmen`: {
+      layout.value = keyboardLayout.msTurkmen.default;
+      break;
+    }
+    case `msUkranian`: {
+      layout.value = keyboardLayout.msUkranian.default;
+      break;
+    }
+    case `msUkranianEnhanced`: {
+      layout.value = keyboardLayout.msUkranianEnhanced.default;
+      break;
+    }
+    case `msUnitedKingdom`: {
+      layout.value = keyboardLayout.msUnitedKingdom.default;
+      break;
+    }
+    case `msUrdu`: {
+      layout.value = keyboardLayout.msUrdu.default;
+      break;
+    }
+    case `msUsEnglishIBMArabic238L`: {
+      layout.value = keyboardLayout.msUsEnglishIBMArabic238L.default;
+      break;
+    }
+    case `msUsDvorak`: {
+      layout.value = keyboardLayout.msUsDvorak.default;
+      break;
+    }
+    case `msUsDvorakLeftHand`: {
+      layout.value = keyboardLayout.msUsDvorakLeftHand.default;
+      break;
+    }
+    case `msUsDvorakRightHand`: {
+      layout.value = keyboardLayout.msUsDvorakRightHand.default;
+      break;
+    }
+    case `msUsEnglishLatin`: {
+      layout.value = keyboardLayout.msUsEnglishLatin.default;
+      break;
+    }
+    case `msUsInternational`: {
+      layout.value = keyboardLayout.msUsInternational.default;
+      break;
+    }
+    case `msUyghur`: {
+      layout.value = keyboardLayout.msUyghur.default;
+      break;
+    }
+    case `msUyghurLegacy`: {
+      layout.value = keyboardLayout.msUyghurLegacy.default;
+      break;
+    }
+    case `msUzbekCyrillic`: {
+      layout.value = keyboardLayout.msUzbekCyrillic.default;
+      break;
+    }
+    case `msVietnamese`: {
+      layout.value = keyboardLayout.msVietnamese.default;
+      break;
+    }
+    case `msWolof`: {
+      layout.value = keyboardLayout.msWolof.default;
+      break;
+    }
+    case `msYakut`: {
+      layout.value = keyboardLayout.msYakut.default;
+      break;
+    }
+    case `msYoruba`: {
+      layout.value = keyboardLayout.msYoruba.default;
+      break;
+    }
+    case `default`: {
+      layout.value = keyboardLayout.defaultLayout.default;
+      break;
+    }
+    default: {
+      layout.value = keyboardLayout.defaultLayout.default;
+    }
+  }
+  if (layout.value.display) {
+    keyboardDisplay.value = layout.value.display;
+  }
+  keyboardPreview.value = getKeyboardLayout(EKeyboardLayoutType.DEFAULT);
+};
+
+sendDebugMessage(`Keyboard - keyboardPreview`, keyboardPreview.value);
+
+watch(() => props.keyboardLayout, newValue => {
+  if (newValue) {
+    layout.value = newValue;
+  }
+  keyboardPreview.value = getKeyboardLayout(EKeyboardLayoutType.DEFAULT);
+});
+
+const isAltClicked = ref(false);
+const isCapsClicked = ref(false);
+const isCtrlClicked = ref(false);
+const isShiftClicked = ref(false);
+
+/**
+ * Converts the row string to a string[]
+ * @param value {string} Space separated list of button types.
+ * @return string[] An array of buttons.
+ */
+const getRowOfButtons = (value: string): string[] => {
+  // sendDebugMessage(`Keyboard - getRowOfButtons`, value);
+  return value.split(` `);
+};
+
+const keyboardInput = ref<HTMLInputElement | null>(null);
+
+/**
+ * Event handlers for KeyboardButton events
+ */
+const onAltClicked = (): void => {
+  if (isCapsClicked.value) {
+    return;
+  }
+  isAltClicked.value = !isAltClicked.value;
+};
+
+const onBackspaceClicked = (): void => {
+  let el = keyboardInput.value;
+  if (el?.selectionStart === 0) {
+    return;
   }
 
-  const props = withDefaults(defineProps<IKeyboardProps>(), {
-    debug: false,
-    debugEvents: false,
-    excludeFromLayout: undefined,
-    includeInLayout: undefined,
-    keyBoardDisplay: undefined,
-    keyboardLayout: undefined,
-    showLayoutSelector: false,
-  });
+  if (el?.selectionStart === inputValue.value.length) {
+    inputValue.value = inputValue.value.substring(0, inputValue.value.length - 1);
+    return;
+  }
 
-  const sendDebugMessage = (msg: string, obj?: object | string): void => {
-    if(!props.debug) {
+  let start = el?.selectionStart;
+  let end = el?.selectionEnd;
+  let startString = ``;
+  let endString = ``;
+  if (start && start > 0) {
+    startString = inputValue.value.substring(0, start - 1);
+  }
+  if (end && end > 0) {
+    endString = inputValue.value.substring(end, inputValue.value.length);
+  }
+  inputValue.value = `${startString}${endString}`;
+  nextTick(() => {
+    if (start) {
+      el?.focus();
+      el?.setSelectionRange(start - 1, start - 1);
+    }
+  });
+}
+
+const onCapsClicked = (): void => {
+  if (isShiftClicked.value || isAltClicked.value) {
+    return;
+  }
+  isCapsClicked.value = !isCapsClicked.value;
+};
+
+const onCtrlClicked = (): void => {
+  isCtrlClicked.value = !isCtrlClicked.value;
+};
+
+const onShiftClicked = (): void => {
+  if (isCapsClicked.value) {
+    return;
+  }
+  isShiftClicked.value = !isShiftClicked.value;
+};
+
+/**
+ * Event handler for the KeyboardButton onButtonClick event.
+ * @param value {string}
+ */
+const onClick = (value: string): void => {
+  switch (value) {
+    case ESpecialButton.CAPS: {
+      if (isShiftClicked.value || isAltClicked.value) {
+        return;
+      }
+
+      if (isCapsClicked.value) {
+        layoutType.value = EKeyboardLayoutType.SHIFT;
+      } else {
+        layoutType.value = EKeyboardLayoutType.DEFAULT;
+      }
+      keyboardPreview.value = getKeyboardLayout(layoutType.value);
       return;
     }
-    console.debug(msg, obj);
-  }
-
-  const onInputKeyDown = (evt: Event): void => {
-    if(evt instanceof PointerEvent) {
+    case ESpecialButton.ALT:
+    case ESpecialButton.ALT_LEFT:
+    case ESpecialButton.ALT_RIGHT: {
+      if (isCapsClicked.value) {
+        return;
+      }
+      if (isAltClicked.value) {
+        layoutType.value = EKeyboardLayoutType.ALT;
+      } else {
+        layoutType.value = EKeyboardLayoutType.DEFAULT;
+      }
+      keyboardPreview.value = getKeyboardLayout(layoutType.value);
       return;
     }
-    sendDebugMessage(`Keyboard - onInputKeyDown`, evt)
-  };
-
-  const layout = ref<ILayoutItem>(defaultLayout.default);
-  if(props.keyboardLayout) {
-    layout.value = props.keyboardLayout;
+    case ESpecialButton.BACKSPACE: {
+      return;
+    }
+    case ESpecialButton.CTRL:
+    case ESpecialButton.CTRL_LEFT:
+    case ESpecialButton.CTRL_RIGHT: {
+      // TODO Implement at some later time
+      return;
+    }
+    case ESpecialButton.ENTER: {
+      // TODO complete this option
+      return;
+    }
+    case ESpecialButton.SHIFT:
+    case ESpecialButton.SHIFT_LEFT:
+    case ESpecialButton.SHIFT_RIGHT: {
+      if (isCapsClicked.value) {
+        return;
+      }
+      if (isAltClicked.value) {
+        layoutType.value = EKeyboardLayoutType.ALT_SHIFT;
+        keyboardPreview.value = getKeyboardLayout(layoutType.value);
+        return;
+      } else if (isShiftClicked.value) {
+        layoutType.value = EKeyboardLayoutType.SHIFT;
+      } else {
+        layoutType.value = EKeyboardLayoutType.DEFAULT;
+      }
+      keyboardPreview.value = getKeyboardLayout(layoutType.value);
+      return;
+    }
+    case ESpecialButton.TAB: {
+      if (props.disableTab) {
+        value = ``;
+      } else {
+        value = `  `;
+      }
+      break;
+    }
+    default: {
+      // We do nothing
+      break;
+    }
   }
-  const getKeyboardDisplay = (value: string): string[] => {
-    sendDebugMessage(`Keyboard - getKeyboardDisplay`, value);
-    switch(value) {
-      case EKeyboardLayoutType.DEFAULT: {
-        return layout.value.layout.default;
-      }
-      case EKeyboardLayoutType.SHIFT: {
-        if(layout.value.layout.shift) {
-          return layout.value.layout.shift;
-        }
-        return layout.value.layout.default;
-      }
-      case EKeyboardLayoutType.ALT: {
-        if(layout.value.layout.alt) {
-          return layout.value.layout.alt;
-        }
-        return layout.value.layout.default;
-      }
-      case EKeyboardLayoutType.ALT_SHIFT: {
-        if(layout.value.layout.altShift){
-          return layout.value.layout.altShift;
-        }
-        return layout.value.layout.default;
-      }
-      default: {
-        return layout.value.layout.default;
-      }
-    }
-  };
-  const keyboardPreview = ref<string[]>();
-  const layoutType = ref(EKeyboardLayoutType.DEFAULT);
-  keyboardPreview.value = getKeyboardDisplay(layoutType.value);
-  sendDebugMessage(`Keyboard - keyboardPreview`, keyboardPreview.value);
 
-  watch(() => props.keyboardLayout, (newValue) => {
-    if(newValue) {
-      layout.value = newValue;
-    }
-    keyboardPreview.value = getKeyboardDisplay(EKeyboardLayoutType.DEFAULT);
-  });
-  const isShiftClicked = ref(false);
-  const isCapsClicked = ref(false);
-  const isAltClicked = ref(false);
+  if (value === ESpecialButton.SPACE.toString()) {
+    value = ` `;
+  }
 
-  /**
-   * Converts the row string to a string[]
-   * @param value {string} Space separated list of button types.
-   * @return string[] An array of buttons.
-   */
-  const getRowOfButtons = (value: string): string[] => {
-    sendDebugMessage(`Keyboard - getRowOfButtons`, value);
-    return value.split(` `);
-  };
+  let el = keyboardInput.value;
+  if (el?.selectionStart === inputValue.value.length) {
+    inputValue.value = `${inputValue.value}${value}`;
+    return;
+  }
 
-  /**
-   * Event handler for the KeyboardButton onButtonClick event.
-   * @param value {string}
-   */
-  const onClick = (value: string): void => {
-    switch(value) {
-      case ESpecialButton.CAPS: {
-        isCapsClicked.value = !isCapsClicked.value;
-        if(isCapsClicked.value) {
-          layoutType.value = EKeyboardLayoutType.SHIFT;
-        } else {
-          layoutType.value = EKeyboardLayoutType.DEFAULT;
-        }
-        keyboardPreview.value = getKeyboardDisplay(layoutType.value);
-        break;
+  let start = el?.selectionStart;
+  if (start) {
+    let startString = inputValue.value.substring(0, start);
+    let endString = inputValue.value.substring(start, inputValue.value.length);
+    inputValue.value = `${startString}${value}${endString}`;
+    nextTick(() => {
+      if (start) {
+        el?.focus();
+        el?.setSelectionRange(start + 1, start + 1);
       }
-      case ESpecialButton.SHIFT:
-      case ESpecialButton.SHIFT_LEFT:
-      case ESpecialButton.SHIFT_RIGHT: {
-        isShiftClicked.value = !isShiftClicked.value;
-        if(isShiftClicked.value) {
-          layoutType.value = EKeyboardLayoutType.SHIFT;
-        } else {
-          layoutType.value = EKeyboardLayoutType.DEFAULT;
-        }
-        keyboardPreview.value = getKeyboardDisplay(layoutType.value);
-        break;
-      }
-      case ESpecialButton.ALT:
-      case ESpecialButton.ALT_LEFT:
-      case ESpecialButton.ALT_RIGHT: {
-        isAltClicked.value = !isAltClicked.value;
-        if(isAltClicked.value) {
-          layoutType.value = EKeyboardLayoutType.ALT;
-        } else {
-          layoutType.value = EKeyboardLayoutType.DEFAULT;
-        }
-        keyboardPreview.value = getKeyboardDisplay(layoutType.value);
-        break;
-      }
-      case ESpecialButton.CTRL:
-      case ESpecialButton.CTRL_LEFT:
-      case ESpecialButton.CTRL_RIGHT: {
-        // TODO Implement at some later time
-        break;
-      }
-      default: {
-        // We do nothing
-      }
-    }
-  };
+    });
+  }
+};
 </script>
 
 <style lang="scss">
 @import "../../css/Keyboard.css";
+@import "../../css/buttons.css";
+@import "../../css/select.scss";
+@import "../../css/scrollbar.scss";
 
-/*
-  Styling function buttons
-*/
-.hg-button-alt {
-  max-width: 70px;
-}
-
-.hg-button-altleft {
-  max-width: 70px;
-}
-
-.hg-button-altright {
-  max-width: 70px;
-}
-
-.hg-button-ctrl {
-  max-width: 80px;
-}
-
-.hg-button-ctrlleft {
-  max-width: 80px;
-}
-
-.hg-button-ctrlleft span {
-  text-align: left;
-  width: 100%;
-}
-
-.hg-button-ctrlright {
-  max-width: 80px;
-}
-
-.hg-button-ctrlright span {
-  text-align: right;
-  width: 100%;
-}
-
-.hg-button-shift {
-  max-width: 70px;
-  min-width: 60px;
-}
-
-.hg-button-shiftleft {
-  max-width: 70px;
-  min-width: 60px;
-}
-
-.hg-button-shiftleft span {
-  text-align: left;
-  width: 100%;
-}
-
-.hg-button-shiftright {
-  max-width: 80px;
-  min-width: 70px;
-}
-
-.hg-button-shiftright span {
-  text-align: right;
-  width: 100%;
-}
-
-.hg-button-tab {
-  max-width: 90px;
-  min-width: 80px;
-}
-
-.hg-button-tab span {
-  text-align: left;
-  width: 100%;
+.selectBox {
+  margin: 10px;
 }
 
 /*
@@ -263,7 +1010,23 @@
 */
 .darkTheme {
   background-color: rgba(0, 0, 0, 0.8);
-  border-radius: 0 0 5px 5px;
+}
+
+.darkTheme, .keyboard-input {
+  background-color: #696666;
+  border-bottom: 3px solid #726e6e;
+  color: #FFFFFF;
+}
+
+.darkTheme .keyboard-border {
+  border: 3px solid #e0dada;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.darkTheme, .selectText {
+  color: white;
+  font-size: 1em;
 }
 
 .darkTheme .hg-button {
@@ -275,11 +1038,51 @@
   justify-content: center;
 }
 
-.darkTheme .hg-button.hg-activeButton {
-  background: #1c4995;
+.darkTheme .hg-button:hover {
+  background-color: #e2e2e8;
+  color: black;
 }
+
+.darkTheme .hg-button.hg-activeButton {
+  background: #58749f;
+}
+
 .darkTheme .hg-button.hg-button-hold {
   background: #ffffff;
   color: black;
+}
+
+@media (min-width: 480px) {
+  .hg-theme-default button.hg-button {
+    font-size: 0.8em;
+    height: 20px;
+    width: 15px;
+  }
+}
+
+@media (min-width: 640px) {
+  .hg-theme-default button.hg-button {
+    height: 25px;
+    width: 20px;
+  }
+
+  .hg-button-caps {
+    min-width: 50px !important;
+  }
+
+  .hg-button-enter {
+    min-width: 50px !important;
+  }
+
+  .hg-button-tab {
+    width: 40px !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .hg-theme-default button.hg-button {
+    height: 35px;
+    width: 30px;
+  }
 }
 </style>

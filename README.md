@@ -1,23 +1,23 @@
 # Vue Keyboard Component
 A virtual keyboard built with VUE 3 and VITE
 
-[Inspired by simple-keyboard by Francisco Hedge](https://hodgef.com/simple-keyboard/)
+Inspired from simple-keyboard by [Francisco Hedge](https://hodgef.com/simple-keyboard/) and
+from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.html)
 
 ### Dark mode example with Pashto keyboard
-<p align="center">
-  <img alt="dark mode keyboard" src="./docs/images/dark-mode-keyboard.png" />
-</p>
+<img alt="dark mode keyboard" src="./docs/images/dark-mode-keyboard.png" />
 
-### ✏ New Features:
+### ✏ Features:
 
-- Add layout option alt.
-- Add layout option alt - shift.
+- TBD
 
 ### 📔 TODO's:
 
+- Add option for theme switching to Keyboard.
+- Move language selection to Keyboard component and a props for displaying it.
+- Restyle buttons and theme.
+- Move all inline css to css file.
 - Create new documentation.
-- Add support for layout option alt 
-- Add support for layout option altShift.
 
 
 ### 📚 Documentation
@@ -46,9 +46,9 @@ Contributions are always welcome!
 [Create a new issue or report a bug.](https://github.com/gwinnem/vue-virtual-keyboard/issues)
 
 
-## Donate
+## 💲 Donate
 <a href="https://paypal.me/gwinnem/">
-    <img src="paypal-images/blue.svg" height="40">
+    <img alt="donate" src="paypal-images/blue.svg" height="40">
 </a>
 
 If you enjoyed this project — or just feeling generous, consider buying me a beer. Cheers! :beers:

@@ -1,0 +1,32 @@
+$glass: rgba(255, 255, 255, 0.2);
+$glass-icon: rgba(255, 255, 255, 0.3);
+$gradient: linear-gradient(35deg, red, purple);
+
+/* <select> styles */
+select {
+  appearance: none;
+  background: url("../../public/assets/chevron.png") no-repeat right 0.8em center / 1.4em, linear-gradient(to left, $glass-icon 1em, $glass 1em);
+  border: 0;
+  border-radius: 0.25em;
+  color: black;
+  cursor: pointer;
+  box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
+  font: inherit;
+  font-size: 1em;
+  height: 1.8em;
+  outline: 0;
+  padding: 0 4em 0 1em;
+
+  option {
+    color: inherit;
+    background-color: #e0dada;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &::-ms-expand {
+    display: none;
+  }
+}

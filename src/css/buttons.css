@@ -1,0 +1,75 @@
+/*
+  Styling function buttons
+*/
+.hg-button-alt {
+    max-width: 70px;
+}
+
+.hg-button-altleft {
+    max-width: 70px;
+}
+
+.hg-button-altright {
+    max-width: 70px;
+}
+
+.hg-button-ctrl {
+    max-width: 80px;
+}
+
+.hg-button-ctrlleft {
+    max-width: 80px;
+}
+
+.hg-button-ctrlleft span {
+    text-align: left;
+    width: 100%;
+}
+
+.hg-button-ctrlright {
+    max-width: 80px;
+}
+
+.hg-button-ctrlright span {
+    text-align: right;
+    width: 100%;
+}
+
+.hg-button-shift {
+    max-width: 70px;
+    min-width: 60px;
+}
+
+.hg-button-shiftleft {
+    max-width: 70px;
+    min-width: 60px;
+}
+
+.hg-button-shiftleft span {
+    text-align: left;
+    width: 100%;
+}
+
+.hg-button-shiftright {
+    max-width: 70px;
+    min-width: 60px;
+}
+
+.hg-button-shiftright span {
+    text-align: right;
+    width: 100%;
+}
+
+.hg-button-tab {
+    max-width: 90px;
+    text-align: left;
+}
+
+.hg-button-tab span {
+    text-align: left;
+    width: 100%;
+}
+
+.hg-button-space {
+    max-width: 100% !important;
+}

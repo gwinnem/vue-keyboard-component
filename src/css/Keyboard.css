@@ -45,12 +45,6 @@
   width: 99%;
 }
 
-/*.ui-widget-content {*/
-/*  border: 1px solid #dddddd;*/
-/*  background: #eeeeee url("images/ui-bg_highlight-soft_100_eeeeee_1x100.png") 50% top repeat-x;*/
-/*  color: #333333;*/
-/*}*/
-
 .hg-theme-default .selectText {
   color: black;
   font-size: 1em;
@@ -77,8 +71,13 @@
 }
 
 .hg-theme-default .hg-button:hover {
-  background-color: #1c4995;
-  color: white;
+  border: 1px solid #fbcb09;
+  font-weight: bold;
+}
+
+.hg-theme-default .hg-button:hover span{
+  font-weight: bold;
+  color: #c77405;
 }
 
 .hg-theme-default .hg-row {
@@ -112,7 +111,7 @@
   border-radius: 4px;
   box-sizing: border-box;
   padding: 5px;
-  background: white;
+  background: #dad7d7;
   border-bottom: 3px solid #b5b5b5;
   cursor: pointer;
   display: flex;
@@ -125,16 +124,13 @@
   width: 20px;
 }
 
-.hg-theme-default .hg-button.hg-activeButton {
-  background: #1481b4;
+.hg-button.hg-activeButton {
+  background: #ffffff;
+  color: black !important;
+  font-weight: bold;
 }
 
-.hg-theme-default .hg-button.hg-button-hold {
-  background: #0f4b67;
-  color: whitesmoke;
-}
-
-.hg-theme-default .hg-button.hg-selectedButton {
-  background: rgba(5, 25, 70, 0.53);
-  color: white;
+.hg-button.hg-activeButton span {
+  color: black;
+  font-weight: bold;
 }

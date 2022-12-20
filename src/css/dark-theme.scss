@@ -35,7 +35,7 @@
   font-size: 1em;
 }
 
-.dark-theme button.hg-button {
+.dark-theme button.keyboard-button {
   align-items: center;
   background: rgba(0, 0, 0, 0.5);
   color: white;
@@ -44,16 +44,16 @@
   justify-content: center;
 }
 
-.dark-theme button.hg-button:hover {
+.dark-theme button.keyboard-button:hover {
   background-color: #e2e2e8;
   color: black;
 }
 
-.dark-theme button.hg-button.hg-activeButton {
+.dark-theme button.keyboard-button.hg-activeButton {
   background: #58749f;
 }
 
-.dark-theme button.hg-button.hg-button-hold {
+.dark-theme button.keyboard-button.keyboard-button-hold {
   background: #ffffff;
   color: black;
 }

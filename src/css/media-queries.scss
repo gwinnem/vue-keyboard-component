@@ -1,5 +1,5 @@
 @media (min-width: 480px) {
-  .keyboard button.hg-button {
+  .keyboard button.keyboard-button {
     font-size: 0.8em;
     height: 20px;
     width: 15px;
@@ -7,26 +7,26 @@
 }
 
 @media (min-width: 640px) {
-  button.hg-button {
+  button.keyboard-button {
     height: 25px;
     width: 20px;
   }
 
-  .hg-button-caps {
+  .keyboard-button-caps {
     min-width: 50px !important;
   }
 
-  .hg-button-enter {
+  .keyboard-button-enter {
     min-width: 50px !important;
   }
 
-  .hg-button-tab {
+  .keyboard-button-tab {
     width: 40px !important;
   }
 }
 
 @media (min-width: 1200px) {
-  .keyboard button.hg-button {
+  .keyboard button.keyboard-button {
     height: 35px;
     width: 30px;
   }

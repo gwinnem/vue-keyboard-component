@@ -92,10 +92,10 @@
     let buttonNormalized = ``;
 
     if(buttonTypeClass !== `standardBtn`) {
-      buttonNormalized = ` hg-button-${buttonWithoutBraces}`;
+      buttonNormalized = ` keyboard-button-${buttonWithoutBraces}`;
     }
 
-    return `hg-button hg-${buttonTypeClass}${buttonNormalized}`;
+    return `keyboard-button hg-${buttonTypeClass}${buttonNormalized}`;
   };
 
   const isAltClicked = ref(props.isAltClicked);

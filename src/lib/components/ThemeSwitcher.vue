@@ -3,7 +3,7 @@
     <input
       v-model="isDarkMode"
       id="themeSwitch"
-      type="checkbox" />
+      type="checkbox"/>
     <label
       for="themeSwitch"
       class="toggle">
@@ -31,19 +31,23 @@ const emit = defineEmits<{
 }>();
 
 const isDarkMode = ref(props.initialMode);
-if(props.useLocalStorage) {
-  if(localStorage.getItem('theme-switcher-value')) {
-    isDarkMode.value = localStorage.getItem('theme-switcher-value') !== `light-mode`;
+if (props.useLocalStorage) {
+  if (localStorage.getItem('theme-switcher-value')) {
+    const mode = localStorage.getItem('theme-switcher-value');
+    isDarkMode.value = mode !== `light-mode`;
+    if (mode) {
+      emit('themeSwitched', mode);
+    }
   }
 }
 
 watch(() => isDarkMode.value, newValue => {
   isDarkMode.value = newValue;
   let emitValue = `light-mode`;
-  if(isDarkMode.value) {
+  if (isDarkMode.value) {
     emitValue = `dark-mode`;
   }
-  if(props.useLocalStorage) {
+  if (props.useLocalStorage) {
     localStorage.setItem('theme-switcher-value', emitValue);
   }
   emit('themeSwitched', emitValue);

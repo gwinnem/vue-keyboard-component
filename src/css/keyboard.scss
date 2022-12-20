@@ -2,20 +2,20 @@
  * Theme: hg-theme-default
  */
 
-.hg-theme-default ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+.keyboard ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: black;
   font-size: 0.8em;
   font-weight: bolder;
   opacity: 1; /* Firefox */
 }
 
-.hg-theme-default ::-ms-input-placeholder { /* Microsoft Edge */
+.keyboard ::-ms-input-placeholder { /* Microsoft Edge */
   color: black;
   font-size: 0.8em;
   font-weight: bolder;
 }
 
-.hg-theme-default {
+.keyboard {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #ececec;
@@ -29,85 +29,56 @@
   z-index: 16001;
 }
 
-.hg-rows {
-  margin-left: 3px;
-  margin-right: 3px;
-}
-.hg-theme-default, .keyboard-border {
+.keyboard, .keyboard-border {
   border: 3px solid #dddddd;
   border-radius: 5px;
 }
 
-.hg-theme-default .keyboard-input {
+.keyboard .keyboard-input {
   background-color: white;
   border-bottom: 3px solid #726e6e;
-  border-radius: 4px;
+  border-radius: 5px;
   color: black;
   font-size: 1.2em;
   height: 40px;
-  margin-bottom: 15px;
-  margin-top: 10px;
-  width: 99%;
+  margin: 5px 3px 5px 3px;
+  width: 100%;
 }
 
-.hg-theme-default .selectText {
+.keyboard .selectText {
   color: black;
   font-size: 1em;
 }
 
-.hg-theme-default button.hg-button span {
+.keyboard button.hg-button span {
   color: #1c94c4;
   font-weight: bolder;
   pointer-events: none;
 }
-.hg-theme-default button.hg-button {
+.keyboard button.hg-button {
   border-radius: 4px;
   border-bottom: 3px solid #726e6e;
   font-size: 1em;
   overflow: hidden;
 }
 
-.hg-theme-default button.hg-button {
+.keyboard button.hg-button {
   display: inline-block;
   flex-grow: 1;
   cursor: pointer;
 }
 
-.hg-theme-default button.hg-button:hover {
+.keyboard button.hg-button:hover {
   border: 1px solid #fbcb09;
   font-weight: bold;
 }
 
-.hg-theme-default button.hg-button:hover span{
+.keyboard button.hg-button:hover span{
   font-weight: bold;
   color: #c77405;
 }
 
-.hg-theme-default .hg-row {
-  display: flex;
-}
-
-.hg-theme-default .hg-row:not(:last-child) {
-  margin-bottom: 5px;
-}
-
-.hg-theme-default .hg-row .hg-button:not(:last-child) {
-  margin-right: 5px;
-}
-
-.hg-theme-default .hg-row .hg-button-container {
-  margin-right: 5px;
-}
-
-.hg-theme-default .hg-row > div:last-child {
-  margin-right: 0;
-}
-
-.hg-theme-default .hg-row .hg-button-container {
-  display: flex;
-}
-
-.hg-theme-default button.hg-button {
+.keyboard button.hg-button {
   align-items: center;
   background: #dad7d7;
   border-bottom: 3px solid #b5b5b5;

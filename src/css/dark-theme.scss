@@ -1,28 +1,41 @@
 /*
-  Theme: darkTheme
+  Theme: dark-theme
 */
-.darkTheme {
+.dark-theme {
   background-color: rgba(0, 0, 0, 0.8);
 }
 
-.darkTheme, .keyboard-input {
+.dark-theme ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: white;
+  font-size: 0.8em;
+  font-weight: bolder;
+  opacity: 1; /* Firefox */
+}
+
+.dark-theme ::-ms-input-placeholder { /* Microsoft Edge */
+  color: black;
+  font-size: 0.8em;
+  font-weight: bolder;
+}
+
+.dark-theme .keyboard-input {
   background-color: #696666;
   border-bottom: 3px solid #726e6e;
   color: #FFFFFF;
 }
 
-.darkTheme .keyboard-border {
+.dark-theme .keyboard-border {
   border: 3px solid #e0dada;
   border-radius: 5px;
   padding: 5px;
 }
 
-.darkTheme, .selectText {
+.dark-theme, .selectText {
   color: white;
   font-size: 1em;
 }
 
-.darkTheme button.hg-button {
+.dark-theme button.hg-button {
   align-items: center;
   background: rgba(0, 0, 0, 0.5);
   color: white;
@@ -31,16 +44,16 @@
   justify-content: center;
 }
 
-.darkTheme button.hg-button:hover {
+.dark-theme button.hg-button:hover {
   background-color: #e2e2e8;
   color: black;
 }
 
-.darkTheme button.hg-button.hg-activeButton {
+.dark-theme button.hg-button.hg-activeButton {
   background: #58749f;
 }
 
-.darkTheme button.hg-button.hg-button-hold {
+.dark-theme button.hg-button.hg-button-hold {
   background: #ffffff;
   color: black;
 }

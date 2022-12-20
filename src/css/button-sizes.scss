@@ -1,19 +1,34 @@
 /*
   Styling function buttons
 */
-.hg-button-alt {
+button.hg-button-alt {
     max-width: 70px;
 }
 
-.hg-button-altleft {
+.hg-button-alt span {
+    text-align: center;
+    width: 100%;
+}
+
+button.hg-button-altleft {
     max-width: 70px;
 }
 
-.hg-button-altright {
+.hg-button-altleft span {
+    text-align: center;
+    width: 100%;
+}
+
+button.hg-button-altright {
     max-width: 70px;
 }
 
-.hg-button-ctrl {
+.hg-button-altright span {
+    text-align: center;
+    width: 100%;
+}
+
+button.hg-button-ctrl {
     max-width: 80px;
 }
 
@@ -22,7 +37,7 @@
     width: 100%;
 }
 
-.hg-button-ctrlleft {
+button.hg-button-ctrlleft {
     max-width: 80px;
 }
 
@@ -43,6 +58,11 @@
 .hg-button-shift {
     max-width: 70px;
     min-width: 60px;
+}
+
+.hg-button-shift span {
+    text-align: left;
+    width: 100%;
 }
 
 .hg-button-shiftleft {

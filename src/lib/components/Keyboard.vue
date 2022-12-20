@@ -1,10 +1,10 @@
 <template>
   <div :class="mainCss">
-    <div class="hg-rows">
+    <div class="keyboard-rows">
       <div
         v-if="showLayoutSelector"
-        class="hb-row">
-        <div class="selectBox">
+        class="keyboard-row--first-row">
+        <div class="select-theme-switcher">
           Select Keyboard language:
           <select
             v-model="layoutName"
@@ -18,17 +18,17 @@
               {{ item.title }}
             </option>
           </select>
-          <div
+          <span
             v-if="props.enableThemeSwitcher"
             class="theme-switcher">
             <ThemeSwitcher
               :initial-state="true"
               :use-local-storage="true"
               @theme-switched="switchTheme"/>
-          </div>
+          </span>
         </div>
       </div>
-      <div class="hb-row">
+      <div class="keyboard-row">
         <input
           ref="keyboardInput"
           v-model="inputValue"
@@ -40,7 +40,7 @@
       <div
         v-for="(row, rowIndex) in keyboardPreview"
         :key="rowIndex"
-        class="hg-row"
+        class="keyboard-row"
         :data-layout-type="layoutType">
         <KeyboardButton
           v-for="(button, buttonIndex) in getRowOfButtons(row)"
@@ -124,7 +124,7 @@ const switchTheme = (value: string): void => {
   }
   sendDebugMessage(`switchTheme`, value);
   if (value === `dark-mode`) {
-    mainCss.value = `${orgCss} darkTheme`;
+    mainCss.value = `${orgCss} dark-theme`;
   } else {
     mainCss.value = orgCss;
   }
@@ -1028,18 +1028,19 @@ const onClick = (value: string): void => {
 
 <style lang="scss">
 @import "../../css/keyboard";
+@import "../../css/keyboard-rows";
 @import "../../css/dark-theme";
 @import "../../css/button-sizes";
 @import "../../css/select";
 @import "../../css/scrollbar";
 @import "../../css/media-queries";
 
-.selectBox {
-  margin: 10px;
+.select-theme-switcher {
+  margin: 15px 5px 0 5px;
 }
 
 .theme-switcher {
-  float: right;
+  float: right !important;
   margin-top: 3px;
 }
 </style>

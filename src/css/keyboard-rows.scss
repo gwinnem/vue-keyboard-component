@@ -1,0 +1,21 @@
+.keyboard-rows {
+  margin-left: 3px;
+  margin-right: 3px;
+}
+
+.keyboard-row {
+  display: flex;
+  width: 100%;
+}
+
+.keyboard-row--first-row {
+  justify-items: right;
+}
+
+.keyboard-row:not(:last-child) {
+  margin-bottom: 5px;
+}
+
+.keyboard-row .hg-button:not(:last-child) {
+  margin-right: 5px;
+}

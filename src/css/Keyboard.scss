@@ -41,7 +41,8 @@
   color: black;
   font-size: 1.2em;
   height: 40px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  margin-top: 10px;
   width: 99%;
 }
 
@@ -50,7 +51,7 @@
   font-size: 1em;
 }
 
-.hg-theme-default .hg-button span {
+.hg-theme-default button.hg-button span {
   color: #1c94c4;
   font-weight: bolder;
   pointer-events: none;
@@ -64,18 +65,18 @@
   overflow: hidden;
 }
 
-.hg-theme-default .hg-button {
+.hg-theme-default button.hg-button {
   display: inline-block;
   flex-grow: 1;
   cursor: pointer;
 }
 
-.hg-theme-default .hg-button:hover {
+.hg-theme-default button.hg-button:hover {
   border: 1px solid #fbcb09;
   font-weight: bold;
 }
 
-.hg-theme-default .hg-button:hover span{
+.hg-theme-default button.hg-button:hover span{
   font-weight: bold;
   color: #c77405;
 }
@@ -104,7 +105,7 @@
   display: flex;
 }
 
-.hg-theme-default .hg-button {
+.hg-theme-default button.hg-button {
   box-shadow: 0 0 3px -1px rgba(0, 0, 0, 0.3);
   height: 37px;
   width: 35px;
@@ -120,17 +121,16 @@
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-.hg-theme-default .hg-button.hg-standardBtn {
-  width: 20px;
-}
+/*.hg-theme-default .hg-button.hg-standardBtn {*/
+/*  width: 20px;*/
+/*}*/
 
-.hg-button.hg-activeButton {
+button.hg-button.hg-activeButton {
   background: #ffffff;
-  color: black !important;
-  font-weight: bold;
 }
 
-.hg-button.hg-activeButton span {
+button.hg-button.hg-activeButton span {
   color: black;
-  font-weight: bold;
+  font-size: 1.2em;
+  font-weight: bolder;
 }

@@ -15,13 +15,13 @@
 </template>
 
 <script lang="ts" setup>
-import {ref} from 'vue';
-import Keyboard from '../src/lib/components/Keyboard.vue';
-import * as keyboardLayout from '../src/core';
-import {ILayoutItem} from '../src/core/interfaces/layout.interfaces';
+  import { ref } from 'vue';
+  import Keyboard from '../src/lib/components/Keyboard.vue';
+  import * as keyboardLayout from '../src/core';
+  import { ILayoutItem } from '../src/core/interfaces/layout.interfaces';
 
-// const isKeyboardOpen = ref<boolean>(true);
-const layout = ref<ILayoutItem>(keyboardLayout.defaultLayout.default);
+  // const isKeyboardOpen = ref<boolean>(true);
+  const layout = ref<ILayoutItem>(keyboardLayout.defaultLayout.default);
 
 // const onKeyPress = (button: string): void => {
 //   if(button === `{enter}`) {

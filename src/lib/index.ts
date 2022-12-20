@@ -1,4 +1,4 @@
-import SimpleKeyboard from './components/Keyboard';
+import Keyboard from './components/Keyboard.vue';
 
-export { SimpleKeyboard };
-export default SimpleKeyboard;
+export { Keyboard };
+export default Keyboard;

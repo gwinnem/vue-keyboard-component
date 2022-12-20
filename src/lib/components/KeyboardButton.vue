@@ -73,6 +73,25 @@ watch(() => props.isShiftClicked, newValue => {
   isShiftClicked.value = newValue;
 });
 
+const sendButtonEventDebugMessage = (msg: string, evt: Event): void => {
+  if (!props.debugEvents) return;
+
+  if (evt instanceof KeyboardEvent && (evt as KeyboardEvent).key === props.defaultValue) {
+    // eslint-disable-next-line no-console
+    console.debug(msg, (evt as KeyboardEvent));
+    return;
+  }
+  if (evt instanceof MouseEvent) {
+    // eslint-disable-next-line no-console
+    console.debug(msg, (evt as MouseEvent));
+    return;
+  }
+  if (evt instanceof PointerEvent) {
+    // eslint-disable-next-line no-console
+    console.debug(msg, (evt as PointerEvent));
+  }
+};
+
 /**
  * Retrieve button type
  *
@@ -114,25 +133,6 @@ const getButtonDisplayValue = (value: string): string => {
 /**
  * Event handlers
  */
-
-const sendButtonEventDebugMessage = (msg: string, evt: Event): void => {
-  if (!props.debugEvents) return;
-
-  if (evt instanceof KeyboardEvent && (evt as KeyboardEvent).key === props.defaultValue) {
-    // eslint-disable-next-line no-console
-    console.debug(msg, (evt as KeyboardEvent));
-    return;
-  }
-  if (evt instanceof MouseEvent) {
-    // eslint-disable-next-line no-console
-    console.debug(msg, (evt as MouseEvent));
-    return;
-  }
-  if (evt instanceof PointerEvent) {
-    // eslint-disable-next-line no-console
-    console.debug(msg, (evt as PointerEvent));
-  }
-};
 
 const onClick = (evt: Event): void => {
   evt.preventDefault();

@@ -1,12 +1,12 @@
 <template>
   <div class="toggleWrapper">
     <input
-      v-model="isDarkMode"
       id="themeSwitch"
-      type="checkbox"/>
+      v-model="isDarkMode"
+      type="checkbox" />
     <label
-      for="themeSwitch"
-      class="toggle">
+      class="toggle"
+      for="themeSwitch">
       <span class="toggle__handler"></span>
     </label>
   </div>
@@ -14,44 +14,44 @@
 
 <script lang="ts" setup>
 
-import {ref, watch} from "vue";
+  import { ref, watch } from 'vue';
 
-interface IProps {
-  initialMode: boolean;
-  useLocalStorage: boolean;
-}
+  interface IProps {
+    initialMode: boolean;
+    useLocalStorage: boolean;
+  }
 
-const props = withDefaults(defineProps<IProps>(), {
-  initialMode: false,
-  useLocalStorage: false,
-});
+  const props = withDefaults(defineProps<IProps>(), {
+    initialMode: false,
+    useLocalStorage: false,
+  });
 
-const emit = defineEmits<{
-  (event: 'themeSwitched', value: string): void;
-}>();
+  const emit = defineEmits<{
+    (event: `themeSwitched`, value: string): void;
+  }>();
 
-const isDarkMode = ref(props.initialMode);
-if (props.useLocalStorage) {
-  if (localStorage.getItem('theme-switcher-value')) {
-    const mode = localStorage.getItem('theme-switcher-value');
-    isDarkMode.value = mode !== `light-mode`;
-    if (mode) {
-      emit('themeSwitched', mode);
+  const isDarkMode = ref(props.initialMode);
+  if(props.useLocalStorage) {
+    if(localStorage.getItem(`theme-switcher-value`)) {
+      const mode = localStorage.getItem(`theme-switcher-value`);
+      isDarkMode.value = mode !== `light-mode`;
+      if(mode) {
+        emit(`themeSwitched`, mode);
+      }
     }
   }
-}
 
-watch(() => isDarkMode.value, newValue => {
-  isDarkMode.value = newValue;
-  let emitValue = `light-mode`;
-  if (isDarkMode.value) {
-    emitValue = `dark-mode`;
-  }
-  if (props.useLocalStorage) {
-    localStorage.setItem('theme-switcher-value', emitValue);
-  }
-  emit('themeSwitched', emitValue);
-});
+  watch(() => isDarkMode.value, newValue => {
+    isDarkMode.value = newValue;
+    let emitValue = `light-mode`;
+    if(isDarkMode.value) {
+      emitValue = `dark-mode`;
+    }
+    if(props.useLocalStorage) {
+      localStorage.setItem(`theme-switcher-value`, emitValue);
+    }
+    emit(`themeSwitched`, emitValue);
+  });
 </script>
 
 <style lang="scss" scoped>

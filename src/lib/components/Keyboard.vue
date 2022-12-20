@@ -13,19 +13,19 @@
               Default
             </option>
             <option
-              v-for="layout in selectValues"
-              :value="layout.name">
-              {{ layout.title }}
+              v-for="item in selectValues"
+              :value="item.name">
+              {{ item.title }}
             </option>
           </select>
-          <span
+          <div
             v-if="props.enableThemeSwitcher"
-            style="float: right">
+            class="theme-switcher">
             <ThemeSwitcher
               :initial-state="true"
               :use-local-storage="true"
               @theme-switched="switchTheme"/>
-          </span>
+          </div>
         </div>
       </div>
       <div class="hb-row">
@@ -67,6 +67,7 @@
 <script lang="ts" setup>
 import {nextTick, ref, watch} from 'vue';
 import KeyboardButton from './KeyboardButton.vue';
+import ThemeSwitcher from './ThemeSwitcher.vue';
 import {ILayoutItem} from '../../core/interfaces/layout.interfaces';
 import * as defaultLayout from '../../core/layouts/default';
 import * as defaultDisplay from '../../core/keyboard-layouts/default-keyboard';
@@ -74,19 +75,18 @@ import * as selectValuesFromFile from '../../core/ms-keyboards/ms-layouts.select
 import {ESpecialButton} from '../../core/enums/KeyboardSpecialButton.enum';
 import {EKeyboardLayoutType} from '../../core/enums/keyboardLayoutTypes.enum';
 import {IDisplay} from '../../core/interfaces/display.interfaces';
-import {ISelect} from "../../core/interfaces/select.interfaces";
-import * as keyboardLayout from "../../core/";
-import ThemeSwitcher from "./ThemeSwitcher.vue";
+import {ISelect} from '../../core/interfaces/select.interfaces';
+import * as keyboardLayout from '../../core';
 
 interface IKeyboardProps {
   debug?: boolean;
   debugEvents?: boolean;
   disableTab?: boolean;
-  enableThemeSwitcher: boolean;
+  enableThemeSwitcher?: boolean;
   excludeFromLayout?: string[];
   includeInLayout?: string[];
   keyboardLayout?: ILayoutItem;
-  keyBoardTranslation?: IDisplay;
+  keyboardTranslation?: IDisplay;
   showLayoutSelector?: boolean;
   theme?: string;
   usePhysicalKeyboard?: boolean;
@@ -100,7 +100,7 @@ const props = withDefaults(defineProps<IKeyboardProps>(), {
   excludeFromLayout: undefined,
   includeInLayout: undefined,
   keyboardLayout: undefined,
-  keyBoardTranslation: undefined,
+  keyboardTranslation: undefined,
   showLayoutSelector: false,
   theme: ``,
   usePhysicalKeyboard: false,
@@ -109,16 +109,19 @@ const props = withDefaults(defineProps<IKeyboardProps>(), {
 const inputValue = ref(``);
 
 const sendDebugMessage = (msg: string, obj?: object | string): void => {
-  if (!props.debug) {
-    return;
+  if (props.debug) {
+    // eslint-disable-next-line no-console
+    console.debug(msg, obj);
   }
-  console.debug(msg, obj);
 };
 
 const orgCss = `hg-theme-default hg-layout-default keyboard keyboard-border`;
-const mainCss = ref<string>(`hg-theme-default hg-layout-default keyboard keyboard-border`)
+const mainCss = ref<string>(`hg-theme-default hg-layout-default keyboard keyboard-border`);
 
 const switchTheme = (value: string): void => {
+  if(!props.enableThemeSwitcher) {
+    return;
+  }
   sendDebugMessage(`switchTheme`, value);
   if (value === `dark-mode`) {
     mainCss.value = `${orgCss} darkTheme`;
@@ -156,7 +159,7 @@ const onInputKeyDown = (evt: KeyboardEvent): void => {
   sendDebugMessage(`Keyboard - onInputKeyDown`, evt);
 };
 
-const onInputFocus = (evt: FocusEvent) => {
+const onInputFocus = (evt: FocusEvent): void => {
   evt.preventDefault();
   sendDebugMessage(`Keyboard - onInputFocus`, evt);
   // TODO maybe remove this before publishing since it is not used.
@@ -871,15 +874,19 @@ const onAltClicked = (): void => {
 };
 
 const onBackspaceClicked = (): void => {
-  let el = keyboardInput.value;
+  const el = keyboardInput.value;
+
+  if (el?.selectionStart === 0 && inputValue.value.length === 0) {
+    return;
+  }
 
   if (el?.selectionStart === inputValue.value.length) {
     inputValue.value = inputValue.value.substring(0, inputValue.value.length - 1);
     return;
   }
 
-  let start = el?.selectionStart;
-  let end = el?.selectionEnd;
+  const start = el?.selectionStart;
+  const end = el?.selectionEnd;
   let startString = ``;
   let endString = ``;
   if (start && start > 0) {
@@ -895,7 +902,7 @@ const onBackspaceClicked = (): void => {
       el?.setSelectionRange(start - 1, start - 1);
     }
   });
-}
+};
 
 const onCapsClicked = (): void => {
   if (isShiftClicked.value || isAltClicked.value) {
@@ -971,7 +978,8 @@ const onClick = (value: string): void => {
         layoutType.value = EKeyboardLayoutType.ALT_SHIFT;
         keyboardPreview.value = getKeyboardLayout(layoutType.value);
         return;
-      } else if (isShiftClicked.value) {
+      }
+      if (isShiftClicked.value) {
         layoutType.value = EKeyboardLayoutType.SHIFT;
       } else {
         layoutType.value = EKeyboardLayoutType.DEFAULT;
@@ -997,16 +1005,16 @@ const onClick = (value: string): void => {
     value = ` `;
   }
 
-  let el = keyboardInput.value;
+  const el = keyboardInput.value;
   if (el?.selectionStart === inputValue.value.length) {
     inputValue.value = `${inputValue.value}${value}`;
     return;
   }
 
-  let start = el?.selectionStart;
+  const start = el?.selectionStart;
   if (start) {
-    let startString = inputValue.value.substring(0, start);
-    let endString = inputValue.value.substring(start, inputValue.value.length);
+    const startString = inputValue.value.substring(0, start);
+    const endString = inputValue.value.substring(start, inputValue.value.length);
     inputValue.value = `${startString}${value}${endString}`;
     nextTick(() => {
       if (start) {
@@ -1028,5 +1036,10 @@ const onClick = (value: string): void => {
 
 .selectBox {
   margin: 10px;
+}
+
+.theme-switcher {
+  float: right;
+  margin-top: 3px;
 }
 </style>

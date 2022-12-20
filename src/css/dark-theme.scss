@@ -22,7 +22,7 @@
   font-size: 1em;
 }
 
-.darkTheme .hg-button {
+.darkTheme button.hg-button {
   align-items: center;
   background: rgba(0, 0, 0, 0.5);
   color: white;
@@ -31,16 +31,16 @@
   justify-content: center;
 }
 
-.darkTheme .hg-button:hover {
+.darkTheme button.hg-button:hover {
   background-color: #e2e2e8;
   color: black;
 }
 
-.darkTheme .hg-button.hg-activeButton {
+.darkTheme button.hg-button.hg-activeButton {
   background: #58749f;
 }
 
-.darkTheme .hg-button.hg-button-hold {
+.darkTheme button.hg-button.hg-button-hold {
   background: #ffffff;
   color: black;
 }

@@ -51,26 +51,6 @@
     (event: EKeyboardButtonEvent.SHIFT_CLICKED): void;
   }>();
 
-  const isAltClicked = ref(props.isAltClicked);
-  watch(() => props.isAltClicked, newValue => {
-    isAltClicked.value = newValue;
-  });
-
-  const isCapsClicked = ref(props.isCapsClicked);
-  watch(() => props.isCapsClicked, newValue => {
-    isCapsClicked.value = newValue;
-  });
-
-  const isCtrlClicked = ref(props.isCtrlClicked);
-  watch(() => props.isCtrlClicked, newValue => {
-    isCtrlClicked.value = newValue;
-  });
-
-  const isShiftClicked = ref(props.isShiftClicked);
-  watch(() => props.isShiftClicked, newValue => {
-    isShiftClicked.value = newValue;
-  });
-
   const sendButtonEventDebugMessage = (msg: string, evt: Event): void => {
     if(!props.debugEvents) return;
 
@@ -117,6 +97,55 @@
 
     return `hg-button hg-${buttonTypeClass}${buttonNormalized}`;
   };
+
+  const isAltClicked = ref(props.isAltClicked);
+  watch(() => props.isAltClicked, newValue => {
+    isAltClicked.value = newValue;
+    if(isAltClicked.value
+      && (props.defaultValue === ESpecialButton.ALT.toString()
+        || props.defaultValue === ESpecialButton.ALT_LEFT.toString()
+        || props.defaultValue === ESpecialButton.ALT_RIGHT.toString())) {
+      buttonClass.value = `${buttonClass.value} hg-activeButton`;
+    } else {
+      buttonClass.value = getButtonClass();
+    }
+  });
+
+  const isCapsClicked = ref(props.isCapsClicked);
+  watch(() => props.isCapsClicked, newValue => {
+    isCapsClicked.value = newValue;
+    if(isCapsClicked.value && props.defaultValue === ESpecialButton.CAPS.toString()) {
+      buttonClass.value = `${buttonClass.value} hg-activeButton`;
+    } else {
+      buttonClass.value = getButtonClass();
+    }
+  });
+
+  const isCtrlClicked = ref(props.isCtrlClicked);
+  watch(() => props.isCtrlClicked, newValue => {
+    isCtrlClicked.value = newValue;
+    if(isCtrlClicked.value
+      && (props.defaultValue === ESpecialButton.CTRL.toString()
+        || props.defaultValue === ESpecialButton.CTRL_LEFT.toString()
+        || props.defaultValue === ESpecialButton.CTRL_RIGHT.toString())) {
+      buttonClass.value = `${buttonClass.value} hg-activeButton`;
+    } else {
+      buttonClass.value = getButtonClass();
+    }
+  });
+
+  const isShiftClicked = ref(props.isShiftClicked);
+  watch(() => props.isShiftClicked, newValue => {
+    isShiftClicked.value = newValue;
+    if(isShiftClicked.value
+      && (props.defaultValue === ESpecialButton.SHIFT.toString()
+        || props.defaultValue === ESpecialButton.SHIFT_LEFT.toString()
+        || props.defaultValue === ESpecialButton.SHIFT_RIGHT.toString())) {
+      buttonClass.value = `${buttonClass.value} hg-activeButton`;
+    } else {
+      buttonClass.value = getButtonClass();
+    }
+  });
 
   const buttonClass = ref(``);
   buttonClass.value = getButtonClass();
@@ -202,9 +231,15 @@
         buttonClass.value = getButtonClass();
         break;
       }
-      // case ESpecialButton.CTRL:
-      // case ESpecialButton.CTRL_LEFT:
-      // case ESpecialButton.CTRL_RIGHT:
+      case ESpecialButton.CTRL:
+      case ESpecialButton.CTRL_LEFT:
+      case ESpecialButton.CTRL_RIGHT: {
+        if(isCtrlClicked.value) {
+          return;
+        }
+        buttonClass.value = getButtonClass();
+        break;
+      }
       case ESpecialButton.SHIFT:
       case ESpecialButton.SHIFT_LEFT:
       case ESpecialButton.SHIFT_RIGHT: {

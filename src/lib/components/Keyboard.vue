@@ -23,7 +23,7 @@
             style="float: right">
             <ThemeSwitcher
               :initial-state="true"
-              :use-local-storage="false"
+              :use-local-storage="true"
               @theme-switched="switchTheme"/>
           </span>
         </div>
@@ -1020,6 +1020,7 @@ const onClick = (value: string): void => {
 
 <style lang="scss">
 @import "../../css/keyboard";
+@import "../../css/dark-theme";
 @import "../../css/button-sizes";
 @import "../../css/select";
 @import "../../css/scrollbar";
@@ -1027,52 +1028,5 @@ const onClick = (value: string): void => {
 
 .selectBox {
   margin: 10px;
-}
-
-/*
-  Theme: darkTheme
-*/
-.darkTheme {
-  background-color: rgba(0, 0, 0, 0.8);
-}
-
-.darkTheme, .keyboard-input {
-  background-color: #696666;
-  border-bottom: 3px solid #726e6e;
-  color: #FFFFFF;
-}
-
-.darkTheme .keyboard-border {
-  border: 3px solid #e0dada;
-  border-radius: 5px;
-  padding: 5px;
-}
-
-.darkTheme, .selectText {
-  color: white;
-  font-size: 1em;
-}
-
-.darkTheme .hg-button {
-  align-items: center;
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
-  display: flex;
-  height: 50px;
-  justify-content: center;
-}
-
-.darkTheme .hg-button:hover {
-  background-color: #e2e2e8;
-  color: black;
-}
-
-.darkTheme .hg-button.hg-activeButton {
-  background: #58749f;
-}
-
-.darkTheme .hg-button.hg-button-hold {
-  background: #ffffff;
-  color: black;
 }
 </style>

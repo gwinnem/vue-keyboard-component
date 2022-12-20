@@ -1,5 +1,5 @@
 <template>
-  <div class="hg-theme-default hg-layout-default keyboard keyboard-border">
+  <div :class="mainCss">
     <div class="hg-rows">
       <div
         v-if="showLayoutSelector"
@@ -12,11 +12,20 @@
             <option value="default">
               Default
             </option>
-            <option v-for="layout in selectValues" :value="layout.name">
+            <option
+              v-for="layout in selectValues"
+              :value="layout.name">
               {{ layout.title }}
             </option>
           </select>
-          <span style="float: right">Here comes the theme selector</span>
+          <span
+            v-if="props.enableThemeSwitcher"
+            style="float: right">
+            <ThemeSwitcher
+              :initial-state="true"
+              :use-local-storage="false"
+              @theme-switched="switchTheme"/>
+          </span>
         </div>
       </div>
       <div class="hb-row">
@@ -25,7 +34,6 @@
           v-model="inputValue"
           class="keyboard-input"
           placeholder="Start typing now !"
-          style="margin-top: 50px;"
           @focus="onInputFocus"
           @keydown="onInputKeyDown"/>
       </div>
@@ -68,11 +76,13 @@ import {EKeyboardLayoutType} from '../../core/enums/keyboardLayoutTypes.enum';
 import {IDisplay} from '../../core/interfaces/display.interfaces';
 import {ISelect} from "../../core/interfaces/select.interfaces";
 import * as keyboardLayout from "../../core/";
+import ThemeSwitcher from "./ThemeSwitcher.vue";
 
 interface IKeyboardProps {
   debug?: boolean;
   debugEvents?: boolean;
   disableTab?: boolean;
+  enableThemeSwitcher: boolean;
   excludeFromLayout?: string[];
   includeInLayout?: string[];
   keyboardLayout?: ILayoutItem;
@@ -86,6 +96,7 @@ const props = withDefaults(defineProps<IKeyboardProps>(), {
   debug: false,
   debugEvents: false,
   disableTab: true,
+  enableThemeSwitcher: true,
   excludeFromLayout: undefined,
   includeInLayout: undefined,
   keyboardLayout: undefined,
@@ -102,6 +113,18 @@ const sendDebugMessage = (msg: string, obj?: object | string): void => {
     return;
   }
   console.debug(msg, obj);
+};
+
+const orgCss = `hg-theme-default hg-layout-default keyboard keyboard-border`;
+const mainCss = ref<string>(`hg-theme-default hg-layout-default keyboard keyboard-border`)
+
+const switchTheme = (value: string): void => {
+  sendDebugMessage(`switchTheme`, value);
+  if (value === `dark-mode`) {
+    mainCss.value = `${orgCss} darkTheme`;
+  } else {
+    mainCss.value = orgCss;
+  }
 };
 
 const onInputKeyDown = (evt: KeyboardEvent): void => {
@@ -136,6 +159,7 @@ const onInputKeyDown = (evt: KeyboardEvent): void => {
 const onInputFocus = (evt: FocusEvent) => {
   evt.preventDefault();
   sendDebugMessage(`Keyboard - onInputFocus`, evt);
+  // TODO maybe remove this before publishing since it is not used.
 };
 
 const layout = ref<ILayoutItem>(defaultLayout.default);
@@ -848,9 +872,6 @@ const onAltClicked = (): void => {
 
 const onBackspaceClicked = (): void => {
   let el = keyboardInput.value;
-  if (el?.selectionStart === 0) {
-    return;
-  }
 
   if (el?.selectionStart === inputValue.value.length) {
     inputValue.value = inputValue.value.substring(0, inputValue.value.length - 1);
@@ -998,10 +1019,11 @@ const onClick = (value: string): void => {
 </script>
 
 <style lang="scss">
-@import "../../css/Keyboard.css";
-@import "../../css/button-sizes.css";
-@import "../../css/select.scss";
-@import "../../css/scrollbar.scss";
+@import "../../css/Keyboard";
+@import "../../css/button-sizes";
+@import "../../css/select";
+@import "../../css/scrollbar";
+@import "../../css/media-queries";
 
 .selectBox {
   margin: 10px;
@@ -1052,39 +1074,5 @@ const onClick = (value: string): void => {
 .darkTheme .hg-button.hg-button-hold {
   background: #ffffff;
   color: black;
-}
-
-@media (min-width: 480px) {
-  .hg-theme-default button.hg-button {
-    font-size: 0.8em;
-    height: 20px;
-    width: 15px;
-  }
-}
-
-@media (min-width: 640px) {
-  .hg-theme-default button.hg-button {
-    height: 25px;
-    width: 20px;
-  }
-
-  .hg-button-caps {
-    min-width: 50px !important;
-  }
-
-  .hg-button-enter {
-    min-width: 50px !important;
-  }
-
-  .hg-button-tab {
-    width: 40px !important;
-  }
-}
-
-@media (min-width: 1200px) {
-  .hg-theme-default button.hg-button {
-    height: 35px;
-    width: 30px;
-  }
 }
 </style>

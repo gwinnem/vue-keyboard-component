@@ -1019,7 +1019,7 @@ const onClick = (value: string): void => {
 </script>
 
 <style lang="scss">
-@import "../../css/Keyboard";
+@import "../../css/keyboard";
 @import "../../css/button-sizes";
 @import "../../css/select";
 @import "../../css/scrollbar";

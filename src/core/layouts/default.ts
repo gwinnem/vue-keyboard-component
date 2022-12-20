@@ -10,14 +10,14 @@ export default <ILayoutItem>{
       `{tab} q w e r t y u i o p [ ] #`,
       `{caps} a s d f g h j k l ; ' {enter}`,
       `{shift} \u005c z x c v b n m , . / {shift}`,
-      `{alt} {space} {alt}`,
+      `{ctrl} {alt} {space} {alt} {ctrl}`,
     ],
     shift: [
       `\u00ac ! \u0022 \u00a3 $ % ^ & * ( ) _ + {bksp}`,
       `{tab} Q W E R T Y U I O P { } ~`,
       `{caps} A S D F G H J K L : @ {enter}`,
       `{shift} | Z X C V B N M < > / {shift}`,
-      `{alt} {space} {alt}`,
+      `{ctrl} {alt} {space} {alt} {ctrl}`,
     ],
   },
 };

@@ -7,16 +7,17 @@ from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.h
 ### Dark mode example with Pashto keyboard
 <img alt="dark mode keyboard" src="./docs/images/dark-mode-keyboard.png" />
 
-### ✏ Features:
+### ✏ Upcoming Features:
 
-- TBD
+- Add support for physical keyboard.
+- Add full keyboard option.
+- Add numeric keyboard option.
+- Add possibility to style one or more buttons different from the rest.
+
 
 ### 📔 TODO's:
 
-- Add option for theme switching to Keyboard.
-- Move language selection to Keyboard component and a props for displaying it.
-- Restyle buttons and theme.
-- Move all inline css to css file.
+- Fix function button issues.
 - Create new documentation.
 
 
@@ -31,7 +32,8 @@ from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.h
 
 ### ⌨ Supported Layouts (150 different layouts)
 
-[Click to see the complete list.](./docs/keyboard-layouts.md)
+* [Click to see the complete list.](./docs/keyboard-layouts.md)
+* [Microsoft layout's.](https://learn.microsoft.com/en-us/globalization/windows-keyboard-layouts)
 
 ### 🔗 References
 
@@ -64,7 +66,7 @@ npm install
 #### Compiles and hot-reloads for development
 
 ```
-npm run serve
+npm run dev
 ```
 
 #### Compiles and minifies for production
@@ -73,7 +75,25 @@ npm run serve
 npm run build
 ```
 
-#### Lints and fixes files
+#### Lints code files
+
+```
+npm run lint
+```
+
+#### Lints style files
+
+```
+npm run lint:style
+```
+
+#### Fixes linting errors
+
+```
+npm run lint:fix
+```
+
+#### Formats files.
 
 ```
 npm run lint

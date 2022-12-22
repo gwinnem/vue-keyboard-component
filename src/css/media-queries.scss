@@ -1,33 +1,291 @@
-@media (min-width: 480px) {
+// X-Small devices (portrait phones, less than 576px)
+@media (max-width: 600px) {
+  $keyboard-font-size: 0.6em;
+
+  .keyboard ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    font-size: $keyboard-font-size;
+  }
+
+  .keyboard ::-ms-input-placeholder { /* Microsoft Edge */
+    font-size: $keyboard-font-size;
+  }
+
+  .keyboard .selectText {
+    font-size: $keyboard-font-size;
+  }
+
+  input.keyboard-input {
+    font-size: $keyboard-font-size;
+    height: 15px;
+  }
+
   .keyboard button.keyboard-button {
-    font-size: 0.8em;
-    height: 20px;
-    width: 15px;
+    border-radius: 3px;
+    font-size: $keyboard-font-size;
+    height: 15px;
+    width: 10px;
+  }
+
+  .keyboard button.keyboard-button-alt
+  .keyboard button.keyboard-button-altleft
+  .keyboard button.keyboard-button-altright {
+    width: 30px !important;
+  }
+
+  .keyboard-button-caps {
+    max-width: 25px !important;
+  }
+
+  .keyboard-button-ctrl
+  .keyboard-button-ctrlleft
+  .keyboard-button-ctrlright {
+    width: 25px !important;
+  }
+
+  .keyboard button.keyboard-button-enter {
+    width: 20px !important;
+  }
+
+  .keyboard-button-shift
+  .keyboard-button-shiftleft
+  .keyboard-button-shiftright {
+    width: 20px !important;
+  }
+
+  .keyboard button.keyboard-button-space {
+    width: 50% !important;
+  }
+
+  .keyboard-button-tab {
+    max-width: 25px !important;
+  }
+
+  select {
+    font-size: 0.6em;
   }
 }
 
-@media (min-width: 640px) {
-  button.keyboard-button {
+// Small devices (landscape phones, less than 768px)
+@media (min-width: 600px) {
+  $keyboard-font-size: 0.8em;
+
+  .keyboard ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    font-size: $keyboard-font-size;
+  }
+
+  .keyboard ::-ms-input-placeholder { /* Microsoft Edge */
+    font-size: $keyboard-font-size;
+  }
+
+  .keyboard .selectText {
+    font-size: $keyboard-font-size;
+  }
+
+  input.keyboard-input {
+    font-size: $keyboard-font-size;
+    height: 20px;
+  }
+
+  .keyboard button.keyboard-button {
+    border-radius: 6px;
+    font-size: $keyboard-font-size;
+    height: 20px;
+    width: 15px;
+  }
+
+  .keyboard button.keyboard-button-caps {
+    width: 30px !important;
+  }
+
+  .keyboard button.keyboard-button-ctrl
+  .keyboard button.keyboard-button-ctrlleft
+  .keyboard button.keyboard-button-ctrlright {
+    width: 50px !important;
+  }
+
+  .keyboard button.keyboard-button-enter {
+    width: 50px !important;
+  }
+
+  .keyboard button.keyboard-button-shift
+  .keyboard button.keyboard-button-shiftleft
+  .keyboard button.keyboard-button-shiftright {
+    width: 35px !important;
+  }
+
+  .keyboard button.keyboard-button-space {
+    width: 60% !important;
+  }
+
+  .keyboard button.keyboard-button-tab {
+    width: 30px !important;
+  }
+}
+
+// Medium devices (tablets, less than 992px)
+@media (min-width: 768px) {
+  $keyboard-font-size: 1em;
+
+  .keyboard ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    font-size: $keyboard-font-size;
+  }
+
+  .keyboard ::-ms-input-placeholder { /* Microsoft Edge */
+    font-size: $keyboard-font-size;
+  }
+
+  .keyboard .selectText {
+    font-size: $keyboard-font-size;
+  }
+
+  input.keyboard-input {
+    font-size: $keyboard-font-size;
+    height: 25px;
+  }
+
+  .keyboard button.keyboard-button {
+    border-radius: 8px;
+    font-size: $keyboard-font-size;
     height: 25px;
     width: 20px;
   }
 
-  .keyboard-button-caps {
-    min-width: 50px !important;
+  .keyboard button.keyboard-button-caps {
+    width: 30px !important;
   }
 
-  .keyboard-button-enter {
-    min-width: 50px !important;
+  .keyboard button.keyboard-button-ctrl
+  .keyboard button.keyboard-button-ctrlleft
+  .keyboard button.keyboard-button-ctrlright {
+    width: 50px !important;
   }
 
-  .keyboard-button-tab {
-    width: 40px !important;
+  .keyboard button.keyboard-button-enter {
+    width: 50px !important;
+  }
+
+  .keyboard button.keyboard-button-shift
+  .keyboard button.keyboard-button-shiftleft
+  .keyboard button.keyboard-button-shiftright {
+    width: 35px !important;
+  }
+
+  .keyboard button.keyboard-button-space {
+    width: 60% !important;
+  }
+
+  .keyboard button.keyboard-button-tab {
+    width: 30px !important;
   }
 }
 
-@media (min-width: 1200px) {
+
+// Large devices (desktops, less than 1200px)
+@media (min-width: 992px) {
+  $keyboard-font-size: 1.1em;
+
+  .keyboard ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    font-size: $keyboard-font-size;
+  }
+
+  .keyboard ::-ms-input-placeholder { /* Microsoft Edge */
+    font-size: $keyboard-font-size;
+  }
+
+  .keyboard .selectText {
+    font-size: $keyboard-font-size;
+  }
+
+  input.keyboard-input {
+    font-size: $keyboard-font-size;
+    height: 30px;
+  }
+
   .keyboard button.keyboard-button {
+    border-radius: 8px;
+    font-size: $keyboard-font-size;
+    height: 25px;
+    width: 20px;
+  }
+
+  .keyboard button.keyboard-button-caps {
+    width: 30px !important;
+  }
+
+  .keyboard button.keyboard-button-ctrl
+  .keyboard button.keyboard-button-ctrlleft
+  .keyboard button.keyboard-button-ctrlright {
+    width: 50px !important;
+  }
+
+  .keyboard button.keyboard-button-enter {
+    width: 50px !important;
+  }
+
+  .keyboard button.keyboard-button-shift
+  .keyboard button.keyboard-button-shiftleft
+  .keyboard button.keyboard-button-shiftright {
+    width: 35px !important;
+  }
+
+  .keyboard button.keyboard-button-space {
+    width: 60% !important;
+  }
+
+  .keyboard button.keyboard-button-tab {
+    width: 30px !important;
+  }
+}
+
+// X-Large devices (large desktops, less than 1400px)
+@media (min-width: 1200px) {
+  $keyboard-font-size: 1.2em;
+
+  .keyboard ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    font-size: $keyboard-font-size;
+  }
+
+  .keyboard ::-ms-input-placeholder { /* Microsoft Edge */
+    font-size: $keyboard-font-size;
+  }
+
+  .keyboard .selectText {
+    font-size: $keyboard-font-size;
+  }
+
+  input.keyboard-input {
+    font-size: $keyboard-font-size;
+    height: 40px;
+  }
+
+  .keyboard button.keyboard-button {
+    border-radius: 8px;
+    font-size: $keyboard-font-size;
     height: 35px;
     width: 30px;
+  }
+
+  .keyboard button.keyboard-button-caps {
+    min-width: 50px !important;
+  }
+
+  .keyboard button.keyboard-button-ctrl
+  .keyboard button.keyboard-button-ctrlleft
+  .keyboard button.keyboard-button-ctrlright {
+    min-width: 50px !important;
+  }
+
+  .keyboard button.keyboard-button-enter {
+    min-width: 50px !important;
+  }
+
+  .keyboard button.keyboard-button-shift
+  .keyboard button.keyboard-button-shiftleft
+  .keyboard button.keyboard-button-shiftright {
+    width: 40px !important;
+  }
+
+  .keyboard button.keyboard-button-tab {
+    width: 40px !important;
   }
 }

@@ -1,0 +1,41 @@
+/**
+ * Removing default button props.
+ */
+button {
+  border: transparent;
+}
+
+.keyboard button.keyboard-button {
+  align-items: center;
+  background-color: var(--keyboard-button-background-color);
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  flex-grow: 1;
+  font-size: var(--keyboard-font-size);
+  justify-content: center;
+  overflow: hidden;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.keyboard button.keyboard-button span {
+  color: var(--keyboard-button-color);
+}
+
+.keyboard button.keyboard-button:hover {
+  border: 1px solid var(--keyboard-button-hover-border-color);
+  background-color: var(--keyboard-button-hover-color);
+}
+
+.keyboard button.keyboard-button:hover span {
+  color: #db3b5c;
+}
+
+button.keyboard-button.activeButton {
+  background-color: var(--keyboard-button-activeButton-background-color);
+}
+
+button.keyboard-button.activeButton span {
+  color: black;
+  font-size: 1.1em;
+}

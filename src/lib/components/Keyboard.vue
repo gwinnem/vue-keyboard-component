@@ -5,27 +5,27 @@
         v-if="showLayoutSelector"
         class="keyboard-row--first-row">
         <div class="select-theme-switcher">
-          Select Keyboard language:
-          <select
-            v-model="layoutName"
-            @change="changeLayout">
-            <option value="default">
-              Default
-            </option>
-            <option
-              v-for="item in selectValues"
-              :value="item.name">
-              {{ item.title }}
-            </option>
-          </select>
-          <span
-            v-if="props.enableThemeSwitcher"
-            class="theme-switcher">
+          <div class="selectText">
+            Select Keyboard language:
+          </div>
+          <div>
+            <select
+              v-model="layoutName"
+              @change="changeLayout">
+              <option value="default">
+                Default
+              </option>
+              <option
+                v-for="item in selectValues"
+                :value="item.name">
+                {{ item.title }}
+              </option>
+            </select>
             <ThemeSwitcher
-              :initial-state="true"
-              :use-local-storage="true"
-              @theme-switched="switchTheme"/>
-          </span>
+              v-if="props.enableThemeSwitcher"
+              class="theme-switcher"
+              @on-theme-switched="switchTheme" />
+          </div>
         </div>
       </div>
       <div class="keyboard-row">
@@ -93,7 +93,7 @@ interface IKeyboardProps {
 }
 
 const props = withDefaults(defineProps<IKeyboardProps>(), {
-  debug: false,
+  debug: true,
   debugEvents: false,
   disableTab: true,
   enableThemeSwitcher: true,
@@ -115,18 +115,18 @@ const sendDebugMessage = (msg: string, obj?: object | string): void => {
   }
 };
 
-const orgCss = `hg-theme-default hg-layout-default keyboard keyboard-border`;
-const mainCss = ref<string>(`hg-theme-default hg-layout-default keyboard keyboard-border`);
+const orgCss = `keyboard`;
+const mainCss = ref<string>(`keyboard`);
 
 const switchTheme = (value: string): void => {
-  if(!props.enableThemeSwitcher) {
+  if (!props.enableThemeSwitcher) {
     return;
   }
   sendDebugMessage(`switchTheme`, value);
-  if (value === `dark-mode`) {
-    mainCss.value = `${orgCss} dark-theme`;
+  if (value === `dark`) {
+    mainCss.value = `${orgCss} dark`;
   } else {
-    mainCss.value = orgCss;
+    mainCss.value = `${orgCss} light`;
   }
 };
 
@@ -1027,13 +1027,14 @@ const onClick = (value: string): void => {
 </script>
 
 <style lang="scss">
-@import "../../css/keyboard";
-@import "../../css/keyboard-rows";
-@import "../../css/dark-theme";
-@import "../../css/button-sizes";
-@import "../../css/select";
-@import "../../css/scrollbar";
-@import "../../css/media-queries";
+@import '../../css/themes';
+@import '../../css/keyboard';
+@import '../../css/keyboard-button';
+@import '../../css/keyboard-rows';
+@import '../../css/button-sizes';
+@import '../../css/select';
+@import '../../css/scrollbar';
+@import '../../css/media-queries';
 
 .select-theme-switcher {
   margin: 15px 5px 0 5px;

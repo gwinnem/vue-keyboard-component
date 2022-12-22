@@ -1,9 +1,14 @@
 .keyboard-rows {
-  margin-left: 3px;
-  margin-right: 3px;
+  // display: inline-block;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 .keyboard-row {
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
   display: flex;
   width: 100%;
 }
@@ -13,9 +18,13 @@
 }
 
 .keyboard-row:not(:last-child) {
-  margin-bottom: 5px;
+  margin-bottom: 3px;
+}
+
+.keyboard-row:last-child {
+  margin-bottom: 10px;
 }
 
 .keyboard-row .keyboard-button:not(:last-child) {
-  margin-right: 5px;
+  margin-right: 3px;
 }

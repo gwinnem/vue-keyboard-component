@@ -95,7 +95,7 @@
       buttonNormalized = ` keyboard-button-${buttonWithoutBraces}`;
     }
 
-    return `keyboard-button hg-${buttonTypeClass}${buttonNormalized}`;
+    return `keyboard-button ${buttonTypeClass}${buttonNormalized}`;
   };
 
   const isAltClicked = ref(props.isAltClicked);
@@ -105,7 +105,7 @@
       && (props.defaultValue === ESpecialButton.ALT.toString()
         || props.defaultValue === ESpecialButton.ALT_LEFT.toString()
         || props.defaultValue === ESpecialButton.ALT_RIGHT.toString())) {
-      buttonClass.value = `${buttonClass.value} hg-activeButton`;
+      buttonClass.value = `${buttonClass.value} hactiveButton`;
     } else {
       buttonClass.value = getButtonClass();
     }
@@ -115,7 +115,7 @@
   watch(() => props.isCapsClicked, newValue => {
     isCapsClicked.value = newValue;
     if(isCapsClicked.value && props.defaultValue === ESpecialButton.CAPS.toString()) {
-      buttonClass.value = `${buttonClass.value} hg-activeButton`;
+      buttonClass.value = `${buttonClass.value} activeButton`;
     } else {
       buttonClass.value = getButtonClass();
     }
@@ -128,7 +128,7 @@
       && (props.defaultValue === ESpecialButton.CTRL.toString()
         || props.defaultValue === ESpecialButton.CTRL_LEFT.toString()
         || props.defaultValue === ESpecialButton.CTRL_RIGHT.toString())) {
-      buttonClass.value = `${buttonClass.value} hg-activeButton`;
+      buttonClass.value = `${buttonClass.value} activeButton`;
     } else {
       buttonClass.value = getButtonClass();
     }
@@ -141,7 +141,7 @@
       && (props.defaultValue === ESpecialButton.SHIFT.toString()
         || props.defaultValue === ESpecialButton.SHIFT_LEFT.toString()
         || props.defaultValue === ESpecialButton.SHIFT_RIGHT.toString())) {
-      buttonClass.value = `${buttonClass.value} hg-activeButton`;
+      buttonClass.value = `${buttonClass.value} activeButton`;
     } else {
       buttonClass.value = getButtonClass();
     }
@@ -207,7 +207,7 @@
         emit(EKeyboardButtonEvent.KEY_DOWN, props.defaultValue);
       }
     }
-    buttonClass.value = `${buttonClass.value} hg-activeButton`;
+    buttonClass.value = `${buttonClass.value} activeButton`;
   };
 
   const onKeyUp = (evt: Event): void => {

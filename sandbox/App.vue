@@ -5,7 +5,8 @@
       :debug-events="false"
       :enable-theme-switcher="true"
       :keyboard-layout="layout"
-      :show-layout-selector="true" />
+      :show-layout-selector="false"
+      :show-theme-switcher="true" />
   </div>
 </template>
 

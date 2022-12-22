@@ -1,15 +1,16 @@
 <template>
   <div :class="mainCss">
     <div class="keyboard-rows">
-      <div
-        v-if="showLayoutSelector"
-        class="keyboard-row--first-row">
+      <div class="keyboard-row--first-row">
         <div class="select-theme-switcher">
-          <div class="selectText">
+          <div
+            v-if="showLayoutSelector"
+            class="selectText">
             Select Keyboard language:
           </div>
           <div>
             <select
+              v-if="showLayoutSelector"
               v-model="layoutName"
               @change="changeLayout">
               <option value="default">
@@ -22,7 +23,7 @@
               </option>
             </select>
             <ThemeSwitcher
-              v-if="props.enableThemeSwitcher"
+              v-if="showThemeSwitcher"
               class="theme-switcher"
               @on-theme-switched="switchTheme" />
           </div>
@@ -82,12 +83,12 @@ interface IKeyboardProps {
   debug?: boolean;
   debugEvents?: boolean;
   disableTab?: boolean;
-  enableThemeSwitcher?: boolean;
   excludeFromLayout?: string[];
   includeInLayout?: string[];
   keyboardLayout?: ILayoutItem;
   keyboardTranslation?: IDisplay;
   showLayoutSelector?: boolean;
+  showThemeSwitcher?: boolean;
   theme?: string;
   usePhysicalKeyboard?: boolean;
 }
@@ -96,13 +97,12 @@ const props = withDefaults(defineProps<IKeyboardProps>(), {
   debug: true,
   debugEvents: false,
   disableTab: true,
-  enableThemeSwitcher: true,
   excludeFromLayout: undefined,
   includeInLayout: undefined,
   keyboardLayout: undefined,
   keyboardTranslation: undefined,
   showLayoutSelector: false,
-  theme: ``,
+  showThemeSwitcher: true,
   usePhysicalKeyboard: false,
 });
 
@@ -119,7 +119,7 @@ const orgCss = `keyboard`;
 const mainCss = ref<string>(`keyboard`);
 
 const switchTheme = (value: string): void => {
-  if (!props.enableThemeSwitcher) {
+  if (!props.showThemeSwitcher) {
     return;
   }
   sendDebugMessage(`switchTheme`, value);

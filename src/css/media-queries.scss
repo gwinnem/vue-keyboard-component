@@ -266,11 +266,17 @@
   }
 
   .keyboard button.keyboard-button-caps {
+    width: 50px !important;
+  }
+
+  .keyboard button.keyboard-button-alt,
+  .keyboard button.keyboard-button-altleft,
+  .keyboard button.keyboard-button-altright {
     min-width: 50px !important;
   }
 
-  .keyboard button.keyboard-button-ctrl
-  .keyboard button.keyboard-button-ctrlleft
+  .keyboard button.keyboard-button-ctrl,
+  .keyboard button.keyboard-button-ctrlleft,
   .keyboard button.keyboard-button-ctrlright {
     min-width: 50px !important;
   }
@@ -279,10 +285,10 @@
     min-width: 50px !important;
   }
 
-  .keyboard button.keyboard-button-shift
-  .keyboard button.keyboard-button-shiftleft
+  .keyboard button.keyboard-button-shift,
+  .keyboard button.keyboard-button-shiftleft,
   .keyboard button.keyboard-button-shiftright {
-    width: 40px !important;
+    width: 50px !important;
   }
 
   .keyboard button.keyboard-button-tab {

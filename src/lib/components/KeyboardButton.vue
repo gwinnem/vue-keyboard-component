@@ -98,6 +98,7 @@
     return `keyboard-button ${buttonTypeClass}${buttonNormalized}`;
   };
 
+  const buttonClass = ref(``);
   const isAltClicked = ref(props.isAltClicked);
   watch(() => props.isAltClicked, newValue => {
     isAltClicked.value = newValue;
@@ -147,7 +148,6 @@
     }
   });
 
-  const buttonClass = ref(``);
   buttonClass.value = getButtonClass();
   /**
    * Returns the display (label) name for a given button

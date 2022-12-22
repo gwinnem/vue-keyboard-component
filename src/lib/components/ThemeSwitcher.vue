@@ -3,7 +3,7 @@
     <input
       id="themeSwitch"
       v-model="isDarkMode"
-      type="checkbox"/>
+      type="checkbox" />
     <label
       class="toggle"
       for="themeSwitch">
@@ -14,65 +14,60 @@
 
 <script lang="ts" setup>
 
-import {onMounted, ref, watch} from 'vue';
+  import { onMounted, ref, watch } from 'vue';
 
-enum ETheme {
-  DARK = `dark`,
-  LIGHT = `light`,
-}
-
-enum EThemeEvent {
-  SWITCH = `onThemeSwitched`,
-}
-
-const emit = defineEmits<{
-  (event: EThemeEvent.SWITCH, value: string): void;
-}>();
-
-const isDarkMode = ref(false);
-
-function loadTheme(theme: string) {
-  const root = document.querySelector(`:root`);
-  if (root) {
-    root.setAttribute(`color-scheme`, `${theme}`);
+  enum ETheme {
+    DARK = `dark`,
+    LIGHT = `light`,
   }
-  emit(EThemeEvent.SWITCH, theme);
-}
 
-function getCurrentTheme() {
-  let theme = window.matchMedia(`prefers-color-scheme: dark`).matches
-    ? ETheme.DARK
-    : ETheme.LIGHT;
-  return theme;
-}
-
-function getCurrentThemeFromLocalStorage() {
-  let theme = localStorage.getItem(`theme-switcher-value`);
-  if (!theme) {
-    theme = getCurrentTheme();
-    localStorage.setItem(`theme-switcher-value`, theme);
+  enum EThemeEvent {
+    SWITCH = `onThemeSwitched`,
   }
-  if (theme === ETheme.DARK.toString()) {
-    isDarkMode.value = true;
-  } else {
-    isDarkMode.value = false;
-  }
-  return theme;
-}
 
-watch(() => isDarkMode.value, newValue => {
-  isDarkMode.value = newValue;
-  let emitValue = ETheme.LIGHT;
-  if (isDarkMode.value) {
-    emitValue = ETheme.DARK;
-  }
-  localStorage.setItem(`theme-switcher-value`, emitValue);
-  loadTheme(emitValue);
-});
+  const emit = defineEmits<{
+    (event: EThemeEvent.SWITCH, value: string): void;
+  }>();
 
-onMounted(() => {
-  loadTheme(getCurrentThemeFromLocalStorage());
-});
+  const isDarkMode = ref(false);
+
+  function loadTheme(theme: string): void {
+    const root = document.querySelector(`:root`);
+    if(root) {
+      root.setAttribute(`color-scheme`, `${theme}`);
+    }
+    emit(EThemeEvent.SWITCH, theme);
+  }
+
+  function getCurrentTheme(): string {
+    return window.matchMedia(`prefers-color-scheme: dark`).matches
+      ? ETheme.DARK
+      : ETheme.LIGHT;
+  }
+
+  function getCurrentThemeFromLocalStorage(): string {
+    let theme = localStorage.getItem(`theme-switcher-value`);
+    if(!theme) {
+      theme = getCurrentTheme();
+      localStorage.setItem(`theme-switcher-value`, theme);
+    }
+    isDarkMode.value = theme === ETheme.DARK.toString();
+    return theme;
+  }
+
+  watch(() => isDarkMode.value, newValue => {
+    isDarkMode.value = newValue;
+    let emitValue = ETheme.LIGHT;
+    if(isDarkMode.value) {
+      emitValue = ETheme.DARK;
+    }
+    localStorage.setItem(`theme-switcher-value`, emitValue);
+    loadTheme(emitValue);
+  });
+
+  onMounted(() => {
+    loadTheme(getCurrentThemeFromLocalStorage());
+  });
 
 </script>
 
@@ -184,7 +179,6 @@ input:checked + .toggle .toggle__handler {
   }
 }
 
-
 // Large devices (desktops, less than 1200px)
 @media (min-width: 992px) {
   .toggle {
@@ -224,6 +218,5 @@ input:checked + .toggle .toggle__handler {
     transform: translate3d(26px, 0, 0) rotate(0);
   }
 }
-
 
 </style>

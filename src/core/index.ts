@@ -148,6 +148,7 @@ export * as msVietnamese from './ms-keyboards/ms-Vietnamese';
 export * as msWolof from './ms-keyboards/ms-Wolof';
 export * as msYakut from './ms-keyboards/ms-Yakut';
 export * as msYoruba from './ms-keyboards/ms-Yoruba';
+export * as layoutList from './ms-keyboards/ms-layouts.select';
 
 export * as defaultLayout from './layouts/default';
 export * as defaultKeyboard from './keyboard-layouts/default-keyboard';

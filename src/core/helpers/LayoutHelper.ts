@@ -1,11 +1,9 @@
-import {ILayoutItem} from '../interfaces/layout.interfaces';
-import * as keyboardLayout from '../';
+import { ILayoutItem } from '../interfaces/layout.interfaces';
+import * as keyboardLayout from '..';
 
 export class LayoutHelper {
-
-
   public static changeLayout(layoutName: string): ILayoutItem {
-    switch (layoutName) {
+    switch(layoutName) {
       case `msAlbanian`: {
         return keyboardLayout.msAlbanian.default;
       }

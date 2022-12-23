@@ -152,8 +152,8 @@ export * as layoutList from './ms-keyboards/ms-layouts.select';
 
 export * as defaultLayout from './layouts/default';
 export * as defaultKeyboard from './keyboard-layouts/default-keyboard';
-// export { IDisplay } from './interfaces/display.interfaces';
 
-// export { ILayoutItem } from "./interfaces/layout.interfaces";
+export { IDisplay } from './interfaces/display.interfaces';
+export { ILayoutItem } from "./interfaces/layout.interfaces";
+export { ISelect } from "./interfaces/select.interfaces";
 
-// export { IKeyboardOptions } from "./interfaces/keyboard.interfaces";

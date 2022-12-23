@@ -47,6 +47,8 @@
         <KeyboardButton
           v-for="(button, buttonIndex) in getRowOfButtons(row)"
           :key="buttonIndex"
+          :alt-shift-value="button"
+          :alt-value="button"
           :button-value="button"
           :debug-events="false"
           :default-value="button"
@@ -55,6 +57,7 @@
           :is-caps-clicked="isCapsClicked"
           :is-ctrl-clicked="isCtrlClicked"
           :is-shift-clicked="isShiftClicked"
+          :shift-value="button"
           @onAltClicked="onAltClicked"
           @onBackspaceClicked="onBackspaceClicked"
           @onButtonClick="onClick"
@@ -857,7 +860,7 @@
    * @return string[] An array of buttons.
    */
   const getRowOfButtons = (value: string): string[] => {
-    // sendDebugMessage(`Keyboard - getRowOfButtons`, value);
+    sendDebugMessage(`Keyboard - getRowOfButtons`, value);
     return value.split(` `);
   };
 

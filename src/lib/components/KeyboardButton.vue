@@ -2,7 +2,10 @@
   <button
     ref="button"
     :class="buttonClass"
+    :data-alt-shift-value="altShiftValue"
+    :data-alt-value="altValue"
     :data-default-value="defaultValue"
+    :data-shift-value="shiftValue"
     @click="onClick"
     @keydown="onKeyDown"
     @keyup="onKeyUp"
@@ -19,17 +22,22 @@
   import { ESpecialButton } from '../../core/enums/KeyboardSpecialButton.enum';
 
   interface IKeyboardButtonProps {
+    altShiftValue?: string;
+    altValue?: string;
     buttonLayout?: string;
     debugEvents?: boolean;
-    defaultValue?: string;
+    defaultValue: string;
     display: IDisplay;
     isAltClicked?: boolean;
     isCapsClicked?: boolean;
     isCtrlClicked?: boolean;
     isShiftClicked?: boolean;
+    shiftValue?: string;
   }
 
   const props = withDefaults(defineProps<IKeyboardButtonProps>(), {
+    altShiftValue: undefined,
+    altValue: undefined,
     buttonLayout: undefined,
     debugEvents: false,
     defaultValue: ``,
@@ -38,6 +46,7 @@
     isCapsClicked: false,
     isCtrlClicked: false,
     isShiftClicked: false,
+    shiftValue: undefined,
   });
 
   const emit = defineEmits<{
@@ -106,7 +115,7 @@
       && (props.defaultValue === ESpecialButton.ALT.toString()
         || props.defaultValue === ESpecialButton.ALT_LEFT.toString()
         || props.defaultValue === ESpecialButton.ALT_RIGHT.toString())) {
-      buttonClass.value = `${buttonClass.value} hactiveButton`;
+      buttonClass.value = `${buttonClass.value} activeButton`;
     } else {
       buttonClass.value = getButtonClass();
     }
@@ -182,7 +191,7 @@
         break;
       }
       case ESpecialButton.CAPS: {
-        if(isShiftClicked.value) {
+        if(isShiftClicked.value || isAltClicked.value) {
           return;
         }
         emit(EKeyboardButtonEvent.CAPS_CLICKED);
@@ -191,6 +200,9 @@
       case ESpecialButton.CTRL.toString():
       case ESpecialButton.CTRL_LEFT.toString():
       case ESpecialButton.CTRL_RIGHT.toString(): {
+        if(isCapsClicked.value || isShiftClicked.value || isAltClicked.value) {
+          return;
+        }
         emit(EKeyboardButtonEvent.CTRL_CLICKED);
         break;
       }

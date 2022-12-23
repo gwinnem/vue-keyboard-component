@@ -16,14 +16,13 @@ from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.h
 ### ✏ Features:
 
 - Fully responsive.
-- Supports dark and light theme out of the box. Either with use of the built-in theme switcher, or without it uses the users preferred theme from the settings.
+- Supports dark and light theme out of the box. Using the user's preferred color scheme.
+- Theme can be set with the built-in theme switcher.
 - 150 microsoft keyboard layouts included in the package.
 
 ### ✏ Upcoming Features:
 
 - Add support for physical keyboard.
-- Add full keyboard option.
-- Add numeric keyboard option.
 - Add possibility to style one or more buttons different from the rest.
 - Refactor keyboard button to accept multiple layout values and display them in the button.
 

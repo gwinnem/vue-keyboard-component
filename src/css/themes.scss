@@ -2,7 +2,8 @@
   --keyboard-background-color: #ffffff;
   --keyboard-border-color: #dddddd;
   --keyboard-button-activeButton-background-color: #ffffff;
-  --keyboard-button-background-color: #e7dfdf;
+  --keyboard-button-background: #555555 url("/public/assets/ui-bg_glass_20_555555_1x400.png") 50% 50% repeat-x;
+  --keyboard-button-border-color: #cccccc;
   --keyboard-button-color: #000000;
   --keyboard-button-hover-border-color: #fbcb09;
   --keyboard-button-hover-color: #fdf5ce;
@@ -17,7 +18,8 @@
   --keyboard-background-color-light: #ffffff;
   --keyboard-border-color-light: #dddddd;
   --keyboard-button-activeButton-background-color-light: #d3aeae;
-  --keyboard-button-background-color-light: #e7dfdf;
+  --keyboard-button-background-light: #f6f6f6 url("/public/assets/ui-bg_glass_100_f6f6f6_1x400.png") 50% 50% repeat-x;
+  --keyboard-button-border-color-light: #cccccc;
   --keyboard-button-color-light: #000000;
   --keyboard-button-hover-border-color-light: #fbcb09;
   --keyboard-button-hover-color-light: #fdf5ce;
@@ -31,7 +33,8 @@
   --keyboard-background-color-dark: #000000;
   --keyboard-border-color-dark: #dddddd;
   --keyboard-button-activeButton-background-color-dark: #ffffff;
-  --keyboard-button-background-color-dark: #646161;
+  --keyboard-button-border-color-dark: #a4a4a4;
+  --keyboard-button-background-dark: #555555 url("/public/assets/ui-bg_glass_20_555555_1x400.png") 50% 50% repeat-x;
   --keyboard-button-color-dark: #ffffff;
   --keyboard-button-hover-border-color-dark: #59b4d4;
   --keyboard-button-hover-color-dark: #0078a3;
@@ -47,7 +50,8 @@
     --keyboard-background-color: var(--keyboard-background-color-light);
     --keyboard-border-color: var(--keyboard-border-color-light);
     --keyboard-button-activeButton-background-color: var(--keyboard-button-activeButton-background-color-light);
-    --keyboard-button-background-color: var(--keyboard-button-background-color-light);
+    --keyboard-button-background: var(--keyboard-button-background-light);
+    --keyboard-button-border-color: var(--keyboard-button-border-color-light);
     --keyboard-button-color: var(--keyboard-button-color-light);
     --keyboard-button-hover-border-color: var(--keyboard-button-hover-border-color-light);
     --keyboard-button-hover-color: var(--keyboard-button-hover-color-light);
@@ -64,7 +68,8 @@
     --keyboard-background-color: var(--keyboard-background-color-dark);
     --keyboard-border-color: var(--keyboard-border-color-dark);
     --keyboard-button-activeButton-background-color: var(--keyboard-button-activeButton-background-color-dark);
-    --keyboard-button-background-color: var(--keyboard-button-background-color-dark);
+    --keyboard-button-background: var(--keyboard-button-background-dark);
+    --keyboard-button-border-color: var(--keyboard-button-border-color-dark);
     --keyboard-button-color: var(--keyboard-button-color-dark);
     --keyboard-button-hover-border-color: var(--keyboard-button-hover-border-color-dark);
     --keyboard-button-hover-color: var(--keyboard-button-hover-color-dark);
@@ -80,7 +85,8 @@
   --keyboard-background-color: var(--keyboard-background-color-light);
   --keyboard-border-color: var(--keyboard-border-color-light);
   --keyboard-button-activeButton-background-color: var(--keyboard-button-activeButton-background-color-light);
-  --keyboard-button-background-color: var(--keyboard-button-background-color-light);
+  --keyboard-button-background: var(--keyboard-button-background-light);
+  --keyboard-button-border-color: var(--keyboard-button-border-color-light);
   --keyboard-button-color: var(--keyboard-button-color-light);
   --keyboard-button-hover-border-color: var(--keyboard-button-hover-border-color-light);
   --keyboard-button-hover-color: var(--keyboard-button-hover-color-light);
@@ -95,7 +101,8 @@
   --keyboard-background-color: var(--keyboard-background-color-dark);
   --keyboard-border-color: var(--keyboard-border-color-dark);
   --keyboard-button-activeButton-background-color: var(--keyboard-button-activeButton-background-color-dark);
-  --keyboard-button-background-color: var(--keyboard-button-background-color-dark);
+  --keyboard-button-background: var(--keyboard-button-background-dark);
+  --keyboard-button-border-color: var(--keyboard-button-border-color-dark);
   --keyboard-button-color: var(--keyboard-button-color-dark);
   --keyboard-button-hover-border-color: var(--keyboard-button-hover-border-color-dark);
   --keyboard-button-hover-color: var(--keyboard-button-hover-color-dark);

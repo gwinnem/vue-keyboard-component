@@ -23,6 +23,7 @@ from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.h
 ### ✏ Upcoming Features:
 
 - Add support for physical keyboard.
+- Support for filtering layouts with includedLayouts prop.
 - Add possibility to style one or more buttons different from the rest.
 - Refactor keyboard button to accept multiple layout values and display them in the button.
 

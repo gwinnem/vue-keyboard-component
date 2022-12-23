@@ -3,7 +3,6 @@
     <Keyboard
       :debug="false"
       :debug-events="false"
-      :enable-theme-switcher="true"
       :keyboard-layout="layout"
       :show-layout-selector="true"
       :show-theme-switcher="true" />

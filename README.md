@@ -19,7 +19,6 @@ from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.h
 ### 📔 TODO's:
 
 - Fix function button issues.
-- Restyle keyboard button to glossy effect.
 - Create new documentation.
 
 

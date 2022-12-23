@@ -1,11 +1,14 @@
 # Vue Keyboard Component
-A virtual keyboard built with VUE 3 and VITE
+A virtual keyboard component built with VUE 3 and VITE.
 
 Inspired from simple-keyboard by [Francisco Hedge](https://hodgef.com/simple-keyboard/) and
-from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.html)
+from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.html).
 
 ### Dark mode example.
 <img alt="dark mode keyboard" src="./docs/images/dark-mode-keyboard.png" />
+
+### German keyboard layout example, with custom buttons.
+<img alt="dark mode keyboard" src="./docs/images/german-keyboard.png" />
 
 ### Light mode example.
 <img alt="dark mode keyboard" src="./docs/images/light-mode-keyboard.png" />

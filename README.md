@@ -4,8 +4,17 @@ A virtual keyboard built with VUE 3 and VITE
 Inspired from simple-keyboard by [Francisco Hedge](https://hodgef.com/simple-keyboard/) and
 from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.html)
 
-### Dark mode example with Pashto keyboard
+### Dark mode example.
 <img alt="dark mode keyboard" src="./docs/images/dark-mode-keyboard.png" />
+
+### Light mode example.
+<img alt="dark mode keyboard" src="./docs/images/light-mode-keyboard.png" />
+
+### ✏ Features:
+
+- Fully responsive.
+- Supports dark and light theme out of the box. Either with use of the built-in theme switcher, or without it uses the users preferred theme from the settings.
+- 150 microsoft keyboard layouts included in the package.
 
 ### ✏ Upcoming Features:
 
@@ -19,6 +28,7 @@ from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.h
 ### 📔 TODO's:
 
 - Fix function button issues.
+- Check missing microsoft layouts.
 - Create new documentation.
 
 

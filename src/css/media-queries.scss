@@ -26,8 +26,8 @@
     width: 10px;
   }
 
-  .keyboard button.keyboard-button-alt
-  .keyboard button.keyboard-button-altleft
+  .keyboard button.keyboard-button-alt,
+  .keyboard button.keyboard-button-altleft,
   .keyboard button.keyboard-button-altright {
     width: 30px !important;
   }
@@ -36,8 +36,8 @@
     max-width: 25px !important;
   }
 
-  .keyboard-button-ctrl
-  .keyboard-button-ctrlleft
+  .keyboard-button-ctrl,
+  .keyboard-button-ctrlleft,
   .keyboard-button-ctrlright {
     width: 25px !important;
   }
@@ -46,8 +46,8 @@
     width: 20px !important;
   }
 
-  .keyboard-button-shift
-  .keyboard-button-shiftleft
+  .keyboard-button-shift,
+  .keyboard-button-shiftleft,
   .keyboard-button-shiftright {
     width: 20px !important;
   }
@@ -93,12 +93,16 @@
     width: 15px;
   }
 
+  .keyboard button.keyboard-button-bksp {
+    width: 20px;
+  }
+
   .keyboard button.keyboard-button-caps {
     width: 30px !important;
   }
 
-  .keyboard button.keyboard-button-ctrl
-  .keyboard button.keyboard-button-ctrlleft
+  .keyboard button.keyboard-button-ctrl,
+  .keyboard button.keyboard-button-ctrlleft,
   .keyboard button.keyboard-button-ctrlright {
     width: 50px !important;
   }
@@ -107,8 +111,8 @@
     width: 50px !important;
   }
 
-  .keyboard button.keyboard-button-shift
-  .keyboard button.keyboard-button-shiftleft
+  .keyboard button.keyboard-button-shift,
+  .keyboard button.keyboard-button-shiftleft,
   .keyboard button.keyboard-button-shiftright {
     width: 35px !important;
   }
@@ -150,12 +154,16 @@
     width: 20px;
   }
 
+  .keyboard button.keyboard-button-bksp {
+    width: 40px;
+  }
+
   .keyboard button.keyboard-button-caps {
     width: 30px !important;
   }
 
-  .keyboard button.keyboard-button-ctrl
-  .keyboard button.keyboard-button-ctrlleft
+  .keyboard button.keyboard-button-ctrl,
+  .keyboard button.keyboard-button-ctrlleft,
   .keyboard button.keyboard-button-ctrlright {
     width: 50px !important;
   }
@@ -164,8 +172,8 @@
     width: 50px !important;
   }
 
-  .keyboard button.keyboard-button-shift
-  .keyboard button.keyboard-button-shiftleft
+  .keyboard button.keyboard-button-shift,
+  .keyboard button.keyboard-button-shiftleft,
   .keyboard button.keyboard-button-shiftright {
     width: 35px !important;
   }
@@ -208,12 +216,16 @@
     width: 20px;
   }
 
+  .keyboard button.keyboard-button-bksp {
+    width: 40px;
+  }
+
   .keyboard button.keyboard-button-caps {
     width: 30px !important;
   }
 
-  .keyboard button.keyboard-button-ctrl
-  .keyboard button.keyboard-button-ctrlleft
+  .keyboard button.keyboard-button-ctrl,
+  .keyboard button.keyboard-button-ctrlleft,
   .keyboard button.keyboard-button-ctrlright {
     width: 50px !important;
   }
@@ -222,8 +234,8 @@
     width: 50px !important;
   }
 
-  .keyboard button.keyboard-button-shift
-  .keyboard button.keyboard-button-shiftleft
+  .keyboard button.keyboard-button-shift,
+  .keyboard button.keyboard-button-shiftleft,
   .keyboard button.keyboard-button-shiftright {
     width: 35px !important;
   }
@@ -263,6 +275,10 @@
     font-size: $keyboard-font-size;
     height: 35px;
     width: 30px;
+  }
+
+  .keyboard button.keyboard-button-bksp {
+    width: 50px;
   }
 
   .keyboard button.keyboard-button-caps {

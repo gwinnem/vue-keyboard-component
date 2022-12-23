@@ -1,5 +1,5 @@
 .keyboard {
-  background-color: var(--keyboard-background-color);
+  background: var(--keyboard-background);
   border: 1px solid var(--keyboard-border-color);
   border-radius: 5px;
   box-sizing: border-box;
@@ -29,7 +29,7 @@
 }
 
 input.keyboard-input {
-  background-color: var(--keyboard-input-background-color);
+  background: var(--keyboard-input-background);
   border-bottom: 3px solid var(--keyboard-input-border-bottom);
   border-radius: 5px;
   color: var(--keyboard-font-color);

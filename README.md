@@ -13,11 +13,13 @@ from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.h
 - Add full keyboard option.
 - Add numeric keyboard option.
 - Add possibility to style one or more buttons different from the rest.
+- Refactor keyboard button to accept multiple layout values and display them in the button.
 
 
 ### 📔 TODO's:
 
 - Fix function button issues.
+- Restyle keyboard button to glossy effect.
 - Create new documentation.
 
 

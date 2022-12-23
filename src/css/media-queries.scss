@@ -93,6 +93,12 @@
     width: 15px;
   }
 
+  .keyboard button.keyboard-button-alt,
+  .keyboard button.keyboard-button-altleft,
+  .keyboard button.keyboard-button-altright {
+    width: 50px !important;
+  }
+
   .keyboard button.keyboard-button-bksp {
     width: 20px;
   }
@@ -152,6 +158,12 @@
     font-size: $keyboard-font-size;
     height: 25px;
     width: 20px;
+  }
+
+  .keyboard button.keyboard-button-alt,
+  .keyboard button.keyboard-button-altleft,
+  .keyboard button.keyboard-button-altright {
+    width: 60px !important;
   }
 
   .keyboard button.keyboard-button-bksp {
@@ -216,6 +228,12 @@
     width: 20px;
   }
 
+  .keyboard button.keyboard-button-alt,
+  .keyboard button.keyboard-button-altleft,
+  .keyboard button.keyboard-button-altright {
+    width: 70px !important;
+  }
+
   .keyboard button.keyboard-button-bksp {
     width: 40px;
   }
@@ -277,18 +295,18 @@
     width: 30px;
   }
 
+  .keyboard button.keyboard-button-alt,
+  .keyboard button.keyboard-button-altleft,
+  .keyboard button.keyboard-button-altright {
+    width: 70px !important;
+  }
+
   .keyboard button.keyboard-button-bksp {
     width: 50px;
   }
 
   .keyboard button.keyboard-button-caps {
     width: 50px !important;
-  }
-
-  .keyboard button.keyboard-button-alt,
-  .keyboard button.keyboard-button-altleft,
-  .keyboard button.keyboard-button-altright {
-    min-width: 50px !important;
   }
 
   .keyboard button.keyboard-button-ctrl,

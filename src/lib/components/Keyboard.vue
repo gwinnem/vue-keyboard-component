@@ -39,7 +39,6 @@
           v-model="inputValue"
           class="keyboard-input"
           placeholder="Start typing now !"
-          @focus="onInputFocus"
           @keydown="onInputKeyDown"/>
       </div>
       <div
@@ -136,26 +135,30 @@ const switchTheme = (value: string): void => {
   }
 };
 
+/**
+ * Handler for physical keyboard click event in the input field.
+ * @param evt KeyboardEvent Event emitted when user click's on the physical keyboard.
+ */
 const onInputKeyDown = (evt: KeyboardEvent): void => {
   evt.preventDefault();
   if (!props.usePhysicalKeyboard) {
     return;
   }
   switch (evt.code) {
-    case `Caps`:
-    case `Delete`:
-    case `Shift`:
-    case `ShiftLeft`:
-    case `ShiftRight`:
     case `Alt`:
     case `AltLeft`:
     case `AltRight`:
+    case `Caps`:
+    case `Context`:
     case `Control`:
     case `ControlLeft`:
     case `ControlRight`:
-    case `Context`:
+    case `Delete`:
     case `MetaLeft`:
-    case `MetaRight`: {
+    case `MetaRight`:
+    case `Shift`:
+    case `ShiftLeft`:
+    case `ShiftRight`: {
       break;
     }
     default: {
@@ -163,12 +166,6 @@ const onInputKeyDown = (evt: KeyboardEvent): void => {
     }
   }
   sendDebugMessage(`Keyboard - onInputKeyDown`, evt);
-};
-
-const onInputFocus = (evt: FocusEvent): void => {
-  evt.preventDefault();
-  sendDebugMessage(`Keyboard - onInputFocus`, evt);
-  // TODO maybe remove this before publishing since it is not used.
 };
 
 const layout = ref<ILayoutItem>(defaultLayout.default);
@@ -227,6 +224,7 @@ const layoutType = ref(EKeyboardLayoutType.DEFAULT);
 
 keyboardPreview.value = getKeyboardLayout(layoutType.value);
 
+// TODO Think about moving this into a separate file.
 const changeLayout = (): void => {
   switch (layoutName.value) {
     case `msAlbanian`: {

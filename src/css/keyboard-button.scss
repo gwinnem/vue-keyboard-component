@@ -36,13 +36,14 @@ button {
 
 .keyboard button.keyboard-button:hover span {
   color: #db3b5c;
+  font-weight: bold;
 }
 
 button.keyboard-button.activeButton {
-  background-color: var(--keyboard-button-activeButton-background-color);
+  background: var(--keyboard-button-activeButton-background);
 }
 
 button.keyboard-button.activeButton span {
-  color: black;
+  color: var(--keyboard-button-activeButton-color);
   font-size: 1.1em;
 }

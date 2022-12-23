@@ -110,6 +110,7 @@
   const buttonClass = ref(``);
   const isAltClicked = ref(props.isAltClicked);
   watch(() => props.isAltClicked, newValue => {
+    console.error(isAltClicked.value);
     isAltClicked.value = newValue;
     if(isAltClicked.value
       && (props.defaultValue === ESpecialButton.ALT.toString()
@@ -219,7 +220,7 @@
         emit(EKeyboardButtonEvent.KEY_DOWN, props.defaultValue);
       }
     }
-    buttonClass.value = `${buttonClass.value} activeButton`;
+    // buttonClass.value = `${buttonClass.value} activeButton`;
   };
 
   const onKeyUp = (evt: Event): void => {

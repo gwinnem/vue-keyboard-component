@@ -153,6 +153,6 @@ export * as layoutList from './ms-keyboards/ms-layouts.select';
 export * as defaultLayout from './layouts/default';
 export * as defaultKeyboard from './keyboard-layouts/default-keyboard';
 
-export { IDisplay } from './interfaces/display.interfaces';
-export { ILayoutItem } from "./interfaces/layout.interfaces";
-export { ISelect } from "./interfaces/select.interfaces";
+export  * as IDisplay from './interfaces/display.interfaces';
+export * as ILayoutItem from "./interfaces/layout.interfaces";
+export * as ISelect from "./interfaces/select.interfaces";

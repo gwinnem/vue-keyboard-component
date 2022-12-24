@@ -42,14 +42,13 @@ from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.h
 - Add your own layout by [following these steps](./docs/sample-layout.md).
 - [Exported Interfaces](./docs/exported-interfaces.md).
 - [Select options. Complete list](./docs/complete-select-option-list.md).
-- [Css variables for the light and dark mode](./docs/theme-variables.md).
 
 ### 👓 Customizing dark and light mode
 [List of css variables](./docs/theme-variables.md).
 
 ### 🏁 Demo's
 
-- Default.
+- Default with theme and layout selector.
 - Styled buttons.
 - Demo with customized layout from app.
 

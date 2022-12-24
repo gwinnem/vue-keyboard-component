@@ -183,6 +183,10 @@
     keyboardDisplay.value = layout.value.display;
   }
 
+  /**
+   * Getting the keyboard layout. Fallback to default keyboard layout if layout name does not exist.
+   * @param value string. Name of the keyboard layout.
+   */
   const getKeyboardLayout = (value: string): string[] => {
     sendDebugMessage(`Keyboard - getKeyboardDisplay`, value);
 
@@ -191,6 +195,7 @@
     } else {
       keyboardDisplay.value = defaultDisplay.display;
     }
+
     switch(value) {
       case EKeyboardLayoutType.DEFAULT: {
         return layout.value.layout.default;

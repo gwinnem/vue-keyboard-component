@@ -17,7 +17,7 @@ from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.h
 
 - Fully responsive.
 - Supports dark and light theme out of the box. Using the user's preferred color scheme.
-- Theme can be set with the built-in theme switcher.
+- Theme can be set with the built-in theme switcher. It uses local storage to remember the the selected theme.
 - 150 microsoft keyboard layouts included in the package.
 
 ### ✏ Upcoming Features:
@@ -50,6 +50,7 @@ from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.h
 - Default with theme and layout selector.
 - Styled buttons.
 - Demo with customized layout from app.
+- Playground where devs can test their layouts.
 
 ### ⌨ Supported Layouts (150 different layouts)
 
@@ -113,12 +114,6 @@ npm run lint:style
 
 ```
 npm run lint:fix
-```
-
-#### Formats files.
-
-```
-npm run format
 ```
 
 #### Building the library

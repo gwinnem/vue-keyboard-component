@@ -1,5 +1,5 @@
 /* eslint-disable sort-keys */
-import { ILayoutItem } from '@/core/interfaces/layout.interfaces';
+import { ILayoutItem } from '../../core/interfaces/layout.interfaces';
 
 /**
  * Layout: Nepali

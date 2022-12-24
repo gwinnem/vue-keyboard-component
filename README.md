@@ -24,6 +24,7 @@ from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.h
 
 - Add support for physical keyboard.
 - Support for filtering layouts with includedLayouts prop.
+- Support for providing default display option as prop.
 - Add possibility to style one or more buttons different from the rest.
 - Refactor keyboard button to accept multiple layout values and display them in the button.
 
@@ -31,6 +32,7 @@ from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.h
 ### 📔 TODO's:
 
 - Fix function button issues.
+- Make text Select Keyboard language and Start typing now as props so they can be translated.
 - Check missing microsoft layouts.
 - Create new documentation.
 
@@ -38,7 +40,12 @@ from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.h
 ### 📚 Documentation
 
 - Add your own layout by [following these steps](./docs/sample-layout.md).
-- Add your own display layout to customise the keyboard by [following these steps](./docs/sample-keyboard.md).
+- [Exported Interfaces](./docs/exported-interfaces.md).
+- [Select options. Complete list](./docs/complete-select-option-list.md).
+- [Css variables for the light and dark mode](./docs/theme-variables.md).
+
+### 👓 Customizing dark and light mode
+[List of css variables](./docs/theme-variables.md).
 
 ### 🏁 Demo's
 
@@ -46,8 +53,9 @@ from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.h
 
 ### ⌨ Supported Layouts (150 different layouts)
 
-* [Click to see the complete list.](./docs/keyboard-layouts.md)
-* [Microsoft layout's.](https://learn.microsoft.com/en-us/globalization/windows-keyboard-layouts)
+* [Click to see the complete list](./docs/keyboard-layouts.md).
+* [Microsoft layout's](https://learn.microsoft.com/en-us/globalization/windows-keyboard-layouts).
+
 
 ### 🔗 References
 
@@ -110,7 +118,7 @@ npm run lint:fix
 #### Formats files.
 
 ```
-npm run lint
+npm run format
 ```
 
 #### Building the library

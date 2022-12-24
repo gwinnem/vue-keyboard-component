@@ -1,6 +1,6 @@
 ## Default Keyboard Display file
 
-```javascript
+```typescript
 import { IDisplay } from '../interfaces/keyboard.interfaces';
 
 /**

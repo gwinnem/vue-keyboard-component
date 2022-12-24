@@ -9,7 +9,7 @@
           <div
             v-if="showLayoutSelector"
             class="selectText">
-            Select Keyboard language:
+            {{ props.selectKeyboardLanguageText }}
           </div>
           <div>
             <select
@@ -38,7 +38,7 @@
           ref="keyboardInput"
           v-model="inputValue"
           class="keyboard-input"
-          placeholder="Start typing now !"
+          :placeholder="props.startTypingText"
           @keydown="onInputKeyDown" />
       </div>
       <div
@@ -93,8 +93,10 @@
     includeInLayout?: string[];
     keyboardLayout?: ILayoutItem;
     keyboardTranslation?: IDisplay;
+    selectKeyboardLanguageText: string;
     showLayoutSelector?: boolean;
     showThemeSwitcher?: boolean;
+    startTypingText?: string;
     usePhysicalKeyboard?: boolean;
   }
 
@@ -106,8 +108,10 @@
     includeInLayout: undefined,
     keyboardLayout: undefined,
     keyboardTranslation: undefined,
+    selectKeyboardLanguageText: `Select Keyboard language:`,
     showLayoutSelector: false,
     showThemeSwitcher: true,
+    startTypingText: `Start typing now !`,
     usePhysicalKeyboard: false,
   });
 

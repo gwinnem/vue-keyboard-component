@@ -111,6 +111,14 @@
     usePhysicalKeyboard: false,
   });
 
+  enum InputChangedEvent {
+    CHANGED = `onInputChanged`,
+  }
+
+  const emit = defineEmits<{
+    (event: InputChangedEvent.CHANGED, value: string): void;
+  }>();
+
   const inputValue = ref(``);
 
   const sendDebugMessage = (msg: string, obj?: object | string): void => {
@@ -296,6 +304,7 @@
       endString = inputValue.value.substring(end, inputValue.value.length);
     }
     inputValue.value = `${startString}${endString}`;
+    emit(InputChangedEvent.CHANGED, inputValue.value);
     nextTick(() => {
       if(start) {
         el?.focus();
@@ -409,6 +418,7 @@
     const el = keyboardInput.value;
     if(el?.selectionStart === inputValue.value.length) {
       inputValue.value = `${inputValue.value}${value}`;
+      emit(InputChangedEvent.CHANGED, inputValue.value);
       return;
     }
 
@@ -417,6 +427,7 @@
       const startString = inputValue.value.substring(0, start);
       const endString = inputValue.value.substring(start, inputValue.value.length);
       inputValue.value = `${startString}${value}${endString}`;
+      emit(InputChangedEvent.CHANGED, inputValue.value);
       nextTick(() => {
         if(start) {
           el?.focus();

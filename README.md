@@ -49,7 +49,9 @@ from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.h
 
 ### 🏁 Demo's
 
-- TBD
+- Default.
+- Styled buttons.
+- Demo with customized layout from app.
 
 ### ⌨ Supported Layouts (150 different layouts)
 

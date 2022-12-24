@@ -32,7 +32,7 @@ from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.h
 ### 📔 TODO's:
 
 - Fix function button issues.
-- Make text Select Keyboard language and Start typing now as props so they can be translated.
+- Make text Select Keyboard language and Start typing now as props, so they can be translated.
 - Check missing microsoft layouts.
 - Create new documentation.
 

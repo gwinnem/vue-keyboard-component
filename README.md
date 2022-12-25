@@ -1,8 +1,8 @@
 # Vue Keyboard Component
 A virtual keyboard component built with VUE 3 and VITE.
 
-Inspired from simple-keyboard by [Francisco Hedge](https://hodgef.com/simple-keyboard/) and
-from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.html).
+Inspired from <strong>simple-keyboard</strong> by [Francisco Hedge](https://hodgef.com/simple-keyboard/) and
+from <strong>Keyboard(jQuery plugin)</strong> by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.html).
 
 ### Dark mode example.
 <img alt="dark mode keyboard" src="./docs/images/dark-mode-keyboard.png" />
@@ -16,6 +16,7 @@ from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.h
 ### ✏ Features:
 
 - Fully responsive.
+- Supports unicode values in the layout. Both images and special characters.
 - Supports dark and light theme out of the box. Using the user's preferred color scheme.
 - Theme can be set with the built-in theme switcher. It uses local storage to remember the selected theme.
 - 150 microsoft keyboard layouts included in the package.
@@ -33,7 +34,7 @@ from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.h
 
 - Fix function button issues.
 - Check missing microsoft layouts.
-- Create new documentation.
+- Create new documentation (WIP).
 
 
 ### 📚 Documentation
@@ -50,7 +51,7 @@ from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.h
 - Default with theme and layout selector.
 - Styled buttons.
 - Demo with customized layout from app.
-- Playground where devs can test their layouts.
+- Playground where devs can test their layouts(sandbox).
 
 ### ⌨ Supported Layouts (150 different layouts)
 
@@ -66,8 +67,34 @@ from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.h
 
 ### 🌟 Contributing
 
-Contributions are always welcome!
+#### Contributions are always welcome!
 
+***
+Help is needed defining which images or text to use for the different keyboard layouts.
+Look at the German display definition below:
+
+```
+  display: {
+    // eslint-disable sort-keys
+    '{alt}': `Alt`,
+    '{altleft}': `Alt`,
+    '{altright}': `Alt Gr`,
+    '{bksp}': `\u232b`,
+    '{caps}': `\u21ea`,
+    '{ctrl}': `Strg`,
+    '{ctrlleft}': `Strg`,
+    '{ctrlright}': `Strg`,
+    '{empty}': ` `,
+    '{enter}': `\u21A9`,
+    '{lock}': `caps \u21ea`,
+    '{shift}': `\u2191`,
+    '{shiftleft}': `\u2191`,
+    '{shiftright}': `\u2191`,
+    '{space}': ` `,
+    '{tab}': `\u2b7e`,
+  },
+```
+***
 [Create a new issue or report a bug.](https://github.com/gwinnem/vue-virtual-keyboard/issues)
 
 

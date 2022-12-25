@@ -93,7 +93,7 @@
     includeInLayout?: string[];
     keyboardLayout?: ILayoutItem;
     keyboardTranslation?: IDisplay;
-    selectKeyboardLanguageText: string;
+    selectKeyboardLanguageText?: string;
     showLayoutSelector?: boolean;
     showThemeSwitcher?: boolean;
     startTypingText?: string;
@@ -115,12 +115,12 @@
     usePhysicalKeyboard: false,
   });
 
-  enum InputChangedEvent {
+  enum EInputChangedEvent {
     CHANGED = `onInputChanged`,
   }
 
   const emit = defineEmits<{
-    (event: InputChangedEvent.CHANGED, value: string): void;
+    (event: EInputChangedEvent.CHANGED, value: string): void;
   }>();
 
   const inputValue = ref(``);
@@ -135,6 +135,10 @@
   const orgCss = `keyboard`;
   const mainCss = ref<string>(`keyboard`);
 
+  /**
+   * Switching between dark and light theme.
+   * @param value The theme to switch to.
+   */
   const switchTheme = (value: string): void => {
     if(!props.showThemeSwitcher) {
       return;
@@ -182,6 +186,7 @@
 
   const layout = ref<ILayoutItem>(defaultLayout.default);
   if(props.keyboardLayout) {
+    // eslint-disable-next-line vue/no-setup-props-destructure
     layout.value = props.keyboardLayout;
   } else {
     throw new Error(`keyboard layout not defined`);
@@ -241,6 +246,9 @@
 
   keyboardPreview.value = getKeyboardLayout(layoutType.value);
 
+  /**
+   * Changing the keyboard layout.
+   */
   const changeLayout = (): void => {
     layout.value = LayoutHelper.changeLayout(layoutName.value);
     if(layout.value.display) {
@@ -308,7 +316,7 @@
       endString = inputValue.value.substring(end, inputValue.value.length);
     }
     inputValue.value = `${startString}${endString}`;
-    emit(InputChangedEvent.CHANGED, inputValue.value);
+    emit(EInputChangedEvent.CHANGED, inputValue.value);
     nextTick(() => {
       if(start) {
         el?.focus();
@@ -361,11 +369,14 @@
         if(isCapsClicked.value) {
           return;
         }
-        if(isAltClicked.value) {
+        if(isAltClicked.value && !isShiftClicked.value) {
           layoutType.value = EKeyboardLayoutType.ALT;
+        } else if(isAltClicked.value && isShiftClicked.value) {
+          layoutType.value = EKeyboardLayoutType.ALT_SHIFT;
         } else {
           layoutType.value = EKeyboardLayoutType.DEFAULT;
         }
+
         keyboardPreview.value = getKeyboardLayout(layoutType.value);
         return;
       }
@@ -388,12 +399,11 @@
         if(isCapsClicked.value) {
           return;
         }
-        if(isAltClicked.value) {
+        if(isShiftClicked.value && isAltClicked.value) {
           layoutType.value = EKeyboardLayoutType.ALT_SHIFT;
           keyboardPreview.value = getKeyboardLayout(layoutType.value);
           return;
-        }
-        if(isShiftClicked.value) {
+        } if(isShiftClicked.value && !isAltClicked.value) {
           layoutType.value = EKeyboardLayoutType.SHIFT;
         } else {
           layoutType.value = EKeyboardLayoutType.DEFAULT;
@@ -418,27 +428,26 @@
         break;
       }
     }
-
     const el = keyboardInput.value;
-    if(el?.selectionStart === inputValue.value.length) {
-      inputValue.value = `${inputValue.value}${value}`;
-      emit(InputChangedEvent.CHANGED, inputValue.value);
-      return;
-    }
-
     const start = el?.selectionStart;
-    if(start) {
+
+    if(start && start > 0) {
       const startString = inputValue.value.substring(0, start);
       const endString = inputValue.value.substring(start, inputValue.value.length);
       inputValue.value = `${startString}${value}${endString}`;
-      emit(InputChangedEvent.CHANGED, inputValue.value);
-      nextTick(() => {
-        if(start) {
-          el?.focus();
-          el?.setSelectionRange(start + 1, start + 1);
-        }
-      });
+    } else {
+      inputValue.value = `${value}${inputValue.value}`;
     }
+
+    emit(EInputChangedEvent.CHANGED, inputValue.value);
+    nextTick(() => {
+      el?.focus();
+      if(start) {
+        el?.setSelectionRange(start + 1, start + 1);
+      } else {
+        el?.setSelectionRange(1, 1);
+      }
+    });
   };
 </script>
 

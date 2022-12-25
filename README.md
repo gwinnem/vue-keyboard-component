@@ -17,7 +17,7 @@ from Keyboard by [Rob Garrison](https://mottie.github.io/Keyboard/docs/layouts.h
 
 - Fully responsive.
 - Supports dark and light theme out of the box. Using the user's preferred color scheme.
-- Theme can be set with the built-in theme switcher. It uses local storage to remember the the selected theme.
+- Theme can be set with the built-in theme switcher. It uses local storage to remember the selected theme.
 - 150 microsoft keyboard layouts included in the package.
 
 ### ✏ Upcoming Features:

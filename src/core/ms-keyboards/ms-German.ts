@@ -42,7 +42,6 @@ export default <ILayoutItem>{
     '{ctrlright}': `Strg`,
     '{empty}': ` `,
     '{enter}': `\u21A9`,
-    '{lock}': `caps \u21ea`,
     '{shift}': `\u2191`,
     '{shiftleft}': `\u2191`,
     '{shiftright}': `\u2191`,

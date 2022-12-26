@@ -23,7 +23,7 @@ export const display: IDisplay = {
   '{tab}': `tab`,
   '{lock}': `caps`,
   '{capslock}': `caps`,
-  '{space}': ` `,
+  '{space}': `   `,
   '{//}': ` `,
   '{esc}': `esc`,
   '{escape}': `esc`,

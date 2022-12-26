@@ -51,8 +51,7 @@
           :key="buttonIndex"
           :alt-shift-value="button"
           :alt-value="button"
-          :button-value="button"
-          :debug-events="false"
+          :debug-events="props.debugEvents"
           :default-value="button"
           :display="keyboardDisplay"
           :is-alt-clicked="isAltClicked"
@@ -101,7 +100,7 @@
   }
 
   const props = withDefaults(defineProps<IKeyboardProps>(), {
-    debug: true,
+    debug: false,
     debugEvents: false,
     disableTab: true,
     excludeFromLayout: undefined,
@@ -250,11 +249,14 @@
    * Changing the keyboard layout.
    */
   const changeLayout = (): void => {
+    keyboardPreview.value = undefined;
     layout.value = LayoutHelper.changeLayout(layoutName.value);
+    sendDebugMessage(`Layout changed to: `, layoutName.value);
     if(layout.value.display) {
       keyboardDisplay.value = layout.value.display;
     }
     keyboardPreview.value = getKeyboardLayout(EKeyboardLayoutType.DEFAULT);
+    nextTick();
   };
 
   sendDebugMessage(`Keyboard - keyboardPreview`, keyboardPreview.value);

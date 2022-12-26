@@ -8,15 +8,13 @@
     :data-shift-value="shiftValue"
     @click="onClick"
     @keydown="onKeyDown"
-    @keyup="onKeyUp"
-    @mousedown="onKeyDown"
-    @mouseup="onKeyUp">
+    @mousedown="onKeyDown">
     <span>{{ getButtonDisplayValue(defaultValue) }}</span>
   </button>
 </template>
 
 <script lang="ts" setup>
-  import { ref, watch } from 'vue';
+  import { nextTick, ref, watch } from 'vue';
   import { IDisplay } from '../../core/interfaces/display.interfaces';
   import { EKeyboardButtonEvent } from '../../core/enums/keyboardButtonEvents.enum';
   import { ESpecialButton } from '../../core/enums/KeyboardSpecialButton.enum';
@@ -56,7 +54,6 @@
     (event: EKeyboardButtonEvent.CLICK, value: string): void;
     (event: EKeyboardButtonEvent.CTRL_CLICKED): void;
     (event: EKeyboardButtonEvent.KEY_DOWN, value: string): void;
-    (event: EKeyboardButtonEvent.KEY_UP, value: string): void;
     (event: EKeyboardButtonEvent.SHIFT_CLICKED): void;
   }>();
 
@@ -85,7 +82,9 @@
    * @return {string} The button type
    */
   const getButtonType = (): string => {
-    return props.defaultValue.includes(`{`) && props.defaultValue.includes(`}`) && props.defaultValue !== `{//}`
+    return props.defaultValue
+      .includes(`{`)
+      && props.defaultValue.includes(`}`)
       ? `functionBtn`
       : `standardBtn`;
   };
@@ -97,9 +96,12 @@
    */
   const getButtonClass = (): string => {
     const buttonTypeClass = getButtonType();
-    const buttonWithoutBraces = props.defaultValue.replace(`{`, ``).replace(`}`, ``);
+    const buttonWithoutBraces = props.defaultValue
+      .replace(`{`, ``)
+      .replace(`}`, ``);
     let buttonNormalized = ``;
 
+    nextTick();
     if(buttonTypeClass !== `standardBtn`) {
       buttonNormalized = ` keyboard-button-${buttonWithoutBraces}`;
     }
@@ -220,51 +222,6 @@
       }
     }
     // buttonClass.value = `${buttonClass.value} activeButton`;
-  };
-
-  const onKeyUp = (evt: Event): void => {
-    evt.preventDefault();
-    sendButtonEventDebugMessage(`KeyboardButton - ${EKeyboardButtonEvent.KEY_UP}: ${props.defaultValue}`, evt);
-    emit(EKeyboardButtonEvent.KEY_UP, props.defaultValue);
-    switch(props.defaultValue) {
-      case ESpecialButton.ALT:
-      case ESpecialButton.ALT_LEFT:
-      case ESpecialButton.ALT_RIGHT: {
-        if(isAltClicked.value) {
-          return;
-        }
-        buttonClass.value = getButtonClass();
-        break;
-      }
-      case ESpecialButton.CAPS: {
-        if(isCapsClicked.value) {
-          return;
-        }
-        buttonClass.value = getButtonClass();
-        break;
-      }
-      case ESpecialButton.CTRL:
-      case ESpecialButton.CTRL_LEFT:
-      case ESpecialButton.CTRL_RIGHT: {
-        if(isCtrlClicked.value) {
-          return;
-        }
-        buttonClass.value = getButtonClass();
-        break;
-      }
-      case ESpecialButton.SHIFT:
-      case ESpecialButton.SHIFT_LEFT:
-      case ESpecialButton.SHIFT_RIGHT: {
-        if(isShiftClicked.value) {
-          return;
-        }
-        buttonClass.value = getButtonClass();
-        break;
-      }
-      default: {
-        buttonClass.value = getButtonClass();
-      }
-    }
   };
 </script>
 

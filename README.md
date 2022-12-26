@@ -32,9 +32,10 @@ from <strong>Keyboard(jQuery plugin)</strong> by [Rob Garrison](https://mottie.g
 
 ### 📔 TODO's:
 
-- Fix function button issues.
-- Check missing microsoft layouts.
-- Create new documentation (WIP).
+- [ ] Fix function button issues.
+- [ ] Fix issue with button rendering the space button. It gets the wrong css class so the styling is incorrect.
+- [ ] Check missing microsoft layouts.
+- [ ] Create new documentation (WIP).
 
 
 ### 📚 Documentation

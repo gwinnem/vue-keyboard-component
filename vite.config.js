@@ -1,27 +1,40 @@
-import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
-import Vue from '@vitejs/plugin-vue';
+import * as path from 'path';
+import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
-  // If our .vue files have a style, it will be compiled as a single `.css` file under /dist.
-  plugins: [Vue({ style: { filename: `style.css` } })],
-
   build: {
-    // Output compiled files to /dist.
-    outDir: `./dist`,
+    emptyOutDir: true,
     lib: {
-      // Set the entry point (file that contains our components exported).
-      entry: resolve(__dirname, `src/index.ts`),
-      // Name of the library.
-      name: `vite-vue-package-skeleton`,
-      // We are building for CJS and ESM, use a function to rename automatically files.
-      // Example: my-component-library.esm.js
-      fileName: (format) => `${`vue-virtual-keyboard`}.${format}.js`,
+      entry: path.resolve(__dirname, `src/components/index.ts`),
+      fileName: format => `vue-virtual-keyboard.${format}.js`,
+      formats: [
+        `es`,
+        `umd`,
+      ],
+      name: `vue-virtual-keyboard`,
     },
+    outDir: `./dist`,
     rollupOptions: {
-      // Vue is provided by the parent project, don't compile Vue source-code inside our library.
       external: [`vue`],
-      output: { globals: { vue: `Vue` } },
+      output: {
+        globals: {
+          vue: `Vue`,
+        },
+      },
     },
+  },
+  define: { 'process.env': {} },
+  plugins: [
+    vue(),
+  ],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, `./src`),
+    },
+  },
+  server: {
+    open: true,
+    port: 9090,
   },
 });

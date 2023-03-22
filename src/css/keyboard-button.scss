@@ -4,17 +4,20 @@
 button {
   border: transparent;
 }
-//.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-//  border: 1px solid #666666;
-//  background: #555555 url("images/ui-bg_glass_20_555555_1x400.png") 50% 50% repeat-x;
-//  font-weight: bold;
-//  color: #eeeeee;
-//}
+
+.keyboard-button:active {
+  background : var(--keyboard-button-border-color) !important;
+  & > span {
+    color: var(--keyboard-button-active-span-color) !important;
+  }
+}
+
 .keyboard button.keyboard-button {
   align-items: center;
   background: var(--keyboard-button-background);
   border: 1px solid var(--keyboard-button-border-color);
   border-radius: 10px;
+  color: var(--keyboard-button-color);
   cursor: pointer;
   display: flex;
   flex-grow: 1;
@@ -25,17 +28,14 @@ button {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-.keyboard button.keyboard-button span {
-  color: var(--keyboard-button-color);
-}
-
 .keyboard button.keyboard-button:hover {
   border: 1px solid var(--keyboard-button-hover-border-color);
   background-color: var(--keyboard-button-hover-color);
 }
 
+
 .keyboard button.keyboard-button:hover span {
-  color: #db3b5c;
+  color: var(--keyboard-button-color);
   font-weight: bold;
 }
 

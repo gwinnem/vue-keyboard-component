@@ -15,9 +15,9 @@
 
 <script lang="ts" setup>
   import { nextTick, ref, watch } from 'vue';
-  import { IDisplay } from '../../core/interfaces/display.interfaces';
-  import { EKeyboardButtonEvent } from '../../core/enums/keyboardButtonEvents.enum';
-  import { ESpecialButton } from '../../core/enums/KeyboardSpecialButton.enum';
+  import { IDisplay } from '@/core/interfaces/display.interfaces';
+  import { EKeyboardButtonEvent } from '@/core/enums/keyboardButtonEvents.enum';
+  import { ESpecialButton } from '@/core/enums/KeyboardSpecialButton.enum';
 
   interface IKeyboardButtonProps {
     altShiftValue?: string;
@@ -221,7 +221,6 @@
         emit(EKeyboardButtonEvent.KEY_DOWN, props.defaultValue);
       }
     }
-    // buttonClass.value = `${buttonClass.value} activeButton`;
   };
 </script>
 

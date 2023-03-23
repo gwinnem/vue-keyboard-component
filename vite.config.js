@@ -6,7 +6,7 @@ export default defineConfig({
   build: {
     emptyOutDir: true,
     lib: {
-      entry: path.resolve(__dirname, `src/components/index.ts`),
+      entry: path.resolve(__dirname, `src/lib/index.ts`),
       fileName: format => `vue-virtual-keyboard.${format}.js`,
       formats: [
         `es`,

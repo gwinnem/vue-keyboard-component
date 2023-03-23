@@ -289,7 +289,7 @@
    * Event handlers for KeyboardButton events
    */
   const onAltClicked = (): void => {
-    if(isCapsClicked.value) {
+    if(isCapsClicked.value || isCtrlClicked.value) {
       return;
     }
     isAltClicked.value = !isAltClicked.value;
@@ -328,18 +328,21 @@
   };
 
   const onCapsClicked = (): void => {
-    if(isShiftClicked.value || isAltClicked.value) {
+    if(isShiftClicked.value || isAltClicked.value || isCtrlClicked.value) {
       return;
     }
     isCapsClicked.value = !isCapsClicked.value;
   };
 
   const onCtrlClicked = (): void => {
+    if(isCapsClicked.value || isAltClicked.value || isShiftClicked.value) {
+      return;
+    }
     isCtrlClicked.value = !isCtrlClicked.value;
   };
 
   const onShiftClicked = (): void => {
-    if(isCapsClicked.value) {
+    if(isCapsClicked.value || isCtrlClicked.value) {
       return;
     }
     isShiftClicked.value = !isShiftClicked.value;

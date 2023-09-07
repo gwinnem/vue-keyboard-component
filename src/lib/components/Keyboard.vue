@@ -51,7 +51,6 @@
           :key="buttonIndex"
           :alt-shift-value="button"
           :alt-value="button"
-          :debug-events="props.debugEvents"
           :default-value="button"
           :display="keyboardDisplay"
           :is-alt-clicked="isAltClicked"
@@ -86,7 +85,6 @@
 
   interface IKeyboardProps {
     debug?: boolean;
-    debugEvents?: boolean;
     disableTab?: boolean;
     excludeFromLayout?: string[];
     includeInLayout?: string[];
@@ -100,8 +98,6 @@
   }
 
   const props = withDefaults(defineProps<IKeyboardProps>(), {
-    debug: false,
-    debugEvents: false,
     disableTab: true,
     excludeFromLayout: undefined,
     includeInLayout: undefined,
@@ -124,13 +120,6 @@
 
   const inputValue = ref(``);
 
-  const sendDebugMessage = (msg: string, obj?: object | string): void => {
-    if(props.debug) {
-      // eslint-disable-next-line no-console
-      console.debug(msg, obj);
-    }
-  };
-
   const orgCss = `keyboard`;
   const mainCss = ref<string>(`keyboard`);
 
@@ -142,7 +131,6 @@
     if(!props.showThemeSwitcher) {
       return;
     }
-    sendDebugMessage(`switchTheme`, value);
     if(value === `dark`) {
       mainCss.value = `${orgCss} dark`;
     } else {
@@ -180,7 +168,6 @@
         inputValue.value += evt.key;
       }
     }
-    sendDebugMessage(`Keyboard - onInputKeyDown`, evt);
   };
 
   const layout = ref<ILayoutItem>(defaultLayout.default);
@@ -204,8 +191,6 @@
    * @param value string. Name of the keyboard layout.
    */
   const getKeyboardLayout = (value: string): string[] => {
-    sendDebugMessage(`Keyboard - getKeyboardDisplay`, value);
-
     if(layout.value.display) {
       keyboardDisplay.value = layout.value.display;
     } else {
@@ -251,15 +236,12 @@
   const changeLayout = (): void => {
     keyboardPreview.value = undefined;
     layout.value = LayoutHelper.changeLayout(layoutName.value);
-    sendDebugMessage(`Layout changed to: `, layoutName.value);
     if(layout.value.display) {
       keyboardDisplay.value = layout.value.display;
     }
     keyboardPreview.value = getKeyboardLayout(EKeyboardLayoutType.DEFAULT);
     nextTick();
   };
-
-  sendDebugMessage(`Keyboard - keyboardPreview`, keyboardPreview.value);
 
   watch(() => props.keyboardLayout, newValue => {
     if(newValue) {
@@ -279,7 +261,6 @@
    * @return string[] An array of buttons.
    */
   const getRowOfButtons = (value: string): string[] => {
-    sendDebugMessage(`Keyboard - getRowOfButtons`, value);
     return value.split(` `);
   };
 
@@ -356,7 +337,7 @@
     let value = newValue;
     switch(value) {
       case ESpecialButton.CAPS: {
-        if(isShiftClicked.value || isAltClicked.value) {
+        if(isShiftClicked.value || isAltClicked.value || isCtrlClicked.value) {
           return;
         }
 

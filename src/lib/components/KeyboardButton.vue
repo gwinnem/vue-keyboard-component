@@ -57,25 +57,6 @@
     (event: EKeyboardButtonEvent.SHIFT_CLICKED): void;
   }>();
 
-  const sendButtonEventDebugMessage = (msg: string, evt: Event): void => {
-    if(!props.debugEvents) return;
-
-    if(evt instanceof KeyboardEvent && (evt as KeyboardEvent).key === props.defaultValue) {
-      // eslint-disable-next-line no-console
-      console.debug(msg, (evt as KeyboardEvent));
-      return;
-    }
-    if(evt instanceof MouseEvent) {
-      // eslint-disable-next-line no-console
-      console.debug(msg, (evt as MouseEvent));
-      return;
-    }
-    if(evt instanceof PointerEvent) {
-      // eslint-disable-next-line no-console
-      console.debug(msg, (evt as PointerEvent));
-    }
-  };
-
   /**
    * Retrieve button type
    *
@@ -112,6 +93,9 @@
   const buttonClass = ref(``);
   const isAltClicked = ref(props.isAltClicked);
   watch(() => props.isAltClicked, newValue => {
+    if(isCtrlClicked.value || isCapsClicked.value) {
+      return;
+    }
     isAltClicked.value = newValue;
     if(isAltClicked.value
       && (props.defaultValue === ESpecialButton.ALT.toString()
@@ -125,6 +109,9 @@
 
   const isCapsClicked = ref(props.isCapsClicked);
   watch(() => props.isCapsClicked, newValue => {
+    if(isCtrlClicked.value || isShiftClicked.value || isAltClicked.value) {
+      return;
+    }
     isCapsClicked.value = newValue;
     if(isCapsClicked.value && props.defaultValue === ESpecialButton.CAPS.toString()) {
       buttonClass.value = `${buttonClass.value} activeButton`;
@@ -135,6 +122,9 @@
 
   const isCtrlClicked = ref(props.isCtrlClicked);
   watch(() => props.isCtrlClicked, newValue => {
+    if(isCapsClicked.value || isAltClicked.value || isShiftClicked.value) {
+      return;
+    }
     isCtrlClicked.value = newValue;
     if(isCtrlClicked.value
       && (props.defaultValue === ESpecialButton.CTRL.toString()
@@ -148,6 +138,9 @@
 
   const isShiftClicked = ref(props.isShiftClicked);
   watch(() => props.isShiftClicked, newValue => {
+    if(isCtrlClicked.value || isCapsClicked.value) {
+      return;
+    }
     isShiftClicked.value = newValue;
     if(isShiftClicked.value
       && (props.defaultValue === ESpecialButton.SHIFT.toString()
@@ -168,23 +161,29 @@
     return props.display[value] || value;
   };
 
-  /**
-   * Event handlers
-   */
 
+  /**
+   * Handler for button click event.
+   * @param evt Event from the button.
+   */
   const onClick = (evt: Event): void => {
     evt.preventDefault();
-    sendButtonEventDebugMessage(`KeyboardButton - ${EKeyboardButtonEvent.CLICK}: ${props.defaultValue}`, evt);
     emit(EKeyboardButtonEvent.CLICK, props.defaultValue);
   };
 
+  /**
+   * Handler for button down event.
+   * @param evt Event from the button.
+   */
   const onKeyDown = (evt: Event): void => {
     evt.preventDefault();
-    sendButtonEventDebugMessage(`KeyboardButton - ${EKeyboardButtonEvent.KEY_DOWN}: ${props.defaultValue}`, evt);
     switch(props.defaultValue) {
       case ESpecialButton.ALT.toString():
       case ESpecialButton.ALT_LEFT.toString():
       case ESpecialButton.ALT_RIGHT.toString(): {
+        if(isCapsClicked.value || isCtrlClicked.value) {
+          return;
+        }
         emit(EKeyboardButtonEvent.ALT_CLICKED);
         break;
       }
@@ -193,7 +192,7 @@
         break;
       }
       case ESpecialButton.CAPS: {
-        if(isShiftClicked.value || isAltClicked.value) {
+        if(isShiftClicked.value || isAltClicked.value || isCtrlClicked.value) {
           return;
         }
         emit(EKeyboardButtonEvent.CAPS_CLICKED);
@@ -211,7 +210,7 @@
       case ESpecialButton.SHIFT.toString():
       case ESpecialButton.SHIFT_LEFT.toString():
       case ESpecialButton.SHIFT_RIGHT.toString(): {
-        if(isCapsClicked.value) {
+        if(isCapsClicked.value || isCtrlClicked.value) {
           return;
         }
         emit(EKeyboardButtonEvent.SHIFT_CLICKED);

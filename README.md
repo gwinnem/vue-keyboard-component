@@ -65,6 +65,9 @@ from <strong>Keyboard(jQuery plugin)</strong> by [Rob Garrison](https://mottie.g
 - [List of QWERTY keyboard language variants](https://en.wikipedia.org/wiki/List_of_QWERTY_keyboard_language_variants)
 - [README Icon's List](https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md)
 - [Symbols Ascii code list](https://www.alt-codes.net/)
+- [Keyboard example](https://codepen.io/ethanbustad/pen/neNgvp)
+- [Keyboard example](https://codepen.io/32bitkid/pen/LKZzMR)
+- [Keyboard example](https://codepen.io/kulpreets/pen/MKgqqB)
 
 ### 🌟 Contributing
 

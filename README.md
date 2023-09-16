@@ -68,6 +68,7 @@ from <strong>Keyboard(jQuery plugin)</strong> by [Rob Garrison](https://mottie.g
 - [Keyboard example](https://codepen.io/ethanbustad/pen/neNgvp)
 - [Keyboard example](https://codepen.io/32bitkid/pen/LKZzMR)
 - [Keyboard example](https://codepen.io/kulpreets/pen/MKgqqB)
+- [Vue Search Select](https://github.com/moreta/vue-search-select)
 
 ### 🌟 Contributing
 
@@ -98,7 +99,9 @@ Look at the German display definition below:
     '{tab}': `\u2b7e`,
   },
 ```
-***
+
+
+## 📓 Bug and Issue creation
 [Create a new issue or report a bug.](https://github.com/gwinnem/vue-virtual-keyboard/issues)
 
 

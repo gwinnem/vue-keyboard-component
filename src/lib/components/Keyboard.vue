@@ -1,19 +1,32 @@
 <template>
-  <div :class="mainCss">
+  <div
+    aria-describedby="keyboard-navigation-hint"
+    aria-label="Virtual keyboard"
+    :class="mainCss"
+    :dir="direction"
+    :lang="layout.lang?.[0]"
+    role="group">
+    <span
+      id="keyboard-navigation-hint"
+      class="visually-hidden">
+      Use arrow keys to move between keys once one is focused.
+    </span>
     <div class="keyboard-rows">
       <div
         v-if="showThemeSwitcher
           || showLayoutSelector"
         class="keyboard-row--first-row">
         <div class="select-theme-switcher">
-          <div
+          <label
             v-if="showLayoutSelector"
-            class="selectText">
+            class="select-text"
+            for="keyboard-layout-select">
             {{ props.selectKeyboardLanguageText }}
-          </div>
+          </label>
           <div>
             <select
               v-if="showLayoutSelector"
+              id="keyboard-layout-select"
               v-model="layoutName"
               @change="changeLayout">
               <option value="default">
@@ -37,6 +50,7 @@
         <input
           ref="keyboardInput"
           v-model="inputValue"
+          :aria-label="props.startTypingText"
           class="keyboard-input"
           :placeholder="props.startTypingText"
           @keydown="onInputKeyDown" />
@@ -49,8 +63,10 @@
         <KeyboardButton
           v-for="(button, buttonIndex) in getRowOfButtons(row)"
           :key="buttonIndex"
+          :ref="el => setButtonRef(rowIndex, buttonIndex, el)"
           :alt-shift-value="button"
           :alt-value="button"
+          :aria-labels="props.keyboardTranslation"
           :default-value="button"
           :display="keyboardDisplay"
           :is-alt-clicked="isAltClicked"
@@ -58,11 +74,13 @@
           :is-ctrl-clicked="isCtrlClicked"
           :is-shift-clicked="isShiftClicked"
           :shift-value="button"
+          :tabindex="rowIndex === activeRow && buttonIndex === activeCol ? 0 : -1"
           @onAltClicked="onAltClicked"
           @onBackspaceClicked="onBackspaceClicked"
-          @onButtonClick="onClick"
+          @onButtonClick="value => onButtonClicked(value, rowIndex, buttonIndex)"
           @onCapsClicked="onCapsClicked"
           @onCtrlClicked="onCtrlClicked"
+          @onNavigate="direction => onNavigate(direction, rowIndex, buttonIndex)"
           @onShiftClicked="onShiftClicked" />
       </div>
     </div>
@@ -70,7 +88,9 @@
 </template>
 
 <script lang="ts" setup>
-  import { nextTick, ref, watch } from 'vue';
+  import {
+    computed, nextTick, ref, watch,
+  } from 'vue';
   import KeyboardButton from './KeyboardButton.vue';
   import ThemeSwitcher from './ThemeSwitcher.vue';
   import { ILayoutItem } from '../../core/interfaces/layout.interfaces';
@@ -82,8 +102,10 @@
   import { IDisplay } from '../../core/interfaces/display.interfaces';
   import { ISelect } from '../../core/interfaces/select.interfaces';
   import { LayoutHelper } from '../../core/helpers/LayoutHelper';
+  import { isRtlLanguage } from '../../core/helpers/RtlHelper';
+  import { TNavigationKey } from '../../core/interfaces/navigation.types';
 
-  interface IKeyboardProps {
+  export interface IKeyboardProps {
     debug?: boolean;
     disableTab?: boolean;
     excludeFromLayout?: string[];
@@ -112,10 +134,14 @@
 
   enum EInputChangedEvent {
     CHANGED = `onInputChanged`,
+    CTRL_COMBINATION = `onCtrlCombination`,
+    ENTER_PRESSED = `onEnterPressed`,
   }
 
   const emit = defineEmits<{
     (event: EInputChangedEvent.CHANGED, value: string): void;
+    (event: EInputChangedEvent.CTRL_COMBINATION, value: string): void;
+    (event: EInputChangedEvent.ENTER_PRESSED, value: string): void;
   }>();
 
   const inputValue = ref(``);
@@ -128,9 +154,6 @@
    * @param value The theme to switch to.
    */
   const switchTheme = (value: string): void => {
-    if(!props.showThemeSwitcher) {
-      return;
-    }
     if(value === `dark`) {
       mainCss.value = `${orgCss} dark`;
     } else {
@@ -143,7 +166,6 @@
    * @param evt KeyboardEvent Event emitted when user click's on the physical keyboard.
    */
   const onInputKeyDown = (evt: KeyboardEvent): void => {
-    evt.preventDefault();
     if(!props.usePhysicalKeyboard) {
       return;
     }
@@ -151,20 +173,36 @@
       case `Alt`:
       case `AltLeft`:
       case `AltRight`:
+      case `ArrowDown`:
+      case `ArrowLeft`:
+      case `ArrowRight`:
+      case `ArrowUp`:
+      case `Backspace`:
       case `Caps`:
       case `Context`:
       case `Control`:
       case `ControlLeft`:
       case `ControlRight`:
       case `Delete`:
+      case `End`:
+      case `Enter`:
+      case `Escape`:
+      case `Home`:
       case `MetaLeft`:
       case `MetaRight`:
+      case `PageDown`:
+      case `PageUp`:
       case `Shift`:
       case `ShiftLeft`:
-      case `ShiftRight`: {
+      case `ShiftRight`:
+      case `Tab`: {
+        // Modifier, navigation, and editing keys: let the browser handle these
+        // natively (cursor movement, native backspace/enter/tab, etc.) rather than
+        // intercepting them - only plain character keys get inserted manually below.
         break;
       }
       default: {
+        evt.preventDefault();
         inputValue.value += evt.key;
       }
     }
@@ -178,51 +216,68 @@
     throw new Error(`keyboard layout not defined`);
   }
 
-  const layoutName = ref(`default`);
-  const selectValues: ISelect[] = selectValuesFromFile.default;
+  const direction = computed<`ltr` | `rtl`>(() => {
+    return isRtlLanguage(layout.value.lang) ? `rtl` : `ltr`;
+  });
 
-  const keyboardDisplay = ref<IDisplay | undefined>(defaultDisplay.display);
+  /**
+   * Opt-in debug logging for significant internal state changes, gated by the
+   * `debug` prop.
+   */
+  const logDebug = (...args: unknown[]): void => {
+    if(props.debug) {
+      // eslint-disable-next-line no-console -- opt-in debug logging, gated by the debug prop
+      console.log(`[Keyboard]`, ...args);
+    }
+  };
+
+  const layoutName = ref(`default`);
+
+  /**
+   * The layout-selector's option list, optionally filtered by the includeInLayout /
+   * excludeFromLayout props. includeInLayout takes precedence when both are given.
+   */
+  const selectValues = computed<ISelect[]>(() => {
+    const allValues: ISelect[] = selectValuesFromFile.default;
+
+    if(props.includeInLayout && props.includeInLayout.length > 0) {
+      const included = new Set(props.includeInLayout);
+      return allValues.filter(item => included.has(item.name));
+    }
+
+    if(props.excludeFromLayout && props.excludeFromLayout.length > 0) {
+      const excluded = new Set(props.excludeFromLayout);
+      return allValues.filter(item => !excluded.has(item.name));
+    }
+
+    return allValues;
+  });
+
+  const keyboardDisplay = ref<IDisplay>(defaultDisplay.display);
   if(layout.value.display) {
     keyboardDisplay.value = layout.value.display;
   }
 
   /**
-   * Getting the keyboard layout. Fallback to default keyboard layout if layout name does not exist.
-   * @param value string. Name of the keyboard layout.
+   * Getting the keyboard layout. Fallback to default keyboard layout if the
+   * requested variant isn't defined for this layout.
+   * @param value The layout variant to render.
    */
-  const getKeyboardLayout = (value: string): string[] => {
+  const getKeyboardLayout = (value: EKeyboardLayoutType): string[] => {
     if(layout.value.display) {
       keyboardDisplay.value = layout.value.display;
     } else {
       keyboardDisplay.value = defaultDisplay.display;
     }
 
-    switch(value) {
-      case EKeyboardLayoutType.DEFAULT: {
-        return layout.value.layout.default;
-      }
-      case EKeyboardLayoutType.SHIFT: {
-        if(layout.value.layout.shift) {
-          return layout.value.layout.shift;
-        }
-        return layout.value.layout.default;
-      }
-      case EKeyboardLayoutType.ALT: {
-        if(layout.value.layout.alt) {
-          return layout.value.layout.alt;
-        }
-        return layout.value.layout.default;
-      }
-      case EKeyboardLayoutType.ALT_SHIFT: {
-        if(layout.value.layout.altShift) {
-          return layout.value.layout.altShift;
-        }
-        return layout.value.layout.default;
-      }
-      default: {
-        return layout.value.layout.default;
-      }
-    }
+    const layoutVariants: Record<EKeyboardLayoutType, string[] | undefined> = {
+      [EKeyboardLayoutType.ALT]: layout.value.layout.alt,
+      [EKeyboardLayoutType.ALT_SHIFT]: layout.value.layout.altShift,
+      [EKeyboardLayoutType.DEFAULT]: layout.value.layout.default,
+      [EKeyboardLayoutType.SHIFT]: layout.value.layout.shift,
+    };
+
+    return layoutVariants[value] ?? layout.value.layout.default;
   };
 
   const keyboardPreview = ref<string[]>();
@@ -231,11 +286,14 @@
   keyboardPreview.value = getKeyboardLayout(layoutType.value);
 
   /**
-   * Changing the keyboard layout.
+   * Changing the keyboard layout. Layouts are lazily loaded on demand, so this
+   * briefly clears the preview (rendering no keys) while the chosen layout's
+   * chunk downloads.
    */
-  const changeLayout = (): void => {
+  const changeLayout = async (): Promise<void> => {
+    logDebug(`changing layout to`, layoutName.value);
     keyboardPreview.value = undefined;
-    layout.value = LayoutHelper.changeLayout(layoutName.value);
+    layout.value = await LayoutHelper.changeLayout(layoutName.value);
     if(layout.value.display) {
       keyboardDisplay.value = layout.value.display;
     }
@@ -264,16 +322,104 @@
     return value.split(` `);
   };
 
+  // Roving tabindex: only the button at (activeRow, activeCol) is a tab stop;
+  // every other button is tabindex="-1". Arrow keys move this position (and focus)
+  // between buttons; clicking a button also moves it there. This keeps the whole
+  // keyboard a single Tab stop instead of ~50, per the WAI-ARIA APG's recommended
+  // interaction pattern for a large set of grouped buttons.
+  const activeRow = ref(0);
+  const activeCol = ref(0);
+
+  type TKeyboardButtonInstance = { focus: () => void } | null;
+  const buttonRefs: TKeyboardButtonInstance[][] = [];
+
+  const setButtonRef = (rowIndex: number, buttonIndex: number, el: unknown): void => {
+    if(!buttonRefs[rowIndex]) {
+      buttonRefs[rowIndex] = [];
+    }
+    buttonRefs[rowIndex][buttonIndex] = el as TKeyboardButtonInstance;
+  };
+
+  const onNavigate = (navigationDirection: TNavigationKey, rowIndex: number, buttonIndex: number): void => {
+    const rows = keyboardPreview.value;
+    if(!rows || rows.length === 0) {
+      return;
+    }
+
+    // Under RTL, the row's visual order is mirrored (see the `direction` computed
+    // and the flexbox layout it drives), but DOM order isn't - so ArrowRight/
+    // ArrowLeft need to swap to still match what the user sees on screen.
+    let resolvedDirection = navigationDirection;
+    if(direction.value === `rtl`) {
+      if(navigationDirection === `ArrowLeft`) {
+        resolvedDirection = `ArrowRight`;
+      } else if(navigationDirection === `ArrowRight`) {
+        resolvedDirection = `ArrowLeft`;
+      }
+    }
+
+    let newRow = rowIndex;
+    let newCol = buttonIndex;
+
+    const navigationHandlers: Record<TNavigationKey, () => void> = {
+      ArrowDown: () => {
+        newRow = Math.min(rows.length - 1, rowIndex + 1);
+        const targetRowLength = getRowOfButtons(rows[newRow]).length;
+        newCol = Math.min(buttonIndex, targetRowLength - 1);
+      },
+      ArrowLeft: () => {
+        newCol = Math.max(0, buttonIndex - 1);
+      },
+      ArrowRight: () => {
+        const rowLength = getRowOfButtons(rows[rowIndex]).length;
+        newCol = Math.min(rowLength - 1, buttonIndex + 1);
+      },
+      ArrowUp: () => {
+        newRow = Math.max(0, rowIndex - 1);
+        const targetRowLength = getRowOfButtons(rows[newRow]).length;
+        newCol = Math.min(buttonIndex, targetRowLength - 1);
+      },
+      End: () => {
+        newCol = getRowOfButtons(rows[rowIndex]).length - 1;
+      },
+      Home: () => {
+        newCol = 0;
+      },
+    };
+
+    navigationHandlers[resolvedDirection]();
+
+    activeRow.value = newRow;
+    activeCol.value = newCol;
+    nextTick(() => {
+      buttonRefs[newRow]?.[newCol]?.focus();
+    });
+  };
+
+  // If the layout/modifier state changes and rows are shorter (or fewer) than
+  // before, clamp the active position back into range rather than pointing at a
+  // button that no longer exists.
+  watch(keyboardPreview, newRows => {
+    if(!newRows || newRows.length === 0) {
+      return;
+    }
+    if(activeRow.value >= newRows.length) {
+      activeRow.value = 0;
+    }
+    const rowLength = getRowOfButtons(newRows[activeRow.value]).length;
+    if(activeCol.value >= rowLength) {
+      activeCol.value = Math.max(0, rowLength - 1);
+    }
+  });
+
   const keyboardInput = ref<HTMLInputElement | null>(null);
 
   /**
    * Event handlers for KeyboardButton events
    */
   const onAltClicked = (): void => {
-    if(isCapsClicked.value || isCtrlClicked.value) {
-      return;
-    }
     isAltClicked.value = !isAltClicked.value;
+    logDebug(`alt toggled`, isAltClicked.value);
   };
 
   const onBackspaceClicked = (): void => {
@@ -284,7 +430,13 @@
     }
 
     if(el?.selectionStart === inputValue.value.length) {
+      const caretPosition = inputValue.value.length - 1;
       inputValue.value = inputValue.value.substring(0, inputValue.value.length - 1);
+      emit(EInputChangedEvent.CHANGED, inputValue.value);
+      nextTick(() => {
+        el?.focus();
+        el?.setSelectionRange(caretPosition, caretPosition);
+      });
       return;
     }
 
@@ -309,25 +461,37 @@
   };
 
   const onCapsClicked = (): void => {
-    if(isShiftClicked.value || isAltClicked.value || isCtrlClicked.value) {
-      return;
-    }
     isCapsClicked.value = !isCapsClicked.value;
+    logDebug(`caps toggled`, isCapsClicked.value);
   };
 
   const onCtrlClicked = (): void => {
-    if(isCapsClicked.value || isAltClicked.value || isShiftClicked.value) {
-      return;
-    }
     isCtrlClicked.value = !isCtrlClicked.value;
+    logDebug(`ctrl toggled`, isCtrlClicked.value);
   };
 
   const onShiftClicked = (): void => {
-    if(isCapsClicked.value || isCtrlClicked.value) {
-      return;
-    }
     isShiftClicked.value = !isShiftClicked.value;
+    logDebug(`shift toggled`, isShiftClicked.value);
   };
+
+  // Modifier/action keys are never subject to Ctrl-combination interception below -
+  // e.g. Ctrl+Shift toggling caps/shift state is handled by their own switch cases,
+  // not treated as a "Ctrl+Shift" combination to emit.
+  const MODIFIER_AND_ACTION_KEYS = new Set<string>([
+    ESpecialButton.CAPS.toString(),
+    ESpecialButton.ALT.toString(),
+    ESpecialButton.ALT_LEFT.toString(),
+    ESpecialButton.ALT_RIGHT.toString(),
+    ESpecialButton.BACKSPACE.toString(),
+    ESpecialButton.CTRL.toString(),
+    ESpecialButton.CTRL_LEFT.toString(),
+    ESpecialButton.CTRL_RIGHT.toString(),
+    ESpecialButton.ENTER.toString(),
+    ESpecialButton.SHIFT.toString(),
+    ESpecialButton.SHIFT_LEFT.toString(),
+    ESpecialButton.SHIFT_RIGHT.toString(),
+  ]);
 
   /**
    * Event handler for the KeyboardButton onButtonClick event.
@@ -335,6 +499,16 @@
    */
   const onClick = (newValue: string): void => {
     let value = newValue;
+
+    // While Ctrl is held, any non-modifier key (letters, digits, space, tab, ...) is
+    // treated as a Ctrl+key combination rather than typed into the input - mirrors
+    // how a physical keyboard's Ctrl key works (Ctrl+C doesn't insert a literal "c").
+    // Consumers decide what each combination means by listening for this event.
+    if(isCtrlClicked.value && !MODIFIER_AND_ACTION_KEYS.has(value)) {
+      emit(EInputChangedEvent.CTRL_COMBINATION, value);
+      return;
+    }
+
     switch(value) {
       case ESpecialButton.CAPS: {
         if(isShiftClicked.value || isAltClicked.value || isCtrlClicked.value) {
@@ -372,11 +546,12 @@
       case ESpecialButton.CTRL:
       case ESpecialButton.CTRL_LEFT:
       case ESpecialButton.CTRL_RIGHT: {
-        // TODO Implement at some later time
+        // The Ctrl key itself has no layout/text effect - see the Ctrl-combination
+        // interception above for what happens when another key is pressed while held.
         return;
       }
       case ESpecialButton.ENTER: {
-        // TODO complete this option
+        emit(EInputChangedEvent.ENTER_PRESSED, inputValue.value);
         return;
       }
       case ESpecialButton.SHIFT:
@@ -435,17 +610,23 @@
       }
     });
   };
+
+  const onButtonClicked = (value: string, rowIndex: number, buttonIndex: number): void => {
+    activeRow.value = rowIndex;
+    activeCol.value = buttonIndex;
+    onClick(value);
+  };
 </script>
 
 <style lang="scss">
-@import '../../css/themes';
-@import '../../css/keyboard';
-@import '../../css/keyboard-button';
-@import '../../css/keyboard-rows';
-@import '../../css/button-sizes';
-@import '../../css/select';
-@import '../../css/scrollbar';
-@import '../../css/media-queries';
+@use '../../css/themes';
+@use '../../css/keyboard';
+@use '../../css/keyboard-button';
+@use '../../css/keyboard-rows';
+@use '../../css/button-sizes';
+@use '../../css/select';
+@use '../../css/scrollbar';
+@use '../../css/media-queries';
 
 .select-theme-switcher {
   margin: 15px 5px 0 5px;
@@ -454,5 +635,17 @@
 .theme-switcher {
   float: right !important;
   margin-top: 3px;
+}
+
+.visually-hidden {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
 }
 </style>

@@ -7,9 +7,9 @@
 .keyboard-row {
   align-content: center;
   align-items: center;
+  display: flex;
   justify-content: center;
   justify-items: center;
-  display: flex;
   width: 100%;
 }
 
@@ -26,5 +26,5 @@
 }
 
 .keyboard-row .keyboard-button:not(:last-child) {
-  margin-right: 3px;
+  margin-inline-end: 3px;
 }

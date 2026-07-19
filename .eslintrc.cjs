@@ -7,7 +7,7 @@ module.exports = {
     // Needed to make the parser take into account 'vue' files
     extraFileExtensions: ['.vue'],
     parser: '@typescript-eslint/parser',
-    project: resolve(__dirname, './tsconfig.json'),
+    project: resolve(__dirname, './tsconfig.eslint.json'),
     tsconfigRootDir: __dirname,
   },
   extends: [
@@ -27,7 +27,7 @@ module.exports = {
     },
     {
       // disable the rule specifically for JavaScript files
-      files: ['*.js'],
+      files: ['*.js', '*.mjs'],
       rules: {
         '@typescript-eslint/explicit-function-return-type': `off`,
         '@typescript-eslint/explicit-module-boundary-types': `off`,
@@ -40,7 +40,7 @@ module.exports = {
       },
     },
   ],
-  plugins: [`@typescript-eslint`, `import-quotes`, `vue`],
+  plugins: [`@stylistic`, `@typescript-eslint`, `import-quotes`, `vue`],
   rules: {
     '@typescript-eslint/array-type': [`error`, { default: `array` }],
     '@typescript-eslint/ban-ts-comment': [`warn`],
@@ -51,8 +51,8 @@ module.exports = {
         allowHigherOrderFunctions: false,
       },
     ],
-    '@typescript-eslint/func-call-spacing': [`error`],
-    '@typescript-eslint/member-delimiter-style': [
+    '@stylistic/func-call-spacing': [`error`],
+    '@stylistic/member-delimiter-style': [
       `error`,
       {
         multiline: {
@@ -98,7 +98,7 @@ module.exports = {
     '@typescript-eslint/no-shadow': 'warn',
     '@typescript-eslint/no-unused-vars': [`error`],
     '@typescript-eslint/no-useless-constructor': ['error'],
-    '@typescript-eslint/space-before-function-paren': [
+    '@stylistic/space-before-function-paren': [
       `error`,
       {
         anonymous: `never`,

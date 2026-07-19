@@ -6,7 +6,8 @@ button {
 }
 
 .keyboard-button:active {
-  background : var(--keyboard-button-border-color) !important;
+  background: var(--keyboard-button-border-color) !important;
+
   & > span {
     color: var(--keyboard-button-active-span-color) !important;
   }
@@ -25,25 +26,24 @@ button {
   justify-content: center;
   line-height: 2em;
   overflow: hidden;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: rgb(0 0 0 / 0%);
 }
 
 .keyboard button.keyboard-button:hover {
-  border: 1px solid var(--keyboard-button-hover-border-color);
   background-color: var(--keyboard-button-hover-color);
+  border: 1px solid var(--keyboard-button-hover-border-color);
 }
-
 
 .keyboard button.keyboard-button:hover span {
   color: var(--keyboard-button-color);
   font-weight: bold;
 }
 
-button.keyboard-button.activeButton {
-  background: var(--keyboard-button-activeButton-background);
+button.keyboard-button.keyboard-button--active {
+  background: var(--keyboard-button-active-button-background);
 }
 
-button.keyboard-button.activeButton span {
-  color: var(--keyboard-button-activeButton-color);
+button.keyboard-button.keyboard-button--active span {
+  color: var(--keyboard-button-active-button-color);
   font-size: 1.1em;
 }

@@ -1,8 +1,11 @@
 <template>
-  <div class="toggleWrapper">
+  <div class="toggle-wrapper">
     <input
       id="themeSwitch"
       v-model="isDarkMode"
+      :aria-checked="isDarkMode"
+      aria-label="Toggle dark mode"
+      role="switch"
       type="checkbox" />
     <label
       class="toggle"
@@ -32,20 +35,28 @@
   const isDarkMode = ref(false);
 
   function loadTheme(theme: string): void {
-    const root = document.querySelector(`:root`);
-    if(root) {
-      root.setAttribute(`color-scheme`, `${theme}`);
+    if(typeof document !== `undefined`) {
+      const root = document.querySelector(`:root`);
+      if(root) {
+        root.setAttribute(`color-scheme`, `${theme}`);
+      }
     }
     emit(EThemeEvent.SWITCH, theme);
   }
 
   function getCurrentTheme(): string {
+    if(typeof window === `undefined` || typeof window.matchMedia !== `function`) {
+      return ETheme.LIGHT;
+    }
     return window.matchMedia(`prefers-color-scheme: dark`).matches
       ? ETheme.DARK
       : ETheme.LIGHT;
   }
 
   function getCurrentThemeFromLocalStorage(): string {
+    if(typeof localStorage === `undefined`) {
+      return getCurrentTheme();
+    }
     let theme = localStorage.getItem(`theme-switcher-value`);
     if(!theme) {
       theme = getCurrentTheme();
@@ -61,7 +72,9 @@
     if(isDarkMode.value) {
       emitValue = ETheme.DARK;
     }
-    localStorage.setItem(`theme-switcher-value`, emitValue);
+    if(typeof localStorage !== `undefined`) {
+      localStorage.setItem(`theme-switcher-value`, emitValue);
+    }
     loadTheme(emitValue);
   });
 
@@ -72,34 +85,46 @@
 </script>
 
 <style lang="scss" scoped>
-.toggleWrapper input {
-  display: none;
+.toggle-wrapper {
+  position: relative;
+}
+
+.toggle-wrapper input {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
 }
 
 .toggle {
+  background-color: #e7dfdfff;
+  border-radius: 84px;
   cursor: pointer;
   display: inline-block;
-  position: relative;
-  width: 55px;
   height: 24px;
-  background-color: #E7DFDFFF;
-  border-radius: 84px;
-  transition: background-color 200ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
+  position: relative;
+  transition: background-color 200ms cubic-bezier(.445, .05, .55, .95);
+  width: 55px;
 }
 
 .toggle__handler {
   background-color: #7b89c0;
   border-radius: 50px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 30%);
   display: inline-block;
   height: 22px;
-  position: relative;
   left: 2px;
+  position: relative;
   top: 1px;
   transform: rotate(-45deg);
-  transition: all 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  z-index: 1;
+  transition: all 400ms cubic-bezier(.68, -.55, .265, 1.55);
   width: 22px;
+  z-index: 1;
 }
 
 input:checked + .toggle {
@@ -107,7 +132,7 @@ input:checked + .toggle {
 }
 
 input:checked + .toggle:before {
-  color: #749ED7;
+  color: #749ed7;
 }
 
 input:checked + .toggle:after {
@@ -122,9 +147,9 @@ input:checked + .toggle .toggle__handler {
 // X-Small devices (portrait phones, less than 576px)
 @media (max-width: 600px) {
   .toggle {
-    width: 30px;
-    height: 14px;
     border-radius: 84px;
+    height: 14px;
+    width: 30px;
   }
 
   .toggle__handler {
@@ -142,9 +167,9 @@ input:checked + .toggle .toggle__handler {
 // Small devices (landscape phones, less than 768px)
 @media (min-width: 600px) {
   .toggle {
-    width: 40px;
-    height: 15px;
     border-radius: 84px;
+    height: 15px;
+    width: 40px;
   }
 
   .toggle__handler {
@@ -162,9 +187,9 @@ input:checked + .toggle .toggle__handler {
 // Medium devices (tablets, less than 992px)
 @media (min-width: 768px) {
   .toggle {
-    width: 50px;
-    height: 20px;
     border-radius: 84px;
+    height: 20px;
+    width: 50px;
   }
 
   .toggle__handler {
@@ -182,9 +207,9 @@ input:checked + .toggle .toggle__handler {
 // Large devices (desktops, less than 1200px)
 @media (min-width: 992px) {
   .toggle {
-    width: 50px;
-    height: 20px;
     border-radius: 84px;
+    height: 20px;
+    width: 50px;
   }
 
   .toggle__handler {
@@ -202,9 +227,9 @@ input:checked + .toggle .toggle__handler {
 // X-Large devices (large desktops, less than 1400px)
 @media (min-width: 1200px) {
   .toggle {
-    width: 50px;
-    height: 20px;
     border-radius: 84px;
+    height: 20px;
+    width: 50px;
   }
 
   .toggle__handler {

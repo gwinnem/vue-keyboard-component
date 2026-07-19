@@ -6,7 +6,7 @@ When the component detects this, it will replace the option values with the valu
 ***
 
 ```typescript
-import { ISelect } from '../interfaces/select.interfaces';
+import type { ISelect } from 'vue-virtual-keyboard';
 
 export default <ISelect[]>[
   { name: `msAlbanian`, title: `Albanian` },

@@ -4,13 +4,18 @@ aside: false
 
 # List used for the layout selector
 
-Copy values from this list to pass in as included layouts to the keyboard component.
-When the component detects this, it will replace the option values with the values in the customized list.
+The raw data behind the layout-selector dropdown (shown when `show-layout-selector` is `true`) -
+each entry's `name` is the value you'd pass to `keyboard-layout`'s corresponding loader, and
+`title` is the human-readable label shown in the dropdown.
 
-***
+::: warning
+`IKeyboardProps` also declares `includeInLayout` / `excludeFromLayout` fields, but they aren't
+wired up to any filtering behavior yet - see the [roadmap](../guide/roadmap.md). Passing them
+currently has no effect.
+:::
 
 ```ts
-import { ISelect } from '../interfaces/select.interfaces';
+import type { ISelect } from 'vue-virtual-keyboard';
 
 export default <ISelect[]>[
   { name: `msAlbanian`, title: `Albanian` },

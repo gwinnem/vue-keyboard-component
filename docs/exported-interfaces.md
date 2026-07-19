@@ -1,5 +1,7 @@
 ## Exported interfaces
 
+All three interfaces below are importable directly from the package: `import type { IDisplay, ILayoutItem, ISelect } from 'vue-virtual-keyboard';`
+
 ***
 ### IDisplay
 Used for the displayed keyboard buttons. [See the default display options](./sample-keyboard.md)

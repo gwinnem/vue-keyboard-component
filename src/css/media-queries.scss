@@ -1,16 +1,16 @@
 // X-Small devices (portrait phones, less than 576px)
 @media (max-width: 600px) {
-  $keyboard-font-size: 0.6em;
+  $keyboard-font-size: .6em;
 
   .keyboard ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
     font-size: $keyboard-font-size;
   }
 
-  .keyboard ::-ms-input-placeholder { /* Microsoft Edge */
+  .keyboard ::input-placeholder { /* Microsoft Edge */
     font-size: $keyboard-font-size;
   }
 
-  .keyboard .selectText {
+  .keyboard .select-text {
     font-size: $keyboard-font-size;
   }
 
@@ -61,23 +61,23 @@
   }
 
   select {
-    font-size: 0.6em;
+    font-size: .6em;
   }
 }
 
 // Small devices (landscape phones, less than 768px)
 @media (min-width: 600px) {
-  $keyboard-font-size: 0.8em;
+  $keyboard-font-size: .8em;
 
   .keyboard ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
     font-size: $keyboard-font-size;
   }
 
-  .keyboard ::-ms-input-placeholder { /* Microsoft Edge */
+  .keyboard ::input-placeholder { /* Microsoft Edge */
     font-size: $keyboard-font-size;
   }
 
-  .keyboard .selectText {
+  .keyboard .select-text {
     font-size: $keyboard-font-size;
   }
 
@@ -140,11 +140,11 @@
     font-size: $keyboard-font-size;
   }
 
-  .keyboard ::-ms-input-placeholder { /* Microsoft Edge */
+  .keyboard ::input-placeholder { /* Microsoft Edge */
     font-size: $keyboard-font-size;
   }
 
-  .keyboard .selectText {
+  .keyboard .select-text {
     font-size: $keyboard-font-size;
   }
 
@@ -199,7 +199,6 @@
   }
 }
 
-
 // Large devices (desktops, less than 1200px)
 @media (min-width: 992px) {
   $keyboard-font-size: 1.1em;
@@ -208,11 +207,11 @@
     font-size: $keyboard-font-size;
   }
 
-  .keyboard ::-ms-input-placeholder { /* Microsoft Edge */
+  .keyboard ::input-placeholder { /* Microsoft Edge */
     font-size: $keyboard-font-size;
   }
 
-  .keyboard .selectText {
+  .keyboard .select-text {
     font-size: $keyboard-font-size;
   }
 
@@ -275,11 +274,11 @@
     font-size: $keyboard-font-size;
   }
 
-  .keyboard ::-ms-input-placeholder { /* Microsoft Edge */
+  .keyboard ::input-placeholder { /* Microsoft Edge */
     font-size: $keyboard-font-size;
   }
 
-  .keyboard .selectText {
+  .keyboard .select-text {
     font-size: $keyboard-font-size;
   }
 

@@ -12,7 +12,7 @@
 - [Bashir](../src/core/ms-keyboards/ms-Bashir.ts)
 - [Belarusian](../src/core/ms-keyboards/ms-Belarusian.ts)
 - [Belgian Comma](../src/core/ms-keyboards/ms-Belgian-Comma.ts)
-- [Belgian French](./src/core/ms-keyboards/ms-Belgian-French.ts)
+- [Belgian French](../src/core/ms-keyboards/ms-Belgian-French.ts)
 - [Bengali](../src/core/ms-keyboards/ms-Bengali.ts)
 - [Bengali INSCRIPT](../src/core/ms-keyboards/ms-Bengali-Inscript.ts)
 - [Bosnian Cyrillic](../src/core/ms-keyboards/ms-Bosnian-Cyrillic.ts)

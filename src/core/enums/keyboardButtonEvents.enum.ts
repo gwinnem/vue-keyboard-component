@@ -6,5 +6,6 @@ export enum EKeyboardButtonEvent {
   CLICK = `onButtonClick`,
   KEY_DOWN = `onButtonDown`,
   KEY_UP = `onButtonUp`,
+  NAVIGATE = `onNavigate`,
   SHIFT_CLICKED = `onShiftClicked`,
 }

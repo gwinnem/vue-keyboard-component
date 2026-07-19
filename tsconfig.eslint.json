@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": [
+    "/dist",
+    "node_modules",
+    "*.tgz"
+  ],
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.vue",
+    "./e2e/**/*.ts",
+    "./scripts/**/*.mjs",
+    "./sandbox/**/*.vue",
+    "./playwright.config.ts"
+  ]
+}

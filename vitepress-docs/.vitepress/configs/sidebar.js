@@ -42,7 +42,7 @@ function getApiSidebar() {
           collapsed: false,
           items: [
             {
-              text: 'EGridItemEvent',
+              text: 'Keyboard enums',
               link: '/api/enums',
             },
           ],
@@ -83,6 +83,10 @@ function getGuideSidebar() {
         {
           text: 'Installation',
           link: '/guide/installation',
+        },
+        {
+          text: 'Examples',
+          link: '/guide/examples',
         },
         {
           text: 'Changelog',

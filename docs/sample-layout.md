@@ -1,7 +1,7 @@
 ## Default Keyboard Layout file
 
 ```typescript
-import { ILayoutItem } from '../interfaces/keyboard.interfaces';
+import type { ILayoutItem } from 'vue-virtual-keyboard';
 
 /**
  * Layout: Default
@@ -11,17 +11,23 @@ export default <ILayoutItem>{
     default: [
       `\` 1 2 3 4 5 6 7 8 9 0 - = {bksp}`,
       `{tab} q w e r t y u i o p [ ] #`,
-      `a s d f g h j k l ; ' {enter}`,
-      `{shift} \u005c z x c v b n m , . / {shift}`,
-      `{alt} {space} {alt}`,
+      `{caps} a s d f g h j k l ; ' {enter}`,
+      `{shift} \u005c z x c v b n m , . / {shiftright}`,
+      `{ctrl} {alt} {space} {alt} {ctrl}`,
     ],
     shift: [
       `\u00ac ! \u0022 \u00a3 $ % ^ & * ( ) _ + {bksp}`,
       `{tab} Q W E R T Y U I O P { } ~`,
-      `A S D F G H J K L : @ {enter}`,
-      `{shift} | Z X C V B N M < > / {shift}`,
-      `{alt} {space} {alt}`,
+      `{caps} A S D F G H J K L : @ {enter}`,
+      `{shiftleft} | Z X C V B N M < > / {shiftright}`,
+      `{ctrl} {alt} {space} {alt} {ctrl}`,
     ],
   },
 };
+```
+
+Pass your layout object to the `keyboard-layout` prop:
+
+```html
+<Keyboard :keyboard-layout="myCustomLayout" />
 ```

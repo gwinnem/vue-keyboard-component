@@ -1,7 +1,7 @@
 ## Default Keyboard Display file
 
 ```typescript
-import { IDisplay } from '../interfaces/keyboard.interfaces';
+import type { IDisplay } from 'vue-virtual-keyboard';
 
 /**
  * Default keyboard layout

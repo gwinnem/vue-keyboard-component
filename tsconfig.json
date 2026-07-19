@@ -17,7 +17,7 @@
       "scripthost",
       "es2016.Array.Include"
     ],
-    "module": "es6",
+    "module": "esnext",
     "moduleResolution": "node",
     "newLine": "lf",
     // "noEmit": true,
@@ -49,6 +49,6 @@
     "node_modules",
     "*.tgz"
   ],
-  "include": ["./src/**/*.ts"],
+  "include": ["./src/**/*.ts", "./src/**/*.vue"],
   "references": [],
 }

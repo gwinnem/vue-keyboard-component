@@ -5,7 +5,7 @@ import { ILayoutItem } from '../../core/interfaces/layout.interfaces';
  * Layout: Belarusian
  */
 export default <ILayoutItem>{
-  name: `ms-ABelarusian`,
+  name: `ms-Belarusian`,
   lang: [`be`],
   layout: {
     default: [

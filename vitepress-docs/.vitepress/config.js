@@ -1,6 +1,10 @@
 import { defineConfig } from 'vitepress';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import nav from './configs/nav';
 import sidebar from './configs/sidebar';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   lang: 'en-US',
@@ -110,6 +114,18 @@ export default defineConfig({
   },
 
   vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          api: `modern-compiler`,
+        },
+      },
+    },
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, `../../src`),
+      },
+    },
     server: {
       host: true,
       port: 9092,

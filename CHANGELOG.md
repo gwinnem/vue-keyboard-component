@@ -27,6 +27,15 @@ This project uses [Semantic Versioning](https://semver.org/).
   version matrix, and provenance-attested npm publishing.
 - `SECURITY.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SUPPORT.md`, `NOTICE.md`, issue/PR
   templates, and a Dependabot configuration.
+- Mutation testing (Stryker + the Vitest runner), scoped to the logic-bearing files. Fixed a real
+  Vue SFC compiler incompatibility this surfaced (`withDefaults(defineProps())`'s object literal
+  can't be mutated without breaking compilation). `RtlHelper.ts` and `ThemeSwitcher.vue` fully
+  verified (100% / 84.62%); `LayoutHelper.ts` at 77.78% with an explained, accepted surviving pair.
+  `Keyboard.vue`/`KeyboardButton.vue` confirmed correctly configured but not run to completion in
+  this environment - see [`COVERAGE.md`](./COVERAGE.md) for the honest specifics rather than an
+  estimated number. Runs separately in CI (weekly/on-demand), not per-PR, given the runtime cost.
+- `COVERAGE.md` and a matching documentation-site page, plus real coverage threshold enforcement
+  in CI (previously purely informational - verified a regression genuinely fails the check now).
 
 ### Changed
 - Upgraded the entire build toolchain (Vite, Vitest, TypeScript, vue-tsc, ESLint/typescript-eslint,
@@ -37,6 +46,18 @@ This project uses [Semantic Versioning](https://semver.org/).
 - `engines.node` corrected to `>=20.17.0` (was `>=22.0.0`, stricter than actually required).
 
 ### Fixed
+- A significant, pervasive bug: `package.json` and multiple root docs pointed every GitHub link at
+  a repository that doesn't exist (`vue-virtual-keyboard` instead of the actual
+  `vue-keyboard-component` - verified via web search, not assumed). Also fixed a separate,
+  pre-existing malformed URL in `package.json`'s `bugs` field. See the
+  [full changelog](https://vue-virtual-keyboard.winnem.tech/guide/changelog) for the complete list
+  of affected files, plus two more instances of `docs/`-vs-VitePress content drift found in the
+  same pass.
+- A race condition in async layout switching (rapid selection could show a stale, out-of-order
+  result), a real responsive-design overflow bug at narrow viewports (a classic flexbox min-width
+  gotcha), and a compounding overflow bug in the sandbox demo itself - all found by adding test
+  coverage for previously-completely-untested scenarios (rapid layout switching, viewport
+  responsiveness) rather than by inspection.
 - Pre-commit hooks were silently non-functional (legacy husky config format, incompatible with
   the installed husky version) - fixed and verified with a real test commit.
 - `prettier` had no config and actively conflicted with this codebase's ESLint-enforced style;

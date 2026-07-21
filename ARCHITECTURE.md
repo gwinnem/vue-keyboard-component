@@ -72,11 +72,22 @@ own footprint small (see the `size-check` CI step, which gates the main ES bundl
 
 ## Testing strategy
 
+See [`COVERAGE.md`](./COVERAGE.md) for current numbers, enforcement thresholds, and the one known,
+accepted gap.
+
 - **Unit/component** (Vitest + Vue Test Utils): the bulk of coverage (~99.8% statements across
-  `src/`). Includes the layout-registry smoke test above, and deliberate tests for accessibility
-  attributes, RTL behavior, and grid navigation.
+  `src/`). Includes the layout-registry smoke test above, deliberate tests for accessibility
+  attributes, RTL behavior, and grid navigation, real SSR rendering via `vue/server-renderer`
+  (not just simulated missing-globals scenarios), and graceful-degradation tests for malformed
+  layout data.
 - **End-to-end** (Playwright): real-browser verification of everything jsdom can't simulate
   faithfully - actual focus movement, native keyboard activation (Space/Enter), touch emulation,
   and visual regression (chromium project only, screenshots committed under `e2e/*-snapshots/`).
   Several real bugs in this codebase were only ever caught here, not in unit tests - see the
   changelog for specifics.
+- **Mutation testing** (Stryker + the Vitest runner): verifies the unit tests would actually
+  *notice* a logic change, not just that a line executed - see `COVERAGE.md` for current numbers
+  and a real Vue SFC compiler compatibility issue this surfaced (`withDefaults(defineProps())`'s
+  object literal can't be mutated without breaking the SFC compiler; both `Keyboard.vue` and
+  `KeyboardButton.vue` exclude that one block via inline `// Stryker disable/restore` comments).
+  Runs separately from the main CI pipeline (weekly/on-demand, not per-PR) given the runtime cost.

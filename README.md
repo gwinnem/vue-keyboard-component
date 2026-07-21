@@ -1,8 +1,13 @@
 # Vue Keyboard Component
 
-[![CI](https://github.com/gwinnem/vue-virtual-keyboard/actions/workflows/ci.yml/badge.svg)](https://github.com/gwinnem/vue-virtual-keyboard/actions/workflows/ci.yml)
+[![CI](https://github.com/gwinnem/vue-keyboard-component/actions/workflows/ci.yml/badge.svg)](https://github.com/gwinnem/vue-keyboard-component/actions/workflows/ci.yml)
 [![npm version](https://img.shields.io/npm/v/vue-virtual-keyboard.svg)](https://www.npmjs.com/package/vue-virtual-keyboard)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+
+<h2 align="center">
+  <a href="https://vue-keyboard-component.winnem.tech" target="_blank">Documentation Website</a>
+</h2>
 
 A virtual keyboard component built with VUE 3 and VITE. Requires Node.js >= 20.17 to build/develop this repo (see [engines](./package.json)); the published package itself has no Node runtime requirement.
 
@@ -40,7 +45,6 @@ from <strong>Keyboard(jQuery plugin)</strong> by [Rob Garrison](https://mottie.g
 ### 📔 TODO's:
 
 - [ ] Fix function button issues.
-- [ ] Fix issue with button rendering the space button. It gets the wrong css class so the styling is incorrect.
 - [ ] Check missing microsoft layouts.
 
 
@@ -108,6 +112,7 @@ npm run dev
 
 - [Changelog](./CHANGELOG.md)
 - [Architecture](./ARCHITECTURE.md)
+- [Test Coverage](./COVERAGE.md)
 - [Contributing](./CONTRIBUTING.md)
 - [Code of Conduct](./CODE_OF_CONDUCT.md)
 - [Governance](./GOVERNANCE.md)
@@ -147,7 +152,7 @@ Look at the German display definition below:
 
 
 ## 📓 Bug and Issue creation
-[Create a new issue or report a bug.](https://github.com/gwinnem/vue-virtual-keyboard/issues)
+[Create a new issue or report a bug.](https://github.com/gwinnem/vue-keyboard-component/issues)
 
 
 ## 💲 Donate
@@ -208,6 +213,15 @@ npm run test:ui
 ```
 npm run test:coverage
 ```
+
+#### Runs mutation testing (Stryker)
+
+```
+npm run test:mutation
+```
+
+See [`COVERAGE.md`](./COVERAGE.md) for what this measures, current numbers, and a known Vue SFC
+compiler compatibility fix.
 
 #### Runs end-to-end tests (Playwright)
 

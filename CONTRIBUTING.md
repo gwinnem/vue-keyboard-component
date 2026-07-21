@@ -6,7 +6,7 @@ be patient with review turnaround.
 ## Getting started
 
 ```bash
-git clone https://github.com/gwinnem/vue-virtual-keyboard.git
+git clone https://github.com/gwinnem/vue-keyboard-component.git
 cd vue-virtual-keyboard
 npm install
 npm run dev
@@ -40,6 +40,14 @@ npm run e2e:run
 
 `npm run e2e:run` excludes visual regression tests by default (see below). Run
 `npm run e2e:visual` separately.
+
+For substantial logic changes to `LayoutHelper.ts`, `RtlHelper.ts`, `ThemeSwitcher.vue`,
+`KeyboardButton.vue`, or `Keyboard.vue`, consider also running mutation testing
+(`npm run test:mutation`) - it catches cases where a test executes a line but wouldn't actually
+notice if its logic were wrong. This isn't part of the required PR checklist above (it's slow, and
+runs separately in CI on a weekly schedule rather than per-PR), but is worth a look for anything
+non-trivial. See [`COVERAGE.md`](./COVERAGE.md) for details, current numbers, and a known Vue SFC
+compiler compatibility fix if you're adding a new component with `withDefaults(defineProps())`.
 
 If Playwright's own browser CDN (`cdn.playwright.dev`) is unreachable from your network, you can
 point Playwright at an already-installed Chrome/Chromium binary instead via
@@ -85,7 +93,7 @@ included, in case yours already exists under a different expected name.
 
 ## Reporting bugs / requesting features
 
-Use [GitHub Issues](https://github.com/gwinnem/vue-virtual-keyboard/issues). For security
+Use [GitHub Issues](https://github.com/gwinnem/vue-keyboard-component/issues). For security
 vulnerabilities, see [`SECURITY.md`](./SECURITY.md) instead - please don't file those as public
 issues.
 

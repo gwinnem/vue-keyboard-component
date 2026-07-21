@@ -50,7 +50,7 @@
   left: 50%;
   margin: auto;
   max-width: 850px;
-  min-width: 420px;
+  min-width: 280px;
   padding: 10px;
   position: absolute;
   top: 50%;

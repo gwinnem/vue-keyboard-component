@@ -25,6 +25,7 @@ button {
   font-size: var(--keyboard-font-size);
   justify-content: center;
   line-height: 2em;
+  min-width: 0;
   overflow: hidden;
   -webkit-tap-highlight-color: rgb(0 0 0 / 0%);
 }

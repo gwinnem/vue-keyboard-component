@@ -89,6 +89,10 @@ function getGuideSidebar() {
           link: '/guide/examples',
         },
         {
+          text: 'Test Coverage',
+          link: '/guide/coverage',
+        },
+        {
           text: 'Changelog',
           link: '/guide/changelog',
         },

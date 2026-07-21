@@ -119,6 +119,10 @@
     usePhysicalKeyboard?: boolean;
   }
 
+  // Stryker disable all: mutating this object literal breaks Vue's SFC compiler -
+  // defineProps()/withDefaults() can't reference locally-scoped variables (including
+  // Stryker's injected mutation-coverage helpers) from within their special
+  // compile-time macro expansion.
   const props = withDefaults(defineProps<IKeyboardProps>(), {
     disableTab: true,
     excludeFromLayout: undefined,
@@ -131,6 +135,7 @@
     startTypingText: `Start typing now !`,
     usePhysicalKeyboard: false,
   });
+  // Stryker restore all
 
   enum EInputChangedEvent {
     CHANGED = `onInputChanged`,
@@ -288,12 +293,20 @@
   /**
    * Changing the keyboard layout. Layouts are lazily loaded on demand, so this
    * briefly clears the preview (rendering no keys) while the chosen layout's
-   * chunk downloads.
+   * chunk downloads. If the user selects another layout before this one finishes
+   * loading, and that later request happens to resolve first (plausible - each
+   * layout is its own differently-sized chunk), this discards the now-stale
+   * result instead of letting it overwrite the newer selection.
    */
   const changeLayout = async (): Promise<void> => {
-    logDebug(`changing layout to`, layoutName.value);
+    const requestedLayoutName = layoutName.value;
+    logDebug(`changing layout to`, requestedLayoutName);
     keyboardPreview.value = undefined;
-    layout.value = await LayoutHelper.changeLayout(layoutName.value);
+    const resolvedLayout = await LayoutHelper.changeLayout(requestedLayoutName);
+    if(requestedLayoutName !== layoutName.value) {
+      return;
+    }
+    layout.value = resolvedLayout;
     if(layout.value.display) {
       keyboardDisplay.value = layout.value.display;
     }

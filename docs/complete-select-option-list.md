@@ -1,7 +1,9 @@
 ## List used for the layout selector
 
-Copy values from this list to pass in as included layouts to the keyboard component.
-When the component detects this, it will replace the option values with the values in the customized list.
+The raw data behind the layout-selector dropdown (shown when `show-layout-selector` is `true`) -
+each entry's `name` is the value you'd pass to `keyboard-layout`'s corresponding loader, and
+`title` is the human-readable label shown in the dropdown. This list is filtered by the
+`includeInLayout` / `excludeFromLayout` props when either is given.
 
 ***
 
@@ -43,7 +45,7 @@ export default <ISelect[]>[
   { name: `msDutch`, title: `Dutch` },
   { name: `msEstonian`, title: `Estonian` },
   { name: `msFaeroese`, title: `Faeroese` },
-  { name: `msFinlandSwedenExtendedSami`, title: `Finland Sweden Extended Sami` },
+  { name: `msFinlandSwedenSamiExtended`, title: `Finland Sweden Extended Sami` },
   { name: `msFinnish`, title: `Finnish` },
   { name: `msFrench`, title: `French` },
   { name: `msGaelic`, title: `Gaelic` },
@@ -68,7 +70,7 @@ export default <ISelect[]>[
   { name: `msIcelandic`, title: `Icelandic` },
   { name: `msIgbo`, title: `Igbo` },
   { name: `msInuktitutLatin`, title: `Inuktitut Latin` },
-  { name: `msInuktitutNaqittaut`, title: `Inuktitut Naqittaut` },
+  { name: `msInuktitutNagittaut`, title: `Inuktitut Naqittaut` },
   { name: `msIrish`, title: `Irish` },
   { name: `msItalian`, title: `Italian` },
   { name: `msJapaneseEnglishFullWidth`, title: `Japanese English Full Width` },
@@ -117,7 +119,7 @@ export default <ISelect[]>[
   { name: `msSerbianCyrillic`, title: `Serbian (Cyrillic)` },
   { name: `msSerbianLatin`, title: `Serbian (Latin)` },
   { name: `msSetswana`, title: `Setswana` },
-  { name: `msSetswanaSaLeboa`, title: `Setswana (Sesotho sa Leboa)` },
+  { name: `msSetswanaSesotoSaLeboa`, title: `Setswana (Sesotho sa Leboa)` },
   { name: `msSinhala`, title: `Sinhala` },
   { name: `msSinhalaWij9`, title: `Sinhala Wij 9` },
   { name: `msSlovakian`, title: `Slovakian` },

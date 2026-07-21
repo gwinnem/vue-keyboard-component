@@ -7,6 +7,7 @@ import Keyboard from '../Keyboard.vue';
 import defaultLayout from '../../../core/layouts/default';
 import { ESpecialButton } from '../../../core/enums/KeyboardSpecialButton.enum';
 import { ILayoutItem } from '../../../core/interfaces/layout.interfaces';
+import { LayoutHelper } from '../../../core/helpers/LayoutHelper';
 
 const mountKeyboard = (props: Record<string, unknown> = {}): VueWrapper => {
   return mount(Keyboard, {
@@ -335,6 +336,26 @@ describe(`Keyboard`, () => {
     expect(wrapper.find(`button[data-default-value="ü"]`).exists()).toBe(true);
   });
 
+  describe(`malformed or incomplete layout data`, () => {
+    it(`does not throw when layout.default is an empty array`, () => {
+      expect(() => {
+        mount(Keyboard, { props: { keyboardLayout: { layout: { default: [] } } } });
+      }).not.toThrow();
+    });
+
+    it(`does not throw when a row is an empty string`, () => {
+      expect(() => {
+        mount(Keyboard, { props: { keyboardLayout: { layout: { default: [``] } } } });
+      }).not.toThrow();
+    });
+
+    it(`does not throw when layout.default is entirely absent (a non-TypeScript consumer's mistake)`, () => {
+      expect(() => {
+        mount(Keyboard, { props: { keyboardLayout: { layout: {} } } });
+      }).not.toThrow();
+    });
+  });
+
   describe(`RTL languages`, () => {
     it(`renders ltr by default (the default layout has no lang metadata)`, () => {
       const wrapper = mountKeyboard();
@@ -565,6 +586,131 @@ describe(`Keyboard`, () => {
     const wrapper = mountKeyboard({ showLayoutSelector: true });
 
     expect(wrapper.find(`select`).exists()).toBe(true);
+  });
+
+  describe(`async layout switching`, () => {
+    it(`does not let a stale (slower-resolving) layout load overwrite a newer selection`, async () => {
+      const wrapper = mountKeyboard({ showLayoutSelector: true });
+
+      let resolveFirst: (value: ILayoutItem) => void = () => undefined;
+      let resolveSecond: (value: ILayoutItem) => void = () => undefined;
+      const firstPromise = new Promise<ILayoutItem>(resolve => {
+        resolveFirst = resolve;
+      });
+      const secondPromise = new Promise<ILayoutItem>(resolve => {
+        resolveSecond = resolve;
+      });
+
+      const spy = vi.spyOn(LayoutHelper, `changeLayout`)
+        .mockImplementationOnce(() => firstPromise)
+        .mockImplementationOnce(() => secondPromise);
+
+      const layoutA: ILayoutItem = { layout: { default: [`a-layout-marker`] } };
+      const layoutB: ILayoutItem = { layout: { default: [`b-layout-marker`] } };
+
+      // Simulate the user rapidly selecting two different layouts before either has
+      // finished loading.
+      const select = wrapper.find(`select`);
+      await select.setValue(`msGerman`);
+      await select.setValue(`msFrench`);
+
+      // Resolve OUT OF ORDER: the second (later, newer) selection's chunk happens to
+      // load faster than the first (earlier, now-stale) one's.
+      resolveSecond(layoutB);
+      await nextTick();
+      await nextTick();
+      resolveFirst(layoutA);
+      await nextTick();
+      await nextTick();
+
+      // The user's actual last selection (B) should win, not whichever happened to
+      // resolve last on the network (A).
+      expect(wrapper.find(`button[data-default-value="b-layout-marker"]`).exists()).toBe(true);
+      expect(wrapper.find(`button[data-default-value="a-layout-marker"]`).exists()).toBe(false);
+
+      spy.mockRestore();
+    });
+  });
+
+  describe(`reactive prop changes after mount`, () => {
+    it(`shows the layout selector when showLayoutSelector is toggled on after mount`, async () => {
+      const wrapper = mountKeyboard({ showLayoutSelector: false });
+      expect(wrapper.find(`select`).exists()).toBe(false);
+
+      await wrapper.setProps({ showLayoutSelector: true });
+
+      expect(wrapper.find(`select`).exists()).toBe(true);
+    });
+
+    it(`hides the theme switcher when showThemeSwitcher is toggled off after mount`, async () => {
+      const wrapper = mountKeyboard({ showThemeSwitcher: true });
+      expect(wrapper.findComponent({ name: `ThemeSwitcher` }).exists()).toBe(true);
+
+      await wrapper.setProps({ showThemeSwitcher: false });
+
+      expect(wrapper.findComponent({ name: `ThemeSwitcher` }).exists()).toBe(false);
+    });
+
+    it(`starts responding to native keydown once usePhysicalKeyboard is toggled on after mount`, async () => {
+      const wrapper = mountKeyboard({ usePhysicalKeyboard: false });
+      const input = wrapper.find(`input.keyboard-input`);
+
+      await input.trigger(`keydown`, { key: `x` });
+      expect((input.element as HTMLInputElement).value).toBe(``);
+
+      await wrapper.setProps({ usePhysicalKeyboard: true });
+      await input.trigger(`keydown`, { key: `x` });
+
+      expect((input.element as HTMLInputElement).value).toBe(`x`);
+    });
+
+    it(`starts inserting a real tab character once disableTab is toggled off after mount`, async () => {
+      const wrapper = mountKeyboard({ disableTab: true });
+
+      await clickButton(wrapper, ESpecialButton.TAB);
+      expect((wrapper.find(`input.keyboard-input`).element as HTMLInputElement).value).toBe(``);
+
+      await wrapper.setProps({ disableTab: false });
+      await clickButton(wrapper, ESpecialButton.TAB);
+
+      expect((wrapper.find(`input.keyboard-input`).element as HTMLInputElement).value).toBe(`  `);
+    });
+  });
+
+  describe(`multiple instances on one page`, () => {
+    it(`keeps two Keyboard instances' input values, themes, and modifier state fully independent`, async () => {
+      const wrapperA = mountKeyboard();
+      const wrapperB = mountKeyboard();
+
+      await clickButton(wrapperA, `a`);
+      await clickButton(wrapperB, `b`);
+
+      expect((wrapperA.find(`input.keyboard-input`).element as HTMLInputElement).value).toBe(`a`);
+      expect((wrapperB.find(`input.keyboard-input`).element as HTMLInputElement).value).toBe(`b`);
+
+      await pressSpecialKey(wrapperA, ESpecialButton.SHIFT);
+
+      expect(wrapperA.find(`button[data-default-value="A"]`).exists()).toBe(true);
+      expect(wrapperB.find(`button[data-default-value="A"]`).exists()).toBe(false);
+      expect(wrapperB.find(`button[data-default-value="a"]`).exists()).toBe(true);
+
+      wrapperA.unmount();
+      wrapperB.unmount();
+    });
+
+    it(`keeps roving-tabindex position independent between two instances`, async () => {
+      const wrapperA = mountKeyboard();
+      const wrapperB = mountKeyboard();
+
+      await wrapperA.find(`button[data-default-value="e"]`).trigger(`click`);
+
+      expect(wrapperA.find(`button[data-default-value="e"]`).attributes(`tabindex`)).toBe(`0`);
+      expect(wrapperB.find(`button[data-default-value="e"]`).attributes(`tabindex`)).toBe(`-1`);
+      expect(wrapperB.find(`button[data-default-value="\`"]`).attributes(`tabindex`)).toBe(`0`);
+
+      wrapperA.unmount();
+      wrapperB.unmount();
+    });
   });
 
   describe(`filtering the layout selector`, () => {

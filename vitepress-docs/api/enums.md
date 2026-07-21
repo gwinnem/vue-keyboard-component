@@ -6,7 +6,9 @@ aside: false
 
 ## EKeyboardButtonEvent
 
-Events emitted by the `KeyboardButton` component.
+Events emitted by the `KeyboardButton` component. `NAVIGATE` is emitted (with the pressed key, one
+of `ArrowUp`/`ArrowDown`/`ArrowLeft`/`ArrowRight`/`Home`/`End`) instead of the button's own click
+handling - it drives `Keyboard`'s roving-tabindex grid navigation.
 
 ```typescript
 export enum EKeyboardButtonEvent {
@@ -17,6 +19,7 @@ export enum EKeyboardButtonEvent {
   CLICK = `onButtonClick`,
   KEY_DOWN = `onButtonDown`,
   KEY_UP = `onButtonUp`,
+  NAVIGATE = `onNavigate`,
   SHIFT_CLICKED = `onShiftClicked`,
 }
 ```

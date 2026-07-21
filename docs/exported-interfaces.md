@@ -18,10 +18,14 @@ Used for the different layouts. The Keyboard support 4 different layout names:
 * alt => Displayed when <strong>alt</strong> is clicked. If layout name is not defined, it fall back to default layout.
 * altShift => Displayed when <strong>alt</strong> and <strong>shift</strong> is clicked. If layout name is not defined, it fall back to default layout.
 
+`lang` (ISO 639 language codes) drives automatic right-to-left rendering for languages that need
+it - see the [documentation site](https://vue-virtual-keyboard.winnem.tech/api/types-layout#right-to-left-languages).
+
 ```typescript
 export interface ILayoutItem {
   layout: { [layoutName: string]: string[] };
   display?: IDisplay;
+  lang?: string[];
 }
 ```
 

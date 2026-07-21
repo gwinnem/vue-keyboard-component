@@ -60,6 +60,12 @@ export default defineConfig({
         `src/lib/components/**`,
       ],
       provider: `v8`,
+      thresholds: {
+        branches: 98,
+        functions: 100,
+        lines: 99,
+        statements: 99,
+      },
     },
     environment: `jsdom`,
     exclude: [

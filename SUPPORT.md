@@ -7,14 +7,14 @@ reference, live examples) - most usage questions are answered there.
 
 ## Reporting a bug
 
-Search [existing issues](https://github.com/gwinnem/vue-virtual-keyboard/issues) first. If it's
-new, open a [bug report](https://github.com/gwinnem/vue-virtual-keyboard/issues/new?template=bug_report.md)
+Search [existing issues](https://github.com/gwinnem/vue-keyboard-component/issues) first. If it's
+new, open a [bug report](https://github.com/gwinnem/vue-keyboard-component/issues/new?template=bug_report.md)
 with a minimal reproduction - see [`CONTRIBUTING.md`](./CONTRIBUTING.md) for what makes a good one.
 
 ## Requesting a feature or a missing keyboard layout
 
-Open a [feature request](https://github.com/gwinnem/vue-virtual-keyboard/issues/new?template=feature_request.md)
-or a [layout request](https://github.com/gwinnem/vue-virtual-keyboard/issues/new?template=layout_request.md).
+Open a [feature request](https://github.com/gwinnem/vue-keyboard-component/issues/new?template=feature_request.md)
+or a [layout request](https://github.com/gwinnem/vue-keyboard-component/issues/new?template=layout_request.md).
 
 ## Security vulnerabilities
 

@@ -8,14 +8,11 @@ The raw data behind the layout-selector dropdown (shown when `show-layout-select
 each entry's `name` is the value you'd pass to `keyboard-layout`'s corresponding loader, and
 `title` is the human-readable label shown in the dropdown.
 
-::: warning
-`IKeyboardProps` also declares `includeInLayout` / `excludeFromLayout` fields, but they aren't
-wired up to any filtering behavior yet - see the [roadmap](../guide/roadmap.md). Passing them
-currently has no effect.
-:::
+This list is filtered by the `includeInLayout` / `excludeFromLayout` props when either is given -
+see [Component props](./types-layout.md).
 
 ```ts
-import type { ISelect } from 'vue-virtual-keyboard';
+import { ISelect } from '../interfaces/select.interfaces';
 
 export default <ISelect[]>[
   { name: `msAlbanian`, title: `Albanian` },
@@ -52,7 +49,7 @@ export default <ISelect[]>[
   { name: `msDutch`, title: `Dutch` },
   { name: `msEstonian`, title: `Estonian` },
   { name: `msFaeroese`, title: `Faeroese` },
-  { name: `msFinlandSwedenExtendedSami`, title: `Finland Sweden Extended Sami` },
+  { name: `msFinlandSwedenSamiExtended`, title: `Finland Sweden Extended Sami` },
   { name: `msFinnish`, title: `Finnish` },
   { name: `msFrench`, title: `French` },
   { name: `msGaelic`, title: `Gaelic` },
@@ -77,7 +74,7 @@ export default <ISelect[]>[
   { name: `msIcelandic`, title: `Icelandic` },
   { name: `msIgbo`, title: `Igbo` },
   { name: `msInuktitutLatin`, title: `Inuktitut Latin` },
-  { name: `msInuktitutNaqittaut`, title: `Inuktitut Naqittaut` },
+  { name: `msInuktitutNagittaut`, title: `Inuktitut Naqittaut` },
   { name: `msIrish`, title: `Irish` },
   { name: `msItalian`, title: `Italian` },
   { name: `msJapaneseEnglishFullWidth`, title: `Japanese English Full Width` },
@@ -126,7 +123,7 @@ export default <ISelect[]>[
   { name: `msSerbianCyrillic`, title: `Serbian (Cyrillic)` },
   { name: `msSerbianLatin`, title: `Serbian (Latin)` },
   { name: `msSetswana`, title: `Setswana` },
-  { name: `msSetswanaSaLeboa`, title: `Setswana (Sesotho sa Leboa)` },
+  { name: `msSetswanaSesotoSaLeboa`, title: `Setswana (Sesotho sa Leboa)` },
   { name: `msSinhala`, title: `Sinhala` },
   { name: `msSinhalaWij9`, title: `Sinhala Wij 9` },
   { name: `msSlovakian`, title: `Slovakian` },
@@ -169,5 +166,4 @@ export default <ISelect[]>[
   { name: `msYakut`, title: `Yakut` },
   { name: `msYoruba`, title: `Yoruba` },
 ];
-
 ```

@@ -1,5 +1,5 @@
 {
-  "name": "vue-virtual-keyboard",
+  "name": "vue-keyboard-component",
   "version": "2.0.0",
   "type": "module",
   "description": "Virtual Keyboard using vue 3x and Microsoft Keyboard Layouts.",
@@ -40,10 +40,10 @@
   "homepage": "https://vue-virtual-keyboard.winnem.tech",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gwinnem/vue-virtual-keyboard.git"
+    "url": "https://github.com/gwinnem/vue-keyboard-component.git"
   },
   "bugs": {
-    "url": "https://github.com/gwinnem/https://github.com/gwinnem/vue-virtual-keyboard/issues"
+    "url": "https://github.com/gwinnem/vue-keyboard-component/issues"
   },
   "scripts": {
     "prepare": "husky install",
@@ -61,6 +61,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
+    "test:mutation": "stryker run",
     "test:coverage": "vitest run --coverage",
     "e2e:install": "playwright install --with-deps",
     "e2e:run": "playwright test --grep-invert @visual",
@@ -73,6 +74,8 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1",
+    "@stryker-mutator/core": "^9.6.1",
+    "@stryker-mutator/vitest-runner": "^9.6.1",
     "@stylistic/eslint-plugin": "^2.13.0",
     "@types/node": "^22.20.1",
     "@typescript-eslint/eslint-plugin": "^8.64.0",

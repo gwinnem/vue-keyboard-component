@@ -43,6 +43,10 @@
     tabindex?: number;
   }
 
+  // Stryker disable all: mutating this object literal breaks Vue's SFC compiler -
+  // defineProps()/withDefaults() can't reference locally-scoped variables (including
+  // Stryker's injected mutation-coverage helpers) from within their special
+  // compile-time macro expansion.
   const props = withDefaults(defineProps<IKeyboardButtonProps>(), {
     altShiftValue: undefined,
     altValue: undefined,
@@ -58,6 +62,7 @@
     shiftValue: undefined,
     tabindex: 0,
   });
+  // Stryker restore all
 
   const button = ref<HTMLButtonElement | null>(null);
 

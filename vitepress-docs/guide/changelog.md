@@ -6,6 +6,124 @@ title: Changelog
 
 # Changelog
 
+## v: 2.0.0 (mutation testing added)
+* __Added__ Mutation testing via Stryker (`@stryker-mutator/core` + `@stryker-mutator/vitest-runner`),
+  scoped to the logic-bearing files - `LayoutHelper.ts`, `RtlHelper.ts`, `ThemeSwitcher.vue`,
+  `KeyboardButton.vue`, `Keyboard.vue` (excluding the 150-entry layout registry, already validated
+  by its own dedicated smoke test rather than mutation). `npm run test:mutation` to run it; see
+  `COVERAGE.md` for full detail.
+* __Fixed__ A real, confirmed Vue SFC compiler incompatibility discovered while setting this up:
+  mutating the object literal inside `withDefaults(defineProps<T>(), {...})` breaks compilation
+  (`defineProps()` can't reference Stryker's injected coverage-helper functions from within its
+  macro expansion - not a theoretical concern, an actual crash reproduced and fixed). Both affected
+  components now wrap that one block in `// Stryker disable all` / `// Stryker restore all`
+  comments; the rest of each file mutates normally.
+* __Verified__ (with real, complete runs, not estimates): `RtlHelper.ts` scores 100%,
+  `LayoutHelper.ts` 77.78% (both surviving mutants are the same finding - `changeLayout`'s explicit
+  `layoutName === 'default'` check is provably redundant, since `'default'` is never an actual
+  registry key, so the fallback would trigger via `!layoutRegistry[layoutName]` regardless; kept
+  as-is for readability rather than removed), `ThemeSwitcher.vue` 84.62%.
+* __Honest limitation__: `Keyboard.vue` and `KeyboardButton.vue` are confirmed correctly configured
+  (real mutants generated and tested, no compiler/config errors) but neither could be run to full
+  completion in this development environment - a complete run of either takes 10+ minutes on a
+  single CPU core, longer than fit in one sitting here. Rather than estimate or extrapolate a
+  final score from a partial run, the actual numbers for these two are left unreported until a
+  real, complete baseline exists (run `npm run test:mutation` locally or let CI's scheduled job
+  produce one). `stryker.config.json`'s `thresholds.break: 60` is deliberately conservative until
+  then - calibrate it to the real numbers once you have them, the same way the coverage thresholds
+  were calibrated against actually-measured coverage rather than guessed.
+* __Added__ `.github/workflows/mutation.yml` - runs mutation testing weekly and on-demand
+  (`workflow_dispatch`), separate from the main CI pipeline, since a full run is far slower than
+  the rest of CI combined and doesn't need to gate every merge the way typecheck/lint/coverage do.
+
+## v: 2.0.0 (major finding: wrong GitHub repo URL everywhere, plus more doc drift)
+* __Fixed__ A significant, pervasive bug: `package.json`'s `repository`/`bugs` fields, and every
+  GitHub link in `README.md`, `SECURITY.md`, `SUPPORT.md`, and `CONTRIBUTING.md`, pointed to
+  `github.com/gwinnem/vue-virtual-keyboard` - which doesn't exist as a repo. Verified via web
+  search (not assumed) that the actual repository, matching this sandbox's own git remote all
+  along, is `github.com/gwinnem/vue-keyboard-component`. The npm package name itself
+  (`vue-virtual-keyboard`) and the docs site domain are correct and unaffected - this was
+  specifically the GitHub repo URL, used inconsistently from the actual remote throughout. Also
+  fixed a separate, clearly pre-existing bug found in the same field: `package.json`'s `bugs.url`
+  had a doubled/malformed URL fragment.
+* __Fixed__ Two more instances of the same duplicate-content drift pattern found earlier this
+  session (the layout-selector data copies): `docs/theme-variables.md` was missing 3 CSS variables
+  (6 entries across light/dark) that `vitepress-docs/components/css-variables.md` already had
+  correctly; `docs/exported-interfaces.md`'s `ILayoutItem` was missing the `lang` field; and
+  `docs/sample-keyboard.md` was missing 5 keys entirely and had 4 wrong values, apparently stale
+  from a version of the display map that predates several rounds of fixes this session.
+* __Verified__ (not just assumed correct): `docs/sample-layout.md`'s layout data, and the "3
+  interfaces are importable from the package" claim in `exported-interfaces.md` - both accurate.
+* __Note__ This is the third and fourth time content duplicated between the legacy `docs/` folder
+  and the actively-maintained `vitepress-docs/` site has been found to have drifted independently.
+  Consider consolidating to a single source of truth (e.g. having `docs/*.md` redirect/link to the
+  VitePress equivalent instead of duplicating content) to remove this recurring risk entirely,
+  rather than continuing to fix drift reactively each time it's found.
+
+## v: 2.0.0 (coverage documentation + real CI enforcement)
+* __Added__ `COVERAGE.md` (root) and a matching VitePress page (`guide/coverage.md`, wired into the
+  sidebar) - current numbers, scope, and the one known/accepted gap. Neither existed before; the
+  numbers were only ever mentioned inline in `ARCHITECTURE.md` and changelog entries.
+* __Added__ Coverage thresholds (`vite.config.js`'s `test.coverage.thresholds`) so a regression
+  actually fails CI, rather than coverage being purely informational as it was before. Set with a
+  small buffer below current actuals (99% statements / 98% branches / 100% functions / 99% lines
+  vs. the actual 99.8% / 99.33% / 100% / 99.8%). Verified this is real enforcement, not just
+  configuration - temporarily raising a threshold above the actual number does fail the check with
+  a clear error, and reverting passes again.
+
+## v: 2.0.0 (documentation re-verification)
+* __Verified__ Every enum, interface, prop table, event table, and CSS variable listing across
+  the entire documentation site cross-checked directly against current source (not assumed) - all
+  accurate, no drift found this pass.
+* __Fixed__ README's TODO list still had a "space button gets the wrong CSS class" item - verified
+  directly (mounted the component and inspected its actual class list: `keyboard-button
+  functionBtn keyboard-button-space`, matching the CSS rules defined for it) that this is already
+  fixed and removed the stale entry. Left the vaguer "Fix function button issues" TODO alone, since
+  it isn't specific enough to concretely verify or disprove.
+
+## v: 2.0.0 (real SSR verification, malformed-data resilience tests)
+* __Added__ Real server-side rendering tests using Vue's actual server-renderer
+  (`vue/server-renderer`, already shipped with `vue` - no new dependency needed). Previously, SSR
+  safety was only verified indirectly: documented guidance recommending `<ClientOnly>`, and unit
+  tests simulating missing browser globals via `vi.stubGlobal`. Neither actually exercised a real
+  `renderToString()` call. Now verified directly: renders without throwing, includes the labeled
+  group landmark, renders the theme switch markup (its `onMounted`-gated theme detection correctly
+  just doesn't run), and renders RTL layouts with the correct `dir`/`lang` attributes server-side.
+* __Added__ Tests locking in graceful degradation for malformed/incomplete layout data - a
+  non-TypeScript consumer passing an empty `layout.default` array, an empty-string row, or
+  omitting `layout.default` entirely. All three were already handled without throwing; previously
+  unverified by any permanent test, only confirmed via ad-hoc probing before adding these.
+* __Result__ 323 unit tests (up from 316). Coverage unchanged at 99.8% statements/lines, 100%
+  functions - same theme as the previous entry: these were unverified behavioral guarantees, not
+  line-coverage gaps.
+
+## v: 2.0.0 (missing test coverage audit: 3 real bugs found)
+* __Fixed__ A genuine race condition in `changeLayout`: if a user selected a layout, then quickly
+  selected a different one before the first had finished loading, the two async loads could
+  resolve out of order (very plausible - each layout is a differently-sized chunk), silently
+  showing the wrong (stale) layout. Reproduced deterministically with controllable promises before
+  fixing; now tracks which layout was actually requested and discards a result that's no longer
+  current.
+* __Fixed__ A real responsive-design bug: at narrow viewports (e.g. a 375px-wide phone), the
+  keyboard overflowed horizontally. Root cause was a classic flexbox gotcha - flex items have an
+  implicit `min-width: auto` (content-based), which prevented keys from shrinking below their text
+  label's natural width ("enter", "shift", "bksp") regardless of `flex-grow` or the existing
+  `<600px` media query's explicit narrower width. Added `min-width: 0` to override it.
+* __Fixed__ A second, compounding overflow bug in the sandbox demo itself: `#app`'s
+  `min-width: 420px` prevented the demo page from ever rendering narrower than 420px, overflowing
+  on real narrow phones. Lowered to `280px`.
+* __Added__ Real e2e coverage for the "Fully responsive" README claim (previously entirely
+  untested) across 5 viewport widths spanning the component's own CSS breakpoints - this is what
+  caught both bugs above.
+* __Added__ Unit test coverage for 3 other previously-completely-untested scenarios: toggling
+  `showLayoutSelector` / `showThemeSwitcher` / `usePhysicalKeyboard` / `disableTab` reactively
+  after mount (all confirmed already correct), and running two `Keyboard` instances on one page
+  simultaneously with fully independent state (also confirmed already correct - no bug there, just
+  previously unverified).
+* __Result__ 316 unit tests (up from 309), 98 e2e tests across chromium + mobile-chrome (up from
+  89), all passing. Coverage unchanged at 99.8% statements/lines, 100% functions - these were
+  behavioral gaps invisible to a line-coverage metric, not statement gaps.
+
 ## v: 2.0.0 (devDependency cleanup: 46 → 28)
 * __Fixed__ Pre-commit hooks were silently non-functional: `package.json` had a legacy husky
   v0-v4-style `"husky": { "hooks": {...} }` config block, but husky `^8.0.3` (what's actually

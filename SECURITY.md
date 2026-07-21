@@ -16,7 +16,7 @@ consumers.
 
 Please **do not open a public GitHub issue** for security vulnerabilities.
 
-Instead, use [GitHub's private vulnerability reporting](https://github.com/gwinnem/vue-virtual-keyboard/security/advisories/new)
+Instead, use [GitHub's private vulnerability reporting](https://github.com/gwinnem/vue-keyboard-component/security/advisories/new)
 (Security tab → "Report a vulnerability") on this repository. This lets us discuss and fix the
 issue privately before any public disclosure.
 
